@@ -2,7 +2,18 @@ import { json } from '@sveltejs/kit';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-export async function POST({ request }) {
+const SESSION_COOKIE_NAME = 'adam_admin_token';
+const SESSION_SECRET_TOKEN = 'auth_session_adamin_portfolio_secret_2026';
+
+export async function POST({ request, cookies }) {
+	const session = cookies.get(SESSION_COOKIE_NAME);
+	if (session !== SESSION_SECRET_TOKEN) {
+		return json(
+			{ success: false, error: 'Akses ditolak. Anda harus login terlebih dahulu sebagai admin.' },
+			{ status: 401 }
+		);
+	}
+
 	try {
 		const data = await request.json();
 		const { title, description, category, tags, readTime, content, slug, author } = data;
@@ -55,7 +66,6 @@ export async function POST({ request }) {
 				message: `Artikel "${title}" berhasil disimpan sebagai ${postSlug}.md!`
 			});
 		} catch (fileErr: any) {
-			// In case environment is read-only (e.g. serverless Vercel function)
 			return json({
 				success: false,
 				readOnly: true,
@@ -68,4 +78,3 @@ export async function POST({ request }) {
 		return json({ success: false, error: err.message || 'Terjadi kesalahan sistem' }, { status: 500 });
 	}
 }
-
