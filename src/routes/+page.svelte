@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
-	import { ArrowRight, BookOpen, Clock, Calendar, Sparkles, TrendingUp, ShieldCheck, Compass, PenTool } from '@lucide/svelte';
+	import { ArrowRight, BookOpen, Clock, Calendar, Sparkles, TrendingUp, ShieldCheck, Compass, User } from '@lucide/svelte';
 
 	let { data }: PageProps = $props();
 
@@ -46,11 +46,11 @@
 					</a>
 
 					<a
-						href="/admin"
-						class="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white text-slate-700 font-semibold text-sm border border-slate-200 hover:border-[#D83995] hover:text-[#D83995] transition-all shadow-sm"
+						href="/tentang"
+						class="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white text-slate-700 font-semibold text-sm border border-slate-200 hover:border-[#0593C6] hover:text-[#0593C6] transition-all shadow-sm"
 					>
-						<PenTool class="w-4 h-4 text-[#D83995]" />
-						<span>Tulis Artikel Baru</span>
+						<User class="w-4 h-4 text-[#0593C6]" />
+						<span>Tentang Penulis</span>
 					</a>
 				</div>
 			</div>
@@ -193,7 +193,7 @@
 		</div>
 	</section>
 
-	<!-- Callout for Discussion / Reflection -->
+	<!-- Callout for Reflection / Discussion -->
 	<section class="max-w-6xl mx-auto px-4 sm:px-6">
 		<div class="p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-[#081726] text-white relative overflow-hidden shadow-xl">
 			<div class="absolute -right-10 -bottom-10 w-72 h-72 rounded-full bg-[#0593C6]/20 blur-3xl"></div>
@@ -201,20 +201,20 @@
 
 			<div class="relative z-10 max-w-2xl">
 				<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-[#f29185] text-xs font-semibold mb-4">
-					Tulis & Bagikan Pemikiran
+					Refleksi & Diskusi
 				</div>
 				<h3 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-4">
-					Punya ide atau pemikiran baru hari ini?
+					Punya sudut pandang atau pemikiran berbeda?
 				</h3>
 				<p class="text-sm sm:text-base text-slate-300 leading-relaxed mb-6 font-normal">
-					Anda bisa langsung membuka mode editor admin untuk mengetik ide investasi atau refleksi dunia kapan saja secara langsung dari browser laptop atau ponsel.
+					Dunia finansial dan dinamika hidup selalu menarik untuk dibedah secara jujur. Pelajari lebih lanjut mengenai prinsip dan filosofi yang saya pegang.
 				</p>
 				<a
-					href="/admin"
-					class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#D83995] to-[#f29185] text-white font-bold text-sm shadow-md hover:opacity-95 transition"
+					href="/tentang"
+					class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#0593C6] to-[#0477a1] text-white font-bold text-sm shadow-md hover:opacity-95 transition"
 				>
-					<PenTool class="w-4 h-4" />
-					<span>Buka Editor Tulisan</span>
+					<User class="w-4 h-4" />
+					<span>Tentang Penulis & Filosofi</span>
 				</a>
 			</div>
 		</div>

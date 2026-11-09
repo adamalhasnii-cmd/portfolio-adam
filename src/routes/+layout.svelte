@@ -2,7 +2,7 @@
 	import './layout.css';
 	import favicon from '#lib/assets/favicon.svg';
 	import type { LayoutProps } from './$types';
-	import { PenTool, Compass, BookOpen, User, Menu, X, ArrowUpRight } from '@lucide/svelte';
+	import { Menu, X } from '@lucide/svelte';
 
 	let { children }: LayoutProps = $props();
 	let isMobileMenuOpen = $state(false);
@@ -38,32 +38,21 @@
 			<nav class="hidden md:flex items-center gap-1 sm:gap-2">
 				<a
 					href="/"
-					class="px-3.5 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-[#0593C6] hover:bg-slate-100/70 transition-colors"
+					class="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-[#0593C6] hover:bg-slate-100/70 transition-colors"
 				>
 					Beranda
 				</a>
 				<a
 					href="/artikel"
-					class="px-3.5 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-[#0593C6] hover:bg-slate-100/70 transition-colors"
+					class="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-[#0593C6] hover:bg-slate-100/70 transition-colors"
 				>
 					Semua Tulisan
 				</a>
 				<a
 					href="/tentang"
-					class="px-3.5 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-[#0593C6] hover:bg-slate-100/70 transition-colors"
+					class="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-[#0593C6] hover:bg-slate-100/70 transition-colors"
 				>
 					Tentang
-				</a>
-
-				<div class="h-4 w-px bg-slate-200 mx-2"></div>
-
-				<!-- Admin / Write Button -->
-				<a
-					href="/admin"
-					class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold bg-[#D83995]/10 text-[#D83995] hover:bg-[#D83995] hover:text-white border border-[#D83995]/20 hover:border-[#D83995] transition-all shadow-sm"
-				>
-					<PenTool class="w-3.5 h-3.5" />
-					<span>Mode Tulis (Admin)</span>
 				</a>
 			</nav>
 
@@ -105,16 +94,6 @@
 				>
 					Tentang Saya
 				</a>
-				<div class="pt-2">
-					<a
-						href="/admin"
-						onclick={() => isMobileMenuOpen = false}
-						class="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg text-xs font-semibold bg-[#D83995] text-white shadow"
-					>
-						<PenTool class="w-4 h-4" />
-						<span>Buka Editor / Mode Tulis</span>
-					</a>
-				</div>
 			</div>
 		{/if}
 	</header>
@@ -138,7 +117,7 @@
 						Ruang eksplorasi dan esai pribadi untuk membedah dinamika dunia, psikologi mengelola kekayaan, dan strategi membangun otonomi waktu jangka panjang.
 					</p>
 					<div class="text-xs text-slate-400 pt-2">
-						Dibuat dengan <span class="text-[#0593C6] font-semibold">SvelteKit</span> & <span class="text-[#D83995] font-semibold">Markdown (MDsveX)</span>. Siap untuk Vercel.
+						Dibuat dengan <span class="text-[#0593C6] font-semibold">SvelteKit</span> & <span class="text-[#D83995] font-semibold">Markdown (MDsveX)</span>.
 					</div>
 				</div>
 
@@ -149,7 +128,6 @@
 						<li><a href="/" class="hover:text-[#0593C6] transition">Beranda</a></li>
 						<li><a href="/artikel" class="hover:text-[#0593C6] transition">Kumpulan Tulisan</a></li>
 						<li><a href="/tentang" class="hover:text-[#0593C6] transition">Filosofi & Tentang</a></li>
-						<li><a href="/admin" class="hover:text-[#D83995] transition">Editor Tulisan (Admin)</a></li>
 					</ul>
 				</div>
 
@@ -166,9 +144,7 @@
 				<div>
 					© {new Date().getFullYear()} Adam Alhasni. Hak cipta dilindungi.
 				</div>
-				<div class="flex items-center gap-4">
-					<a href="/admin" class="text-slate-400 hover:text-[#D83995] transition">Mode Tulis</a>
-					<span>•</span>
+				<div>
 					<button onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} class="hover:text-[#0593C6] transition">
 						Ke Atas ↑
 					</button>
