@@ -167,7 +167,7 @@
 					<div>
 						<div class="flex flex-wrap items-center justify-between gap-2 mb-3">
 							<span
-								class="px-3 py-1 rounded-full text-xs font-semibold glass-pill text-[#0593C6] dark:text-white group-hover:bg-[#D83995] group-hover:text-white transition-colors"
+								class="px-3 py-1 rounded-full text-xs font-bold bg-[#0593C6]/10 text-[#0593C6] border border-[#0593C6]/25 dark:bg-white/10 dark:text-sky-200 dark:border-white/20 transition-colors"
 							>
 								{post.metadata.category}
 							</span>
