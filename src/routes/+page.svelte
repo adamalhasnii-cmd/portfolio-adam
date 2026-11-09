@@ -6,12 +6,7 @@
 		Clock,
 		Calendar,
 		Sparkles,
-		TrendingUp,
-		ShieldCheck,
-		Compass,
-		User,
-		Flame,
-		Radio
+		User
 	} from '@lucide/svelte';
 
 	let { data }: PageProps = $props();
@@ -78,57 +73,6 @@
 						<User class="w-4 h-4 text-[#0593C6] dark:text-white" />
 						<span>Tentang 911 ↗</span>
 					</a>
-				</div>
-			</div>
-
-			<!-- Core Pillars Row (Bottom Feature Strip) -->
-			<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-14 pt-8 border-t border-sky-200/50 dark:border-white/20">
-				<div class="p-4 rounded-2xl glass-pill hover:bg-sky-500/10 dark:hover:bg-white/20 transition-all text-[#061a2e] dark:text-white">
-					<div
-						class="w-8 h-8 rounded-xl bg-[#0593C6]/15 dark:bg-white/20 flex items-center justify-center text-[#0593C6] dark:text-white mb-2.5"
-					>
-						<TrendingUp class="w-4 h-4" />
-					</div>
-					<h3 class="font-bold text-sm text-[#061a2e] dark:text-white">Arus Kas Riil</h3>
-					<p class="text-xs text-[#486584] dark:text-sky-50/80 mt-1 leading-relaxed">
-						Fokus pada aset produktif jangka panjang di atas euforia spekulasi semu.
-					</p>
-				</div>
-
-				<div class="p-4 rounded-2xl glass-pill hover:bg-sky-500/10 dark:hover:bg-white/20 transition-all text-[#061a2e] dark:text-white">
-					<div
-						class="w-8 h-8 rounded-xl bg-[#D83995]/15 dark:bg-[#D83995]/50 flex items-center justify-center text-[#D83995] dark:text-white mb-2.5"
-					>
-						<ShieldCheck class="w-4 h-4" />
-					</div>
-					<h3 class="font-bold text-sm text-[#061a2e] dark:text-white">Seni Bertahan</h3>
-					<p class="text-xs text-[#486584] dark:text-sky-50/80 mt-1 leading-relaxed">
-						Compounding bekerja maksimal saat kita mampu bertahan melewati turbulensi badai.
-					</p>
-				</div>
-
-				<div class="p-4 rounded-2xl glass-pill hover:bg-sky-500/10 dark:hover:bg-white/20 transition-all text-[#061a2e] dark:text-white">
-					<div
-						class="w-8 h-8 rounded-xl bg-[#0593C6]/15 dark:bg-white/20 flex items-center justify-center text-[#0593C6] dark:text-white mb-2.5"
-					>
-						<Compass class="w-4 h-4" />
-					</div>
-					<h3 class="font-bold text-sm text-[#061a2e] dark:text-white">Otonomi di Atas Ego</h3>
-					<p class="text-xs text-[#486584] dark:text-sky-50/80 mt-1 leading-relaxed">
-						Uang sebagai instrumen kemerdekaan memilih ritme hidup, bukan sekadar validasi.
-					</p>
-				</div>
-
-				<div class="p-4 rounded-2xl glass-pill hover:bg-sky-500/10 dark:hover:bg-white/20 transition-all text-[#061a2e] dark:text-white">
-					<div
-						class="w-8 h-8 rounded-xl bg-[#0593C6]/15 dark:bg-white/20 flex items-center justify-center text-[#0593C6] dark:text-white mb-2.5"
-					>
-						<Flame class="w-4 h-4" />
-					</div>
-					<h3 class="font-bold text-sm text-[#061a2e] dark:text-white">Pikiran Mandiri</h3>
-					<p class="text-xs text-[#486584] dark:text-sky-50/80 mt-1 leading-relaxed">
-						Menganalisis dunia dengan kepala dingin tanpa terdistorsi kerumunan bising.
-					</p>
 				</div>
 			</div>
 		</div>
