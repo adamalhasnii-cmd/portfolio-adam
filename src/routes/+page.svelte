@@ -30,145 +30,59 @@
 </svelte:head>
 
 <div class="space-y-16 sm:space-y-24 pb-16">
-	<!-- HERO SECTION (Pelmatech-Style Sky Blue, White & Radiant Hot Pink Aura) -->
+	<!-- HERO SECTION (Minimalist Sky Blue, White & Radiant Hot Pink Aura) -->
 	<section class="pt-8 sm:pt-14 pb-10 sm:pb-14 border-b border-white/15">
 		<div class="max-w-6xl mx-auto px-4 sm:px-6">
-			<div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-				<!-- Left Column: Headline & Action Buttons -->
-				<div class="lg:col-span-7">
-					<!-- Eyebrow Badge with Hot Pink Accent Dot -->
-					<div
-						class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full glass-pill text-white text-xs font-semibold tracking-wide uppercase mb-6 shadow-sm"
-					>
-						<span class="w-2 h-2 rounded-full bg-[#D83995] animate-ping"></span>
-						<span>Pemikiran & Esai Finansial</span>
-					</div>
-
-					<!-- Main Headline: Crisp Pure White -->
-					<h1
-						class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-white leading-[1.12] mb-6 drop-shadow-[0_2px_20px_rgba(0,0,0,0.15)]"
-					>
-						Menavigasi Dunia yang Bising, <br />
-						<span
-							class="text-white drop-shadow-[0_2px_15px_rgba(216,57,149,0.5)] underline decoration-[#D83995] decoration-wavy decoration-2 underline-offset-8"
-							>Membeli Otonomi Waktu</span
-						>.
-					</h1>
-
-					<!-- Subheading: Soft White -->
-					<p
-						class="text-base sm:text-lg text-sky-50/90 leading-relaxed font-normal mb-8 max-w-xl font-normal drop-shadow-xs"
-					>
-						Kumpulan catatan kritis, strategi investasi berlandaskan nilai intrinsik, dan refleksi
-						tentang bagaimana seharusnya kita memposisikan diri di tengah turbulensi ekonomi global.
-					</p>
-
-					<!-- Action Buttons: Solid White Pill & Frosted Glass -->
-					<div class="flex flex-wrap items-center gap-4">
-						<a
-							href="/artikel"
-							class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-white text-[#0593C6] font-bold text-sm hover:bg-white/95 hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/15 group cursor-pointer"
-						>
-							<span>Jelajahi Semua Tulisan</span>
-							<ArrowRight class="w-4 h-4 transition-transform group-hover:translate-x-1" />
-						</a>
-
-						<a
-							href="/tentang"
-							class="inline-flex items-center gap-2 px-5 py-3.5 rounded-full glass-pill hover:bg-white/25 text-white font-semibold text-sm transition-all"
-						>
-							<User class="w-4 h-4 text-white" />
-							<span>Tentang 911 ↗</span>
-						</a>
-					</div>
+			<div class="max-w-3xl">
+				<!-- Eyebrow Badge with Hot Pink Accent Dot -->
+				<div
+					class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full glass-pill text-white text-xs font-semibold tracking-wide uppercase mb-6 shadow-sm"
+				>
+					<span class="w-2 h-2 rounded-full bg-[#D83995] animate-ping"></span>
+					<span>Pemikiran & Esai Finansial</span>
 				</div>
 
-				<!-- Right Column: Pelmatech-Style Frosted Glass Schedule/Dispatch Widget -->
-				<div class="lg:col-span-5">
-					<div
-						class="glass-panel rounded-3xl p-6 sm:p-7 text-white shadow-2xl relative overflow-hidden backdrop-blur-2xl"
+				<!-- Main Headline: Crisp Pure White -->
+				<h1
+					class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-white leading-[1.12] mb-6 drop-shadow-[0_2px_20px_rgba(0,0,0,0.15)]"
+				>
+					Menavigasi Dunia yang Bising, <br />
+					<span
+						class="text-white drop-shadow-[0_2px_15px_rgba(216,57,149,0.5)] underline decoration-[#D83995] decoration-wavy decoration-2 underline-offset-8"
+						>Membeli Otonomi Waktu</span
+					>.
+				</h1>
+
+				<!-- Subheading: Soft White -->
+				<p
+					class="text-base sm:text-lg text-sky-50/90 leading-relaxed font-normal mb-8 max-w-2xl drop-shadow-xs"
+				>
+					Kumpulan catatan kritis, strategi investasi berlandaskan nilai intrinsik, dan refleksi
+					tentang bagaimana seharusnya kita memposisikan diri di tengah turbulensi ekonomi global.
+				</p>
+
+				<!-- Action Buttons: Solid White Pill & Frosted Glass -->
+				<div class="flex flex-wrap items-center gap-4">
+					<a
+						href="/artikel"
+						class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-white text-[#0593C6] font-bold text-sm hover:bg-white/95 hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/15 group cursor-pointer"
 					>
-						<!-- Specular Top Sheen -->
-						<div
-							class="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-white/20 to-transparent pointer-events-none rounded-t-3xl"
-						></div>
+						<span>Jelajahi Semua Tulisan</span>
+						<ArrowRight class="w-4 h-4 transition-transform group-hover:translate-x-1" />
+					</a>
 
-						<!-- Widget Header -->
-						<div class="flex items-center justify-between pb-4 border-b border-white/15 mb-5">
-							<div class="flex items-center gap-2 text-xs font-semibold text-white/90">
-								<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-								<span>Dispatch & Radar Terkini</span>
-							</div>
-							<span
-								class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#D83995] text-white shadow-sm shadow-[#D83995]/40"
-							>
-								911 LIVE
-							</span>
-						</div>
-
-						<!-- Item 1 (Like 'Mondays' in Pelmatech) -->
-						<a
-							href="/artikel"
-							class="block p-4 rounded-2xl bg-white/10 border border-white/15 mb-3.5 hover:bg-white/15 transition-all group cursor-pointer"
-						>
-							<div class="flex items-center justify-between text-xs text-sky-100/80 mb-1.5">
-								<span class="font-bold text-white">Opini Makroekonomi</span>
-								<span class="px-2 py-0.5 rounded-full bg-white/15 text-[10px] font-semibold"
-									>Dunia</span
-								>
-							</div>
-							<div class="text-sm font-bold text-white group-hover:text-pink-200 transition-colors">
-								Arah Dunia & Posisi Keuangan Pribadi
-							</div>
-							<div class="flex items-center justify-between text-xs text-sky-100/70 mt-3 pt-2 border-t border-white/10">
-								<span>7 min baca</span>
-								<span class="font-medium text-white group-hover:translate-x-0.5 transition-transform"
-									>Buka Tulisan →</span
-								>
-							</div>
-							<!-- Subtle Segmented Ticks (like image reference) -->
-							<div class="flex items-center gap-1 mt-2.5 opacity-60">
-								<div class="h-1 flex-1 bg-white/40 rounded-full"></div>
-								<div class="h-1 flex-1 bg-white/40 rounded-full"></div>
-								<div class="h-1 flex-1 bg-[#D83995] rounded-full"></div>
-								<div class="h-1 flex-1 bg-white/20 rounded-full"></div>
-							</div>
-						</a>
-
-						<!-- Item 2 (Like 'Thursdays' in Pelmatech) -->
-						<a
-							href="/artikel"
-							class="block p-4 rounded-2xl bg-white/10 border border-white/15 hover:bg-white/15 transition-all group cursor-pointer"
-						>
-							<div class="flex items-center justify-between text-xs text-sky-100/80 mb-1.5">
-								<span class="font-bold text-white">Mindset & Psikologi</span>
-								<span class="px-2 py-0.5 rounded-full bg-white/15 text-[10px] font-semibold"
-									>Otonomi</span
-								>
-							</div>
-							<div class="text-sm font-bold text-white group-hover:text-pink-200 transition-colors">
-								Psikologi Uang: Kebebasan Waktu Sebagai Dividen
-							</div>
-							<div class="flex items-center justify-between text-xs text-sky-100/70 mt-3 pt-2 border-t border-white/10">
-								<span>5 min baca</span>
-								<span class="font-medium text-white group-hover:translate-x-0.5 transition-transform"
-									>Buka Tulisan →</span
-								>
-							</div>
-							<!-- Subtle Segmented Ticks -->
-							<div class="flex items-center gap-1 mt-2.5 opacity-60">
-								<div class="h-1 flex-1 bg-[#D83995] rounded-full"></div>
-								<div class="h-1 flex-1 bg-white/40 rounded-full"></div>
-								<div class="h-1 flex-1 bg-white/40 rounded-full"></div>
-								<div class="h-1 flex-1 bg-white/20 rounded-full"></div>
-							</div>
-						</a>
-					</div>
+					<a
+						href="/tentang"
+						class="inline-flex items-center gap-2 px-5 py-3.5 rounded-full glass-pill hover:bg-white/25 text-white font-semibold text-sm transition-all"
+					>
+						<User class="w-4 h-4 text-white" />
+						<span>Tentang 911 ↗</span>
+					</a>
 				</div>
 			</div>
 
-			<!-- Core Pillars Row (Like Bottom Feature Strip in Pelmatech) -->
-			<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 pt-8 border-t border-white/20">
+			<!-- Core Pillars Row (Bottom Feature Strip) -->
+			<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-14 pt-8 border-t border-white/20">
 				<div class="p-4 rounded-2xl glass-pill hover:bg-white/20 transition-all">
 					<div
 						class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white mb-2.5"
