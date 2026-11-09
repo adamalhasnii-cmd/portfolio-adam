@@ -205,39 +205,39 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 </svelte:head>
 
-<div class="min-h-screen flex flex-col bg-[#FCFFFF] dark:bg-[#07121e] text-[#081726] dark:text-[#FCFFFF] selection:bg-[#D83995] selection:text-white transition-colors duration-200">
+<div class="min-h-screen flex flex-col pelma-bg text-white selection:bg-[#D83995] selection:text-white transition-colors duration-200">
 	<!-- FLOATING LIQUID GLASS TOPBAR & SCROLL PROGRESS WRAPPER -->
 	<div class="sticky top-3 sm:top-5 z-50 px-3 sm:px-6 w-full max-w-5xl mx-auto">
 		<!-- Liquid Glass Capsule Topbar -->
-		<header class="relative rounded-full bg-white/65 dark:bg-[#081726]/75 backdrop-blur-2xl backdrop-saturate-150 border border-white/60 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.06),inset_0_1px_1px_rgba(255,255,255,0.4)] dark:shadow-[0_12px_36px_rgba(0,0,0,0.45),inset_0_1px_1px_rgba(255,255,255,0.1)] px-4 sm:px-6 h-15 sm:h-16 flex items-center justify-between transition-all duration-300">
+		<header class="relative rounded-full glass-panel px-4 sm:px-6 h-15 sm:h-16 flex items-center justify-between text-white transition-all duration-300">
 			<!-- Brand Logo -->
 			<a href="/" class="flex items-center gap-2.5 group">
-				<div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-[#0593C6] to-[#0477a1] text-white flex items-center justify-center font-black text-base sm:text-lg shadow-sm shadow-[#0593C6]/25 group-hover:scale-105 transition-transform">
+				<div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/20 border border-white/30 text-white flex items-center justify-center font-black text-base sm:text-lg shadow-sm group-hover:scale-105 transition-transform backdrop-blur-md">
 					<span>A</span>
 					<span class="w-1.5 h-1.5 rounded-full bg-[#D83995] ml-0.5 -mt-2"></span>
 				</div>
-				<span class="font-black text-xl sm:text-2xl tracking-tight text-slate-900 dark:text-white group-hover:text-[#0593C6] transition-colors">
+				<span class="font-black text-xl sm:text-2xl tracking-tight text-white group-hover:text-pink-200 transition-colors drop-shadow-sm">
 					911
 				</span>
 			</a>
 
 			<!-- Desktop Navigation Links -->
-			<nav class="hidden md:flex items-center gap-1 sm:gap-2">
+			<nav class="hidden md:flex items-center gap-1 sm:gap-1.5">
 				<a
 					href="/"
-					class="px-4 py-1.5 rounded-full text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-[#0593C6] dark:hover:text-[#0593C6] hover:bg-black/5 dark:hover:bg-white/5 transition-all"
+					class="px-4 py-1.5 rounded-full text-sm font-medium text-white/85 hover:text-white hover:bg-white/15 transition-all"
 				>
 					Beranda
 				</a>
 				<a
 					href="/artikel"
-					class="px-4 py-1.5 rounded-full text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-[#0593C6] dark:hover:text-[#0593C6] hover:bg-black/5 dark:hover:bg-white/5 transition-all"
+					class="px-4 py-1.5 rounded-full text-sm font-medium text-white/85 hover:text-white hover:bg-white/15 transition-all"
 				>
 					Semua Tulisan
 				</a>
 				<a
 					href="/tentang"
-					class="px-4 py-1.5 rounded-full text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-[#0593C6] dark:hover:text-[#0593C6] hover:bg-black/5 dark:hover:bg-white/5 transition-all"
+					class="px-4 py-1.5 rounded-full text-sm font-medium text-white/85 hover:text-white hover:bg-white/15 transition-all"
 				>
 					Tentang
 				</a>
@@ -249,14 +249,14 @@
 				<button
 					type="button"
 					onclick={toggleTheme}
-					class="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-black/5 dark:hover:bg-white/10 hover:text-[#0593C6] dark:hover:text-[#0593C6] transition-colors cursor-pointer"
+					class="p-2 rounded-full text-white/80 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
 					aria-label="Ganti mode terang/gelap"
 					title={isDark ? 'Beralih ke mode terang' : 'Beralih ke mode gelap'}
 				>
 					{#if isDark}
-						<Sun class="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
+						<Sun class="w-4 h-4 sm:w-5 sm:h-5 text-amber-300" />
 					{:else}
-						<Moon class="w-4 h-4 sm:w-5 sm:h-5 text-slate-700" />
+						<Moon class="w-4 h-4 sm:w-5 sm:h-5 text-white" />
 					{/if}
 				</button>
 
@@ -264,25 +264,25 @@
 				<button
 					type="button"
 					onclick={openSearch}
-					class="flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-slate-900/5 dark:bg-white/10 hover:bg-slate-900/10 dark:hover:bg-white/15 border border-slate-300/40 dark:border-white/15 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer shadow-sm group active:scale-95"
+					class="flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full glass-pill hover:bg-white/25 text-white transition-all cursor-pointer shadow-sm group active:scale-95"
 					aria-label="Search or Ask"
 					title="Cari artikel (⌘K)"
 				>
-					<Search class="w-3.5 h-3.5 text-[#0593C6] group-hover:scale-110 transition-transform" />
-					<span class="hidden sm:inline text-xs font-medium text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Search or Ask</span>
-					<kbd class="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 dark:text-slate-400 bg-white/70 dark:bg-black/40 rounded border border-black/5 dark:border-white/10">⌘K</kbd>
+					<Search class="w-3.5 h-3.5 text-white/90 group-hover:scale-110 transition-transform" />
+					<span class="hidden sm:inline text-xs font-medium text-white/90 group-hover:text-white transition-colors">Search or Ask</span>
+					<kbd class="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-semibold text-white/85 bg-white/20 rounded border border-white/25">⌘K</kbd>
 				</button>
 
 				<!-- Mobile Menu Button -->
 				<button
 					onclick={() => isMobileMenuOpen = !isMobileMenuOpen}
-					class="md:hidden p-2 rounded-full text-slate-700 dark:text-slate-300 hover:bg-black/5 dark:hover:bg-white/10 transition"
+					class="md:hidden p-2 rounded-full text-white/90 hover:bg-white/15 transition cursor-pointer"
 					aria-label="Menu navigasi"
 				>
 					{#if isMobileMenuOpen}
-						<X class="w-5 h-5 text-slate-900 dark:text-white" />
+						<X class="w-5 h-5 text-white" />
 					{:else}
-						<Menu class="w-5 h-5 text-slate-900 dark:text-white" />
+						<Menu class="w-5 h-5 text-white" />
 					{/if}
 				</button>
 			</div>
@@ -290,9 +290,9 @@
 
 		<!-- Scroll Progress Bar Directly Under Topbar -->
 		<div class="px-5 mt-1.5 w-full pointer-events-none">
-			<div class="w-full h-[3px] bg-slate-200/40 dark:bg-slate-800/50 rounded-full overflow-hidden backdrop-blur-sm">
+			<div class="w-full h-[3px] bg-white/20 rounded-full overflow-hidden backdrop-blur-sm">
 				<div
-					class="h-full bg-gradient-to-r from-[#0593C6] via-[#D83995] to-[#f29185] rounded-full transition-all duration-100 ease-out shadow-[0_0_8px_rgba(216,57,149,0.6)]"
+					class="h-full bg-gradient-to-r from-white via-[#D83995] to-[#f29185] rounded-full transition-all duration-100 ease-out shadow-[0_0_10px_rgba(216,57,149,0.8)]"
 					style="width: {scrollProgress}%;"
 				></div>
 			</div>
@@ -300,33 +300,33 @@
 
 		<!-- Mobile Floating Glass Dropdown Menu -->
 		{#if isMobileMenuOpen}
-			<div class="md:hidden mt-2 p-4 rounded-3xl bg-white/80 dark:bg-[#081726]/85 backdrop-blur-2xl border border-white/50 dark:border-white/10 shadow-2xl space-y-1.5 animate-in fade-in slide-in-from-top-3 duration-200">
+			<div class="md:hidden mt-2 p-4 rounded-3xl glass-panel space-y-1.5 animate-in fade-in slide-in-from-top-3 duration-200">
 				<button
 					type="button"
 					onclick={() => { isMobileMenuOpen = false; openSearch(); }}
-					class="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-2xl text-sm font-semibold text-[#0593C6] bg-[#0593C6]/10 hover:bg-[#0593C6]/20 transition text-left"
+					class="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-2xl text-sm font-semibold text-white bg-white/20 hover:bg-white/30 transition text-left cursor-pointer"
 				>
-					<Search class="w-4 h-4" />
+					<Search class="w-4 h-4 text-white" />
 					<span>Search or Ask (⌘K)</span>
 				</button>
 				<a
 					href="/"
 					onclick={() => isMobileMenuOpen = false}
-					class="block px-4 py-2.5 rounded-2xl text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-100/70 dark:hover:bg-slate-800/70"
+					class="block px-4 py-2.5 rounded-2xl text-sm font-semibold text-white hover:bg-white/15"
 				>
 					Beranda
 				</a>
 				<a
 					href="/artikel"
 					onclick={() => isMobileMenuOpen = false}
-					class="block px-4 py-2.5 rounded-2xl text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-100/70 dark:hover:bg-slate-800/70"
+					class="block px-4 py-2.5 rounded-2xl text-sm font-semibold text-white hover:bg-white/15"
 				>
 					Semua Tulisan
 				</a>
 				<a
 					href="/tentang"
 					onclick={() => isMobileMenuOpen = false}
-					class="block px-4 py-2.5 rounded-2xl text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-100/70 dark:hover:bg-slate-800/70"
+					class="block px-4 py-2.5 rounded-2xl text-sm font-semibold text-white hover:bg-white/15"
 				>
 					Tentang Saya
 				</a>
@@ -595,46 +595,47 @@
 	</main>
 
 	<!-- Footer -->
-	<footer class="border-t border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-[#07121e]/80 py-12 text-slate-600 dark:text-slate-400 mt-20 transition-colors">
+	<footer class="border-t border-white/20 bg-black/20 backdrop-blur-2xl py-12 text-white/80 mt-20 transition-colors">
 		<div class="max-w-6xl mx-auto px-4 sm:px-6">
 			<div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
 				<!-- Brand Col -->
 				<div class="md:col-span-2 space-y-3">
 					<div class="flex items-center gap-2">
-						<span class="font-extrabold text-xl tracking-tight text-slate-900 dark:text-white">911</span>
+						<span class="font-extrabold text-xl tracking-tight text-white drop-shadow-sm">911</span>
 						<span class="w-1.5 h-1.5 rounded-full bg-[#D83995]"></span>
 					</div>
-					<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-md">
+					<p class="text-sm text-sky-50/85 leading-relaxed max-w-md font-normal">
 						Ruang eksplorasi dan esai pribadi untuk membedah dinamika dunia, psikologi mengelola kekayaan, dan strategi membangun otonomi waktu jangka panjang.
 					</p>
 				</div>
 
 				<!-- Nav Links Col -->
 				<div>
-					<h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-4">Navigasi</h4>
+					<h4 class="text-xs font-bold text-white uppercase tracking-wider mb-4">Navigasi</h4>
 					<ul class="space-y-2.5 text-sm">
-						<li><a href="/" class="hover:text-[#0593C6] transition">Beranda</a></li>
-						<li><a href="/artikel" class="hover:text-[#0593C6] transition">Kumpulan Tulisan</a></li>
-						<li><a href="/tentang" class="hover:text-[#0593C6] transition">Filosofi & Tentang</a></li>
+						<li><a href="/" class="text-white/80 hover:text-white transition">Beranda</a></li>
+						<li><a href="/artikel" class="text-white/80 hover:text-white transition">Kumpulan Tulisan</a></li>
+						<li><a href="/tentang" class="text-white/80 hover:text-white transition">Filosofi & Tentang</a></li>
 					</ul>
 				</div>
 
 				<!-- Disclaimer Col -->
 				<div>
-					<h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-4">Disclaimer</h4>
-					<p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+					<h4 class="text-xs font-bold text-white uppercase tracking-wider mb-4">Disclaimer</h4>
+					<p class="text-xs text-sky-100/75 leading-relaxed">
 						Seluruh tulisan di situs ini adalah opini dan refleksi pribadi semata. Bukan merupakan anjuran, rekomendasi, ataupun nasihat finansial resmi.
 					</p>
 				</div>
 			</div>
 
-			<div class="pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
+			<div class="pt-8 border-t border-white/15 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-sky-100/70">
 				<div>
 					© {new Date().getFullYear()} 911. Hak cipta dilindungi.
 				</div>
 				<div>
-					<button onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} class="hover:text-[#0593C6] transition cursor-pointer">
-						Ke Atas ↑
+					<button onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} class="hover:text-white text-white/80 transition cursor-pointer flex items-center gap-1">
+						<span>Ke Atas</span>
+						<span>↑</span>
 					</button>
 				</div>
 			</div>

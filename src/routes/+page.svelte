@@ -1,6 +1,18 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
-	import { ArrowRight, BookOpen, Clock, Calendar, Sparkles, TrendingUp, ShieldCheck, Compass, User } from '@lucide/svelte';
+	import {
+		ArrowRight,
+		BookOpen,
+		Clock,
+		Calendar,
+		Sparkles,
+		TrendingUp,
+		ShieldCheck,
+		Compass,
+		User,
+		Flame,
+		Radio
+	} from '@lucide/svelte';
 
 	let { data }: PageProps = $props();
 
@@ -11,131 +23,258 @@
 
 <svelte:head>
 	<title>911 — Pemikiran & Finansial</title>
-	<meta name="description" content="Kumpulan pemikiran, catatan investasi, dan sudut pandang tentang bagaimana menata posisi keuangan dan kebebasan waktu di tengah dunia yang bising." />
+	<meta
+		name="description"
+		content="Kumpulan pemikiran, catatan investasi, dan sudut pandang tentang bagaimana menata posisi keuangan dan kebebasan waktu di tengah dunia yang bising."
+	/>
 </svelte:head>
 
-<div class="space-y-16 sm:space-y-24 pb-12">
-	<!-- Hero Section -->
-	<section class="pt-12 sm:pt-20 pb-8 sm:pb-12 border-b border-slate-200/80 dark:border-slate-800">
+<div class="space-y-16 sm:space-y-24 pb-16">
+	<!-- HERO SECTION (Pelmatech-Style Sky Blue, White & Radiant Hot Pink Aura) -->
+	<section class="pt-8 sm:pt-14 pb-10 sm:pb-14 border-b border-white/15">
 		<div class="max-w-6xl mx-auto px-4 sm:px-6">
-			<div class="max-w-3xl">
-				<!-- Eyebrow Badge -->
-				<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0593C6]/10 border border-[#0593C6]/20 text-[#0593C6] text-xs font-semibold tracking-wide uppercase mb-6">
-					<span class="w-2 h-2 rounded-full bg-[#D83995] animate-pulse"></span>
-					Pemikiran & Esai Finansial
+			<div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+				<!-- Left Column: Headline & Action Buttons -->
+				<div class="lg:col-span-7">
+					<!-- Eyebrow Badge with Hot Pink Accent Dot -->
+					<div
+						class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full glass-pill text-white text-xs font-semibold tracking-wide uppercase mb-6 shadow-sm"
+					>
+						<span class="w-2 h-2 rounded-full bg-[#D83995] animate-ping"></span>
+						<span>Pemikiran & Esai Finansial</span>
+					</div>
+
+					<!-- Main Headline: Crisp Pure White -->
+					<h1
+						class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-white leading-[1.12] mb-6 drop-shadow-[0_2px_20px_rgba(0,0,0,0.15)]"
+					>
+						Menavigasi Dunia yang Bising, <br />
+						<span
+							class="text-white drop-shadow-[0_2px_15px_rgba(216,57,149,0.5)] underline decoration-[#D83995] decoration-wavy decoration-2 underline-offset-8"
+							>Membeli Otonomi Waktu</span
+						>.
+					</h1>
+
+					<!-- Subheading: Soft White -->
+					<p
+						class="text-base sm:text-lg text-sky-50/90 leading-relaxed font-normal mb-8 max-w-xl font-normal drop-shadow-xs"
+					>
+						Kumpulan catatan kritis, strategi investasi berlandaskan nilai intrinsik, dan refleksi
+						tentang bagaimana seharusnya kita memposisikan diri di tengah turbulensi ekonomi global.
+					</p>
+
+					<!-- Action Buttons: Solid White Pill & Frosted Glass -->
+					<div class="flex flex-wrap items-center gap-4">
+						<a
+							href="/artikel"
+							class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-white text-[#0593C6] font-bold text-sm hover:bg-white/95 hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/15 group cursor-pointer"
+						>
+							<span>Jelajahi Semua Tulisan</span>
+							<ArrowRight class="w-4 h-4 transition-transform group-hover:translate-x-1" />
+						</a>
+
+						<a
+							href="/tentang"
+							class="inline-flex items-center gap-2 px-5 py-3.5 rounded-full glass-pill hover:bg-white/25 text-white font-semibold text-sm transition-all"
+						>
+							<User class="w-4 h-4 text-white" />
+							<span>Tentang 911 ↗</span>
+						</a>
+					</div>
 				</div>
 
-				<!-- Main Headline -->
-				<h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-slate-900 dark:text-white leading-[1.15] mb-6">
-					Menavigasi Dunia yang Bising, <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#0593C6] via-[#0593C6] to-[#D83995]">Membeli Otonomi Waktu</span>.
-				</h1>
-
-				<!-- Subheading -->
-				<p class="text-lg sm:text-xl text-slate-600 dark:text-slate-300 leading-relaxed font-normal mb-8 max-w-2xl">
-					Kumpulan catatan kritis, strategi investasi berlandaskan nilai intrinsik, dan refleksi tentang bagaimana seharusnya kita memposisikan diri di tengah turbulensi ekonomi global.
-				</p>
-
-				<!-- Action Buttons -->
-				<div class="flex flex-wrap items-center gap-4">
-					<a
-						href="/artikel"
-						class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-[#0593C6] text-white font-semibold text-sm hover:bg-[#0477a1] transition-all shadow-md shadow-[#0593C6]/20 group"
+				<!-- Right Column: Pelmatech-Style Frosted Glass Schedule/Dispatch Widget -->
+				<div class="lg:col-span-5">
+					<div
+						class="glass-panel rounded-3xl p-6 sm:p-7 text-white shadow-2xl relative overflow-hidden backdrop-blur-2xl"
 					>
-						<span>Jelajahi Semua Tulisan</span>
-						<ArrowRight class="w-4 h-4 transition-transform group-hover:translate-x-1" />
-					</a>
+						<!-- Specular Top Sheen -->
+						<div
+							class="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-white/20 to-transparent pointer-events-none rounded-t-3xl"
+						></div>
 
-					<a
-						href="/tentang"
-						class="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white dark:bg-[#0d1e30] text-slate-700 dark:text-slate-200 font-semibold text-sm border border-slate-200 dark:border-slate-700 hover:border-[#0593C6] hover:text-[#0593C6] transition-all shadow-sm"
-					>
-						<User class="w-4 h-4 text-[#0593C6]" />
-						<span>Tentang Penulis</span>
-					</a>
+						<!-- Widget Header -->
+						<div class="flex items-center justify-between pb-4 border-b border-white/15 mb-5">
+							<div class="flex items-center gap-2 text-xs font-semibold text-white/90">
+								<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+								<span>Dispatch & Radar Terkini</span>
+							</div>
+							<span
+								class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#D83995] text-white shadow-sm shadow-[#D83995]/40"
+							>
+								911 LIVE
+							</span>
+						</div>
+
+						<!-- Item 1 (Like 'Mondays' in Pelmatech) -->
+						<a
+							href="/artikel"
+							class="block p-4 rounded-2xl bg-white/10 border border-white/15 mb-3.5 hover:bg-white/15 transition-all group cursor-pointer"
+						>
+							<div class="flex items-center justify-between text-xs text-sky-100/80 mb-1.5">
+								<span class="font-bold text-white">Opini Makroekonomi</span>
+								<span class="px-2 py-0.5 rounded-full bg-white/15 text-[10px] font-semibold"
+									>Dunia</span
+								>
+							</div>
+							<div class="text-sm font-bold text-white group-hover:text-pink-200 transition-colors">
+								Arah Dunia & Posisi Keuangan Pribadi
+							</div>
+							<div class="flex items-center justify-between text-xs text-sky-100/70 mt-3 pt-2 border-t border-white/10">
+								<span>7 min baca</span>
+								<span class="font-medium text-white group-hover:translate-x-0.5 transition-transform"
+									>Buka Tulisan →</span
+								>
+							</div>
+							<!-- Subtle Segmented Ticks (like image reference) -->
+							<div class="flex items-center gap-1 mt-2.5 opacity-60">
+								<div class="h-1 flex-1 bg-white/40 rounded-full"></div>
+								<div class="h-1 flex-1 bg-white/40 rounded-full"></div>
+								<div class="h-1 flex-1 bg-[#D83995] rounded-full"></div>
+								<div class="h-1 flex-1 bg-white/20 rounded-full"></div>
+							</div>
+						</a>
+
+						<!-- Item 2 (Like 'Thursdays' in Pelmatech) -->
+						<a
+							href="/artikel"
+							class="block p-4 rounded-2xl bg-white/10 border border-white/15 hover:bg-white/15 transition-all group cursor-pointer"
+						>
+							<div class="flex items-center justify-between text-xs text-sky-100/80 mb-1.5">
+								<span class="font-bold text-white">Mindset & Psikologi</span>
+								<span class="px-2 py-0.5 rounded-full bg-white/15 text-[10px] font-semibold"
+									>Otonomi</span
+								>
+							</div>
+							<div class="text-sm font-bold text-white group-hover:text-pink-200 transition-colors">
+								Psikologi Uang: Kebebasan Waktu Sebagai Dividen
+							</div>
+							<div class="flex items-center justify-between text-xs text-sky-100/70 mt-3 pt-2 border-t border-white/10">
+								<span>5 min baca</span>
+								<span class="font-medium text-white group-hover:translate-x-0.5 transition-transform"
+									>Buka Tulisan →</span
+								>
+							</div>
+							<!-- Subtle Segmented Ticks -->
+							<div class="flex items-center gap-1 mt-2.5 opacity-60">
+								<div class="h-1 flex-1 bg-[#D83995] rounded-full"></div>
+								<div class="h-1 flex-1 bg-white/40 rounded-full"></div>
+								<div class="h-1 flex-1 bg-white/40 rounded-full"></div>
+								<div class="h-1 flex-1 bg-white/20 rounded-full"></div>
+							</div>
+						</a>
+					</div>
 				</div>
 			</div>
 
-			<!-- Three Core Pillars Bar -->
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mt-14 pt-10 border-t border-slate-200/60 dark:border-slate-800">
-				<div class="flex items-start gap-4 p-4 rounded-xl bg-white dark:bg-[#0d1e30] border border-slate-100 dark:border-slate-800 shadow-xs">
-					<div class="w-10 h-10 rounded-lg bg-[#0593C6]/10 text-[#0593C6] flex items-center justify-center shrink-0">
-						<TrendingUp class="w-5 h-5" />
+			<!-- Core Pillars Row (Like Bottom Feature Strip in Pelmatech) -->
+			<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 pt-8 border-t border-white/20">
+				<div class="p-4 rounded-2xl glass-pill hover:bg-white/20 transition-all">
+					<div
+						class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white mb-2.5"
+					>
+						<TrendingUp class="w-4 h-4" />
 					</div>
-					<div>
-						<h3 class="font-bold text-sm text-slate-900 dark:text-white">Arus Kas & Nilai Riil</h3>
-						<p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-							Mengabaikan euforia instan dan fokus pada aset yang menghasilkan arus kas produktif jangka panjang.
-						</p>
-					</div>
+					<h3 class="font-bold text-sm text-white">Arus Kas Riil</h3>
+					<p class="text-xs text-sky-50/80 mt-1 leading-relaxed">
+						Fokus pada aset produktif jangka panjang di atas euforia spekulasi semu.
+					</p>
 				</div>
 
-				<div class="flex items-start gap-4 p-4 rounded-xl bg-white dark:bg-[#0d1e30] border border-slate-100 dark:border-slate-800 shadow-xs">
-					<div class="w-10 h-10 rounded-lg bg-[#D83995]/10 text-[#D83995] flex items-center justify-center shrink-0">
-						<ShieldCheck class="w-5 h-5" />
+				<div class="p-4 rounded-2xl glass-pill hover:bg-white/20 transition-all">
+					<div
+						class="w-8 h-8 rounded-xl bg-[#D83995]/50 flex items-center justify-center text-white mb-2.5"
+					>
+						<ShieldCheck class="w-4 h-4" />
 					</div>
-					<div>
-						<h3 class="font-bold text-sm text-slate-900 dark:text-white">Seni Bertahan Hidup</h3>
-						<p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-							Menjaga modal tetap utuh di saat badai, karena compounding butuh kelangsungan hidup tanpa interupsi.
-						</p>
-					</div>
+					<h3 class="font-bold text-sm text-white">Seni Bertahan</h3>
+					<p class="text-xs text-sky-50/80 mt-1 leading-relaxed">
+						Compounding bekerja maksimal saat kita mampu bertahan melewati turbulensi badai.
+					</p>
 				</div>
 
-				<div class="flex items-start gap-4 p-4 rounded-xl bg-white dark:bg-[#0d1e30] border border-slate-100 dark:border-slate-800 shadow-xs">
-					<div class="w-10 h-10 rounded-lg bg-[#f29185]/20 text-[#d96c5e] flex items-center justify-center shrink-0">
-						<Compass class="w-5 h-5" />
+				<div class="p-4 rounded-2xl glass-pill hover:bg-white/20 transition-all">
+					<div
+						class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white mb-2.5"
+					>
+						<Compass class="w-4 h-4" />
 					</div>
-					<div>
-						<h3 class="font-bold text-sm text-slate-900 dark:text-white">Otonomi di Atas Ego</h3>
-						<p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-							Uang bukan untuk pamer kemewahan semu, melainkan alat untuk bebas menentukan ritme hidup sendiri.
-						</p>
+					<h3 class="font-bold text-sm text-white">Otonomi di Atas Ego</h3>
+					<p class="text-xs text-sky-50/80 mt-1 leading-relaxed">
+						Uang sebagai instrumen kemerdekaan memilih ritme hidup, bukan sekadar validasi.
+					</p>
+				</div>
+
+				<div class="p-4 rounded-2xl glass-pill hover:bg-white/20 transition-all">
+					<div
+						class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white mb-2.5"
+					>
+						<Flame class="w-4 h-4" />
 					</div>
+					<h3 class="font-bold text-sm text-white">Pikiran Mandiri</h3>
+					<p class="text-xs text-sky-50/80 mt-1 leading-relaxed">
+						Menganalisis dunia dengan kepala dingin tanpa terdistorsi kerumunan bising.
+					</p>
 				</div>
 			</div>
 		</div>
 	</section>
 
-	<!-- Featured Post Section -->
+	<!-- FEATURED POST SECTION (Frosted Glass Panel with Hot Pink Ribbon) -->
 	{#if featuredPost}
 		<section class="max-w-6xl mx-auto px-4 sm:px-6">
 			<div class="flex items-center justify-between mb-6">
 				<div class="flex items-center gap-2">
-					<Sparkles class="w-5 h-5 text-[#D83995]" />
-					<h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Tulisan Sorotan</h2>
+					<Sparkles class="w-5 h-5 text-white" />
+					<h2 class="text-xl sm:text-2xl font-black text-white tracking-tight drop-shadow-sm">
+						Tulisan Sorotan
+					</h2>
 				</div>
-				<span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Paling Direkomendasikan</span>
+				<span
+					class="text-xs font-bold text-white px-3 py-1 rounded-full bg-[#D83995] shadow-sm shadow-[#D83995]/40 uppercase tracking-wider"
+				>
+					Rekomendasi Utama
+				</span>
 			</div>
 
 			<a
 				href="/artikel/{featuredPost.slug}"
-				class="block group relative p-6 sm:p-10 rounded-2xl bg-gradient-to-br from-white to-sky-50/40 dark:from-[#0d1e30] dark:to-[#091624] border border-slate-200/90 dark:border-slate-800 hover:border-[#0593C6]/60 dark:hover:border-[#0593C6]/60 transition-all duration-300 shadow-sm hover:shadow-lg overflow-hidden"
+				class="block group relative p-7 sm:p-10 rounded-3xl glass-panel hover:bg-white/18 hover:border-white/40 transition-all duration-300 shadow-2xl overflow-hidden"
 			>
-				<div class="absolute top-0 left-0 w-2 h-full bg-[#D83995]"></div>
-				
+				<!-- Hot Pink Specular Ribbon on Top-Left -->
+				<div class="absolute top-0 left-0 w-2.5 h-full bg-[#D83995]"></div>
+
 				<div class="flex flex-wrap items-center gap-3 mb-4">
-					<span class="px-3 py-1 rounded-full text-xs font-semibold bg-[#0593C6]/10 text-[#0593C6] border border-[#0593C6]/20">
+					<span
+						class="px-3.5 py-1 rounded-full text-xs font-bold bg-white text-[#0593C6] shadow-sm"
+					>
 						{featuredPost.metadata.category}
 					</span>
-					<div class="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+					<div class="flex items-center gap-1.5 text-xs text-sky-100/90 font-medium">
 						<Calendar class="w-3.5 h-3.5" />
 						<span>{featuredPost.metadata.date}</span>
 					</div>
-					<div class="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
-						<Clock class="w-3.5 h-3.5 text-[#D83995]" />
+					<div class="flex items-center gap-1.5 text-xs text-pink-200 font-medium">
+						<Clock class="w-3.5 h-3.5" />
 						<span>{featuredPost.metadata.readTime}</span>
 					</div>
 				</div>
 
-				<h3 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white group-hover:text-[#0593C6] transition-colors leading-tight mb-4">
+				<h3
+					class="text-2xl sm:text-3xl md:text-4xl font-black text-white group-hover:text-pink-200 transition-colors leading-tight mb-4 drop-shadow-sm"
+				>
 					{featuredPost.metadata.title}
 				</h3>
 
-				<p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-normal mb-6 max-w-3xl">
+				<p
+					class="text-base sm:text-lg text-sky-50/90 leading-relaxed font-normal mb-6 max-w-3xl drop-shadow-xs"
+				>
 					{featuredPost.metadata.description}
 				</p>
 
-				<div class="flex items-center gap-2 text-sm font-semibold text-[#0593C6] group-hover:text-[#D83995] transition-colors">
+				<div
+					class="inline-flex items-center gap-2 text-sm font-bold text-white group-hover:text-pink-200 transition-colors"
+				>
 					<span>Baca selengkapnya</span>
 					<ArrowRight class="w-4 h-4 transition-transform group-hover:translate-x-1" />
 				</div>
@@ -143,14 +282,19 @@
 		</section>
 	{/if}
 
-	<!-- Recent Articles Section -->
+	<!-- RECENT ARTICLES SECTION (Frosted Glass Cards) -->
 	<section class="max-w-6xl mx-auto px-4 sm:px-6">
-		<div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-200 dark:border-slate-800">
+		<div class="flex items-center justify-between mb-8 pb-4 border-b border-white/20">
 			<div class="flex items-center gap-2">
-				<BookOpen class="w-5 h-5 text-[#0593C6]" />
-				<h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Koleksi Tulisan Lainnya</h2>
+				<BookOpen class="w-5 h-5 text-white" />
+				<h2 class="text-xl sm:text-2xl font-black text-white tracking-tight drop-shadow-sm">
+					Koleksi Tulisan Lainnya
+				</h2>
 			</div>
-			<a href="/artikel" class="text-xs sm:text-sm font-semibold text-[#0593C6] hover:text-[#D83995] transition flex items-center gap-1">
+			<a
+				href="/artikel"
+				class="text-xs sm:text-sm font-bold text-white hover:text-pink-200 transition flex items-center gap-1"
+			>
 				<span>Lihat Semua ({posts.length})</span>
 				<ArrowRight class="w-3.5 h-3.5" />
 			</a>
@@ -160,31 +304,39 @@
 			{#each recentPosts as post}
 				<a
 					href="/artikel/{post.slug}"
-					class="group p-6 sm:p-7 rounded-2xl bg-white dark:bg-[#0d1e30] border border-slate-200 dark:border-slate-800 hover:border-[#0593C6]/50 dark:hover:border-[#0593C6]/50 transition-all duration-200 shadow-xs hover:shadow-md flex flex-col justify-between"
+					class="group p-6 sm:p-8 rounded-3xl glass-panel hover:bg-white/18 hover:border-white/40 transition-all duration-300 shadow-xl flex flex-col justify-between"
 				>
 					<div>
 						<div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-							<span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 group-hover:bg-[#0593C6]/10 group-hover:text-[#0593C6] transition-colors">
+							<span
+								class="px-3 py-1 rounded-full text-xs font-semibold glass-pill text-white group-hover:bg-[#D83995] transition-colors"
+							>
 								{post.metadata.category}
 							</span>
-							<div class="flex items-center gap-1.5 text-xs text-slate-400">
+							<div class="flex items-center gap-1.5 text-xs text-sky-100/80">
 								<Clock class="w-3.5 h-3.5" />
 								<span>{post.metadata.readTime}</span>
 							</div>
 						</div>
 
-						<h3 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-[#0593C6] transition-colors leading-snug mb-3">
+						<h3
+							class="text-xl sm:text-2xl font-black text-white group-hover:text-pink-200 transition-colors leading-snug mb-3 drop-shadow-sm"
+						>
 							{post.metadata.title}
 						</h3>
 
-						<p class="text-sm text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed mb-4">
+						<p class="text-sm text-sky-50/85 line-clamp-3 leading-relaxed mb-4 font-normal">
 							{post.metadata.description}
 						</p>
 					</div>
 
-					<div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+					<div
+						class="pt-4 border-t border-white/15 flex items-center justify-between text-xs text-sky-100/75"
+					>
 						<span>{post.metadata.date}</span>
-						<span class="font-semibold text-[#0593C6] group-hover:text-[#D83995] transition flex items-center gap-1">
+						<span
+							class="font-bold text-white group-hover:text-pink-200 transition flex items-center gap-1"
+						>
 							Baca tulisan →
 						</span>
 					</div>
@@ -193,30 +345,41 @@
 		</div>
 	</section>
 
-	<!-- Callout for Reflection / Discussion -->
+	<!-- DISCUSSION / PHILOSOPHY CALLOUT CARD -->
 	<section class="max-w-6xl mx-auto px-4 sm:px-6">
-		<div class="p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-[#081726] text-white relative overflow-hidden shadow-xl border border-slate-800">
-			<div class="absolute -right-10 -bottom-10 w-72 h-72 rounded-full bg-[#0593C6]/20 blur-3xl"></div>
-			<div class="absolute -left-10 -top-10 w-72 h-72 rounded-full bg-[#D83995]/20 blur-3xl"></div>
+		<div
+			class="p-8 sm:p-12 rounded-3xl glass-panel relative overflow-hidden shadow-2xl border border-white/25 text-white"
+		>
+			<!-- Radiant Hot Pink & Sky Blue Aura Dispersion in Background -->
+			<div
+				class="absolute -right-10 -bottom-10 w-80 h-80 rounded-full bg-[#D83995]/40 blur-3xl pointer-events-none"
+			></div>
+			<div
+				class="absolute -left-10 -top-10 w-80 h-80 rounded-full bg-[#0593C6]/40 blur-3xl pointer-events-none"
+			></div>
 
 			<div class="relative z-10 max-w-2xl">
-				<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-[#f29185] text-xs font-semibold mb-4">
+				<div
+					class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#D83995] text-white text-xs font-bold mb-4 shadow-sm shadow-[#D83995]/40"
+				>
 					Refleksi & Diskusi
 				</div>
-				<h3 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-4">
+				<h3 class="text-2xl sm:text-4xl font-black tracking-tight mb-4 drop-shadow-sm">
 					Punya sudut pandang atau pemikiran berbeda?
 				</h3>
-				<p class="text-sm sm:text-base text-slate-300 leading-relaxed mb-6 font-normal">
-					Dunia finansial dan dinamika hidup selalu menarik untuk dibedah secara jujur. Pelajari lebih lanjut mengenai prinsip dan filosofi yang saya pegang.
+				<p class="text-sm sm:text-base text-sky-50/90 leading-relaxed mb-7 font-normal">
+					Dunia finansial dan dinamika hidup selalu menarik untuk dibedah secara jujur. Pelajari
+					lebih lanjut mengenai prinsip dan filosofi yang saya pegang.
 				</p>
 				<a
 					href="/tentang"
-					class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#0593C6] to-[#0477a1] text-white font-bold text-sm shadow-md hover:opacity-95 transition"
+					class="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-[#0593C6] font-bold text-sm shadow-xl hover:bg-white/95 hover:scale-[1.02] active:scale-95 transition cursor-pointer"
 				>
-					<User class="w-4 h-4" />
+					<User class="w-4 h-4 text-[#0593C6]" />
 					<span>Tentang Penulis & Filosofi</span>
 				</a>
 			</div>
 		</div>
 	</section>
 </div>
+

@@ -224,12 +224,12 @@ Bagikan refleksi penutup Anda di sini.`
 
 {#if !data.isAuthenticated}
 	<!-- LOGIN SCREEN -->
-	<div class="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 bg-[#FCFFFF] dark:bg-[#07121e] transition-colors">
+	<div class="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 text-white">
 		<div class="w-full max-w-md">
-			<!-- Login Card -->
-			<div class="bg-white dark:bg-[#0d1e30] rounded-3xl p-8 sm:p-10 border border-slate-200/90 dark:border-slate-800 shadow-xl shadow-slate-200/40 dark:shadow-none relative overflow-hidden transition-colors">
+			<!-- Login Card (Liquid Glass) -->
+			<div class="glass-panel rounded-3xl p-8 sm:p-10 shadow-2xl relative overflow-hidden transition-colors">
 				<!-- Accent top gradient line -->
-				<div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#0593C6] via-[#D83995] to-[#f29185]"></div>
+				<div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-white via-[#D83995] to-[#f29185]"></div>
 
 				<!-- Logo / Monogram -->
 				<div class="flex justify-center mb-8">
