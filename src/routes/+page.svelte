@@ -60,7 +60,7 @@
 				<div class="flex flex-wrap items-center gap-4">
 					<a
 						href="/artikel"
-						class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-[#0593C6] text-white hover:bg-[#047ea8] dark:bg-white dark:text-[#0593C6] font-bold text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-[#0593C6]/25 dark:shadow-black/15 group cursor-pointer"
+						class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-[#0593C6] text-white hover:bg-[#047ea8] hover:text-white dark:bg-white dark:text-[#0593C6] dark:hover:bg-sky-50 dark:hover:text-[#0593C6] font-bold text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-[#0593C6]/25 dark:shadow-black/15 group cursor-pointer"
 					>
 						<span>Jelajahi Semua Tulisan</span>
 						<ArrowRight class="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -208,12 +208,14 @@
 		<div
 			class="p-8 sm:p-12 rounded-3xl glass-panel relative overflow-hidden shadow-2xl border border-sky-200/60 dark:border-white/25 text-[#061a2e] dark:text-white"
 		>
-			<!-- Radiant Hot Pink & Sky Blue Aura Dispersion in Background -->
+			<!-- Radiant Hot Pink & Sky Blue Smooth Radial Aura (Zero GPU WebKit glitching) -->
 			<div
-				class="absolute -right-10 -bottom-10 w-80 h-80 rounded-full bg-[#D83995]/20 dark:bg-[#D83995]/40 blur-3xl pointer-events-none"
+				class="absolute -right-16 -bottom-16 w-96 h-96 rounded-full pointer-events-none"
+				style="background: radial-gradient(circle, rgba(216,57,149,0.25) 0%, transparent 70%);"
 			></div>
 			<div
-				class="absolute -left-10 -top-10 w-80 h-80 rounded-full bg-[#0593C6]/20 dark:bg-[#0593C6]/40 blur-3xl pointer-events-none"
+				class="absolute -left-16 -top-16 w-96 h-96 rounded-full pointer-events-none"
+				style="background: radial-gradient(circle, rgba(5,147,198,0.25) 0%, transparent 70%);"
 			></div>
 
 			<div class="relative z-10 max-w-2xl">
@@ -231,7 +233,7 @@
 				</p>
 				<a
 					href="/tentang"
-					class="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#0593C6] text-white hover:bg-[#047ea8] dark:bg-white dark:text-[#0593C6] font-bold text-sm shadow-xl shadow-[#0593C6]/25 dark:shadow-black/15 hover:scale-[1.02] active:scale-95 transition cursor-pointer"
+					class="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#0593C6] text-white hover:bg-[#047ea8] hover:text-white dark:bg-white dark:text-[#0593C6] dark:hover:bg-sky-50 dark:hover:text-[#0593C6] font-bold text-sm shadow-xl shadow-[#0593C6]/25 dark:shadow-black/15 hover:scale-[1.02] active:scale-95 transition cursor-pointer"
 				>
 					<User class="w-4 h-4" />
 					<span>Tentang Penulis & Filosofi</span>

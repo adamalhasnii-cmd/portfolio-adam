@@ -16,9 +16,10 @@
 		<div
 			class="glass-panel rounded-3xl p-8 sm:p-12 mb-10 shadow-2xl relative overflow-hidden flex flex-col sm:flex-row items-center sm:items-start gap-8 border border-sky-200/60 dark:border-white/20"
 		>
-			<!-- Ambient glow behind avatar -->
+			<!-- Ambient glow behind avatar (Smooth radial gradient, zero GPU artifact) -->
 			<div
-				class="absolute -top-10 -left-10 w-48 h-48 rounded-full bg-[#D83995]/20 dark:bg-[#D83995]/30 blur-2xl pointer-events-none"
+				class="absolute -top-10 -left-10 w-56 h-56 rounded-full pointer-events-none"
+				style="background: radial-gradient(circle, rgba(216,57,149,0.25) 0%, transparent 70%);"
 			></div>
 
 			<!-- Monogram Avatar -->
@@ -161,7 +162,7 @@
 			<div>
 				<a
 					href="/artikel"
-					class="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#0593C6] text-white hover:bg-[#047ea8] dark:bg-white dark:text-[#0593C6] text-sm font-bold shadow-xl shadow-[#0593C6]/25 dark:shadow-black/10 hover:scale-[1.02] active:scale-95 transition cursor-pointer"
+					class="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#0593C6] text-white hover:bg-[#047ea8] hover:text-white dark:bg-white dark:text-[#0593C6] dark:hover:bg-sky-50 dark:hover:text-[#0593C6] text-sm font-bold shadow-xl shadow-[#0593C6]/25 dark:shadow-black/10 hover:scale-[1.02] active:scale-95 transition cursor-pointer"
 				>
 					<span>Mulai Membaca</span>
 					<ArrowRight class="w-4 h-4" />
