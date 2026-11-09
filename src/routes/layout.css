@@ -1,0 +1,24 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@theme {
+  --color-brand-sky: #0593c6;
+  --color-brand-white: #fcffff;
+  --color-brand-pink: #d83995;
+  --color-brand-coral: #f29185;
+  --color-brand-dark: #081726;
+  --color-brand-slate: #1e293b;
+  --color-brand-gray: #f0f7fa;
+}
+
+body {
+  background-color: var(--color-brand-white);
+  color: var(--color-brand-dark);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: #d83995;
+  color: #fcffff;
+}
