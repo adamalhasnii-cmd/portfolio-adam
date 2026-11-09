@@ -31,41 +31,41 @@
 
 <div class="space-y-16 sm:space-y-24 pb-16">
 	<!-- HERO SECTION (Minimalist Sky Blue, White & Radiant Hot Pink Aura) -->
-	<section class="pt-8 sm:pt-14 pb-10 sm:pb-14 border-b border-white/15">
+	<section class="pt-8 sm:pt-14 pb-10 sm:pb-14 border-b border-sky-200/50 dark:border-white/15">
 		<div class="max-w-6xl mx-auto px-4 sm:px-6">
 			<div class="max-w-3xl">
 				<!-- Eyebrow Badge with Hot Pink Accent Dot -->
 				<div
-					class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full glass-pill text-white text-xs font-semibold tracking-wide uppercase mb-6 shadow-sm"
+					class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full glass-pill text-[#0593C6] dark:text-white text-xs font-bold tracking-wide uppercase mb-6 shadow-sm"
 				>
 					<span class="w-2 h-2 rounded-full bg-[#D83995] animate-ping"></span>
 					<span>Pemikiran & Esai Finansial</span>
 				</div>
 
-				<!-- Main Headline: Crisp Pure White -->
+				<!-- Main Headline: Crisp & Legible in Light & Dark Mode -->
 				<h1
-					class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-white leading-[1.12] mb-6 drop-shadow-[0_2px_20px_rgba(0,0,0,0.15)]"
+					class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-[#061a2e] dark:text-white leading-[1.12] mb-6 drop-shadow-xs"
 				>
 					Menavigasi Dunia yang Bising, <br />
 					<span
-						class="text-white drop-shadow-[0_2px_15px_rgba(216,57,149,0.5)] underline decoration-[#D83995] decoration-wavy decoration-2 underline-offset-8"
+						class="text-[#061a2e] dark:text-white underline decoration-[#D83995] decoration-wavy decoration-2 underline-offset-8"
 						>Membeli Otonomi Waktu</span
 					>.
 				</h1>
 
-				<!-- Subheading: Soft White -->
+				<!-- Subheading: High-Contrast Slate / Ice-White -->
 				<p
-					class="text-base sm:text-lg text-sky-50/90 leading-relaxed font-normal mb-8 max-w-2xl drop-shadow-xs"
+					class="text-base sm:text-lg text-[#2e4a68] dark:text-sky-50/90 leading-relaxed font-normal mb-8 max-w-2xl"
 				>
 					Kumpulan catatan kritis, strategi investasi berlandaskan nilai intrinsik, dan refleksi
 					tentang bagaimana seharusnya kita memposisikan diri di tengah turbulensi ekonomi global.
 				</p>
 
-				<!-- Action Buttons: Solid White Pill & Frosted Glass -->
+				<!-- Action Buttons: Solid Vibrant Pill & Frosted Glass -->
 				<div class="flex flex-wrap items-center gap-4">
 					<a
 						href="/artikel"
-						class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-white text-[#0593C6] font-bold text-sm hover:bg-white/95 hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/15 group cursor-pointer"
+						class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-[#0593C6] text-white hover:bg-[#047ea8] dark:bg-white dark:text-[#0593C6] font-bold text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-[#0593C6]/25 dark:shadow-black/15 group cursor-pointer"
 					>
 						<span>Jelajahi Semua Tulisan</span>
 						<ArrowRight class="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -73,60 +73,60 @@
 
 					<a
 						href="/tentang"
-						class="inline-flex items-center gap-2 px-5 py-3.5 rounded-full glass-pill hover:bg-white/25 text-white font-semibold text-sm transition-all"
+						class="inline-flex items-center gap-2 px-5 py-3.5 rounded-full glass-pill hover:bg-sky-500/10 dark:hover:bg-white/25 text-[#061a2e] dark:text-white font-semibold text-sm transition-all"
 					>
-						<User class="w-4 h-4 text-white" />
+						<User class="w-4 h-4 text-[#0593C6] dark:text-white" />
 						<span>Tentang 911 ↗</span>
 					</a>
 				</div>
 			</div>
 
 			<!-- Core Pillars Row (Bottom Feature Strip) -->
-			<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-14 pt-8 border-t border-white/20">
-				<div class="p-4 rounded-2xl glass-pill hover:bg-white/20 transition-all">
+			<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-14 pt-8 border-t border-sky-200/50 dark:border-white/20">
+				<div class="p-4 rounded-2xl glass-pill hover:bg-sky-500/10 dark:hover:bg-white/20 transition-all text-[#061a2e] dark:text-white">
 					<div
-						class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white mb-2.5"
+						class="w-8 h-8 rounded-xl bg-[#0593C6]/15 dark:bg-white/20 flex items-center justify-center text-[#0593C6] dark:text-white mb-2.5"
 					>
 						<TrendingUp class="w-4 h-4" />
 					</div>
-					<h3 class="font-bold text-sm text-white">Arus Kas Riil</h3>
-					<p class="text-xs text-sky-50/80 mt-1 leading-relaxed">
+					<h3 class="font-bold text-sm text-[#061a2e] dark:text-white">Arus Kas Riil</h3>
+					<p class="text-xs text-[#486584] dark:text-sky-50/80 mt-1 leading-relaxed">
 						Fokus pada aset produktif jangka panjang di atas euforia spekulasi semu.
 					</p>
 				</div>
 
-				<div class="p-4 rounded-2xl glass-pill hover:bg-white/20 transition-all">
+				<div class="p-4 rounded-2xl glass-pill hover:bg-sky-500/10 dark:hover:bg-white/20 transition-all text-[#061a2e] dark:text-white">
 					<div
-						class="w-8 h-8 rounded-xl bg-[#D83995]/50 flex items-center justify-center text-white mb-2.5"
+						class="w-8 h-8 rounded-xl bg-[#D83995]/15 dark:bg-[#D83995]/50 flex items-center justify-center text-[#D83995] dark:text-white mb-2.5"
 					>
 						<ShieldCheck class="w-4 h-4" />
 					</div>
-					<h3 class="font-bold text-sm text-white">Seni Bertahan</h3>
-					<p class="text-xs text-sky-50/80 mt-1 leading-relaxed">
+					<h3 class="font-bold text-sm text-[#061a2e] dark:text-white">Seni Bertahan</h3>
+					<p class="text-xs text-[#486584] dark:text-sky-50/80 mt-1 leading-relaxed">
 						Compounding bekerja maksimal saat kita mampu bertahan melewati turbulensi badai.
 					</p>
 				</div>
 
-				<div class="p-4 rounded-2xl glass-pill hover:bg-white/20 transition-all">
+				<div class="p-4 rounded-2xl glass-pill hover:bg-sky-500/10 dark:hover:bg-white/20 transition-all text-[#061a2e] dark:text-white">
 					<div
-						class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white mb-2.5"
+						class="w-8 h-8 rounded-xl bg-[#0593C6]/15 dark:bg-white/20 flex items-center justify-center text-[#0593C6] dark:text-white mb-2.5"
 					>
 						<Compass class="w-4 h-4" />
 					</div>
-					<h3 class="font-bold text-sm text-white">Otonomi di Atas Ego</h3>
-					<p class="text-xs text-sky-50/80 mt-1 leading-relaxed">
+					<h3 class="font-bold text-sm text-[#061a2e] dark:text-white">Otonomi di Atas Ego</h3>
+					<p class="text-xs text-[#486584] dark:text-sky-50/80 mt-1 leading-relaxed">
 						Uang sebagai instrumen kemerdekaan memilih ritme hidup, bukan sekadar validasi.
 					</p>
 				</div>
 
-				<div class="p-4 rounded-2xl glass-pill hover:bg-white/20 transition-all">
+				<div class="p-4 rounded-2xl glass-pill hover:bg-sky-500/10 dark:hover:bg-white/20 transition-all text-[#061a2e] dark:text-white">
 					<div
-						class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white mb-2.5"
+						class="w-8 h-8 rounded-xl bg-[#0593C6]/15 dark:bg-white/20 flex items-center justify-center text-[#0593C6] dark:text-white mb-2.5"
 					>
 						<Flame class="w-4 h-4" />
 					</div>
-					<h3 class="font-bold text-sm text-white">Pikiran Mandiri</h3>
-					<p class="text-xs text-sky-50/80 mt-1 leading-relaxed">
+					<h3 class="font-bold text-sm text-[#061a2e] dark:text-white">Pikiran Mandiri</h3>
+					<p class="text-xs text-[#486584] dark:text-sky-50/80 mt-1 leading-relaxed">
 						Menganalisis dunia dengan kepala dingin tanpa terdistorsi kerumunan bising.
 					</p>
 				</div>
@@ -139,8 +139,8 @@
 		<section class="max-w-6xl mx-auto px-4 sm:px-6">
 			<div class="flex items-center justify-between mb-6">
 				<div class="flex items-center gap-2">
-					<Sparkles class="w-5 h-5 text-white" />
-					<h2 class="text-xl sm:text-2xl font-black text-white tracking-tight drop-shadow-sm">
+					<Sparkles class="w-5 h-5 text-[#0593C6] dark:text-white" />
+					<h2 class="text-xl sm:text-2xl font-black text-[#061a2e] dark:text-white tracking-tight">
 						Tulisan Sorotan
 					</h2>
 				</div>
@@ -153,41 +153,41 @@
 
 			<a
 				href="/artikel/{featuredPost.slug}"
-				class="block group relative p-7 sm:p-10 rounded-3xl glass-panel hover:bg-white/18 hover:border-white/40 transition-all duration-300 shadow-2xl overflow-hidden"
+				class="block group relative p-7 sm:p-10 rounded-3xl glass-panel hover:border-[#0593C6]/40 dark:hover:border-white/40 transition-all duration-300 shadow-xl overflow-hidden text-[#061a2e] dark:text-white"
 			>
 				<!-- Hot Pink Specular Ribbon on Top-Left -->
 				<div class="absolute top-0 left-0 w-2.5 h-full bg-[#D83995]"></div>
 
 				<div class="flex flex-wrap items-center gap-3 mb-4">
 					<span
-						class="px-3.5 py-1 rounded-full text-xs font-bold bg-white text-[#0593C6] shadow-sm"
+						class="px-3.5 py-1 rounded-full text-xs font-bold bg-[#0593C6] text-white dark:bg-white dark:text-[#0593C6] shadow-sm"
 					>
 						{featuredPost.metadata.category}
 					</span>
-					<div class="flex items-center gap-1.5 text-xs text-sky-100/90 font-medium">
+					<div class="flex items-center gap-1.5 text-xs text-[#516f8e] dark:text-sky-100/90 font-medium">
 						<Calendar class="w-3.5 h-3.5" />
 						<span>{featuredPost.metadata.date}</span>
 					</div>
-					<div class="flex items-center gap-1.5 text-xs text-pink-200 font-medium">
+					<div class="flex items-center gap-1.5 text-xs text-[#D83995] dark:text-pink-200 font-semibold">
 						<Clock class="w-3.5 h-3.5" />
 						<span>{featuredPost.metadata.readTime}</span>
 					</div>
 				</div>
 
 				<h3
-					class="text-2xl sm:text-3xl md:text-4xl font-black text-white group-hover:text-pink-200 transition-colors leading-tight mb-4 drop-shadow-sm"
+					class="text-2xl sm:text-3xl md:text-4xl font-black text-[#061a2e] dark:text-white group-hover:text-[#0593C6] dark:group-hover:text-pink-200 transition-colors leading-tight mb-4"
 				>
 					{featuredPost.metadata.title}
 				</h3>
 
 				<p
-					class="text-base sm:text-lg text-sky-50/90 leading-relaxed font-normal mb-6 max-w-3xl drop-shadow-xs"
+					class="text-base sm:text-lg text-[#324f6e] dark:text-sky-50/90 leading-relaxed font-normal mb-6 max-w-3xl"
 				>
 					{featuredPost.metadata.description}
 				</p>
 
 				<div
-					class="inline-flex items-center gap-2 text-sm font-bold text-white group-hover:text-pink-200 transition-colors"
+					class="inline-flex items-center gap-2 text-sm font-bold text-[#0593C6] dark:text-white group-hover:text-[#D83995] dark:group-hover:text-pink-200 transition-colors"
 				>
 					<span>Baca selengkapnya</span>
 					<ArrowRight class="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -198,16 +198,16 @@
 
 	<!-- RECENT ARTICLES SECTION (Frosted Glass Cards) -->
 	<section class="max-w-6xl mx-auto px-4 sm:px-6">
-		<div class="flex items-center justify-between mb-8 pb-4 border-b border-white/20">
+		<div class="flex items-center justify-between mb-8 pb-4 border-b border-sky-200/50 dark:border-white/20">
 			<div class="flex items-center gap-2">
-				<BookOpen class="w-5 h-5 text-white" />
-				<h2 class="text-xl sm:text-2xl font-black text-white tracking-tight drop-shadow-sm">
+				<BookOpen class="w-5 h-5 text-[#0593C6] dark:text-white" />
+				<h2 class="text-xl sm:text-2xl font-black text-[#061a2e] dark:text-white tracking-tight">
 					Koleksi Tulisan Lainnya
 				</h2>
 			</div>
 			<a
 				href="/artikel"
-				class="text-xs sm:text-sm font-bold text-white hover:text-pink-200 transition flex items-center gap-1"
+				class="text-xs sm:text-sm font-bold text-[#0593C6] dark:text-white hover:text-[#D83995] dark:hover:text-pink-200 transition flex items-center gap-1"
 			>
 				<span>Lihat Semua ({posts.length})</span>
 				<ArrowRight class="w-3.5 h-3.5" />
@@ -218,38 +218,38 @@
 			{#each recentPosts as post}
 				<a
 					href="/artikel/{post.slug}"
-					class="group p-6 sm:p-8 rounded-3xl glass-panel hover:bg-white/18 hover:border-white/40 transition-all duration-300 shadow-xl flex flex-col justify-between"
+					class="group p-6 sm:p-8 rounded-3xl glass-panel hover:border-[#0593C6]/40 dark:hover:border-white/40 transition-all duration-300 shadow-lg flex flex-col justify-between text-[#061a2e] dark:text-white"
 				>
 					<div>
 						<div class="flex flex-wrap items-center justify-between gap-2 mb-3">
 							<span
-								class="px-3 py-1 rounded-full text-xs font-semibold glass-pill text-white group-hover:bg-[#D83995] transition-colors"
+								class="px-3 py-1 rounded-full text-xs font-semibold glass-pill text-[#0593C6] dark:text-white group-hover:bg-[#D83995] group-hover:text-white transition-colors"
 							>
 								{post.metadata.category}
 							</span>
-							<div class="flex items-center gap-1.5 text-xs text-sky-100/80">
-								<Clock class="w-3.5 h-3.5" />
+							<div class="flex items-center gap-1.5 text-xs text-[#516f8e] dark:text-sky-100/80">
+								<Clock class="w-3.5 h-3.5 text-[#D83995]" />
 								<span>{post.metadata.readTime}</span>
 							</div>
 						</div>
 
 						<h3
-							class="text-xl sm:text-2xl font-black text-white group-hover:text-pink-200 transition-colors leading-snug mb-3 drop-shadow-sm"
+							class="text-xl sm:text-2xl font-black text-[#061a2e] dark:text-white group-hover:text-[#0593C6] dark:group-hover:text-pink-200 transition-colors leading-snug mb-3"
 						>
 							{post.metadata.title}
 						</h3>
 
-						<p class="text-sm text-sky-50/85 line-clamp-3 leading-relaxed mb-4 font-normal">
+						<p class="text-sm text-[#33506f] dark:text-sky-50/85 line-clamp-3 leading-relaxed mb-4 font-normal">
 							{post.metadata.description}
 						</p>
 					</div>
 
 					<div
-						class="pt-4 border-t border-white/15 flex items-center justify-between text-xs text-sky-100/75"
+						class="pt-4 border-t border-sky-100 dark:border-white/15 flex items-center justify-between text-xs text-[#516f8e] dark:text-sky-100/75"
 					>
 						<span>{post.metadata.date}</span>
 						<span
-							class="font-bold text-white group-hover:text-pink-200 transition flex items-center gap-1"
+							class="font-bold text-[#0593C6] dark:text-white group-hover:text-[#D83995] dark:group-hover:text-pink-200 transition flex items-center gap-1"
 						>
 							Baca tulisan →
 						</span>
@@ -262,14 +262,14 @@
 	<!-- DISCUSSION / PHILOSOPHY CALLOUT CARD -->
 	<section class="max-w-6xl mx-auto px-4 sm:px-6">
 		<div
-			class="p-8 sm:p-12 rounded-3xl glass-panel relative overflow-hidden shadow-2xl border border-white/25 text-white"
+			class="p-8 sm:p-12 rounded-3xl glass-panel relative overflow-hidden shadow-2xl border border-sky-200/60 dark:border-white/25 text-[#061a2e] dark:text-white"
 		>
 			<!-- Radiant Hot Pink & Sky Blue Aura Dispersion in Background -->
 			<div
-				class="absolute -right-10 -bottom-10 w-80 h-80 rounded-full bg-[#D83995]/40 blur-3xl pointer-events-none"
+				class="absolute -right-10 -bottom-10 w-80 h-80 rounded-full bg-[#D83995]/20 dark:bg-[#D83995]/40 blur-3xl pointer-events-none"
 			></div>
 			<div
-				class="absolute -left-10 -top-10 w-80 h-80 rounded-full bg-[#0593C6]/40 blur-3xl pointer-events-none"
+				class="absolute -left-10 -top-10 w-80 h-80 rounded-full bg-[#0593C6]/20 dark:bg-[#0593C6]/40 blur-3xl pointer-events-none"
 			></div>
 
 			<div class="relative z-10 max-w-2xl">
@@ -278,18 +278,18 @@
 				>
 					Refleksi & Diskusi
 				</div>
-				<h3 class="text-2xl sm:text-4xl font-black tracking-tight mb-4 drop-shadow-sm">
+				<h3 class="text-2xl sm:text-4xl font-black tracking-tight mb-4 text-[#061a2e] dark:text-white">
 					Punya sudut pandang atau pemikiran berbeda?
 				</h3>
-				<p class="text-sm sm:text-base text-sky-50/90 leading-relaxed mb-7 font-normal">
+				<p class="text-sm sm:text-base text-[#324f6e] dark:text-sky-50/90 leading-relaxed mb-7 font-normal">
 					Dunia finansial dan dinamika hidup selalu menarik untuk dibedah secara jujur. Pelajari
 					lebih lanjut mengenai prinsip dan filosofi yang saya pegang.
 				</p>
 				<a
 					href="/tentang"
-					class="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-[#0593C6] font-bold text-sm shadow-xl hover:bg-white/95 hover:scale-[1.02] active:scale-95 transition cursor-pointer"
+					class="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#0593C6] text-white hover:bg-[#047ea8] dark:bg-white dark:text-[#0593C6] font-bold text-sm shadow-xl shadow-[#0593C6]/25 dark:shadow-black/15 hover:scale-[1.02] active:scale-95 transition cursor-pointer"
 				>
-					<User class="w-4 h-4 text-[#0593C6]" />
+					<User class="w-4 h-4" />
 					<span>Tentang Penulis & Filosofi</span>
 				</a>
 			</div>
