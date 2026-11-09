@@ -55,18 +55,20 @@
 		<!-- Search & Category Filters Bar -->
 		<div class="space-y-6 mb-10 pb-8 border-b border-sky-200/50 dark:border-white/20">
 			<!-- Search Bar -->
-			<div class="relative max-w-xl">
-				<Search class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-[#0593C6] dark:text-white/70" />
+			<div class="relative max-w-xl flex items-center">
+				<div class="absolute left-4.5 z-10 pointer-events-none flex items-center justify-center text-[#0593C6] dark:text-sky-300">
+					<Search class="w-5 h-5" />
+				</div>
 				<input
 					type="text"
 					bind:value={searchQuery}
 					placeholder="Cari judul artikel, topik, atau kata kunci..."
-					class="w-full pl-12 pr-4 py-3.5 rounded-full glass-panel text-[#061a2e] dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#0593C6] dark:focus:ring-white/50 border border-sky-200/60 dark:border-white/20 text-sm shadow-md transition"
+					class="w-full pl-12 pr-12 py-3.5 rounded-full glass-panel text-[#061a2e] dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#0593C6] dark:focus:ring-white/50 border border-sky-200/60 dark:border-white/20 text-sm shadow-md transition"
 				/>
 				{#if searchQuery}
 					<button
 						onclick={() => (searchQuery = '')}
-						class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold px-2.5 py-1 bg-sky-500/10 dark:bg-white/20 hover:bg-sky-500/20 dark:hover:bg-white/30 rounded-full text-[#061a2e] dark:text-white transition cursor-pointer"
+						class="absolute right-3.5 z-10 text-xs font-semibold px-2.5 py-1 bg-sky-500/10 dark:bg-white/20 hover:bg-sky-500/20 dark:hover:bg-white/30 rounded-full text-[#061a2e] dark:text-white transition cursor-pointer"
 					>
 						Hapus
 					</button>
