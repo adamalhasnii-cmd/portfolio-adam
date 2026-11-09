@@ -111,9 +111,6 @@
 					<p class="text-sm text-slate-600 leading-relaxed max-w-md">
 						Ruang eksplorasi dan esai pribadi untuk membedah dinamika dunia, psikologi mengelola kekayaan, dan strategi membangun otonomi waktu jangka panjang.
 					</p>
-					<div class="text-xs text-slate-400 pt-2">
-						Dibuat dengan <span class="text-[#0593C6] font-semibold">SvelteKit</span> & <span class="text-[#D83995] font-semibold">Markdown (MDsveX)</span>.
-					</div>
 				</div>
 
 				<!-- Nav Links Col -->
