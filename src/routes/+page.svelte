@@ -10,7 +10,7 @@
 </script>
 
 <svelte:head>
-	<title>Adam Alhasni — Pemikiran & Finansial</title>
+	<title>911 — Pemikiran & Finansial</title>
 	<meta name="description" content="Kumpulan pemikiran, catatan investasi, dan sudut pandang tentang bagaimana menata posisi keuangan dan kebebasan waktu di tengah dunia yang bising." />
 </svelte:head>
 

@@ -27,9 +27,7 @@
 		Table,
 		Lock,
 		User,
-		LogOut,
-		ArrowLeft,
-		Shield
+		LogOut
 	} from '@lucide/svelte';
 
 	let { data, form }: PageProps & { form: ActionData } = $props();
@@ -221,48 +219,24 @@ Bagikan refleksi penutup Anda di sini.`
 </script>
 
 <svelte:head>
-	<title>{data.isAuthenticated ? 'Studio Penulis (Admin)' : 'Login Admin'} — Adam Alhasni</title>
+	<title>{data.isAuthenticated ? 'Studio Penulis (Admin)' : 'Login'} — 911</title>
 </svelte:head>
 
 {#if !data.isAuthenticated}
 	<!-- LOGIN SCREEN -->
 	<div class="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 bg-[#FCFFFF]">
 		<div class="w-full max-w-md">
-			<!-- Back to home -->
-			<div class="mb-6 text-center">
-				<a
-					href="/"
-					class="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-[#0593C6] transition"
-				>
-					<ArrowLeft class="w-4 h-4" />
-					Kembali ke Beranda Publik
-				</a>
-			</div>
-
 			<!-- Login Card -->
 			<div class="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/90 shadow-xl shadow-slate-200/40 relative overflow-hidden">
 				<!-- Accent top gradient line -->
 				<div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#0593C6] via-[#D83995] to-[#f29185]"></div>
 
 				<!-- Logo / Monogram -->
-				<div class="flex justify-center mb-6">
+				<div class="flex justify-center mb-8">
 					<div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#0593C6] to-[#0477a1] text-white flex items-center justify-center font-black text-2xl shadow-lg shadow-[#0593C6]/25">
 						<span>A</span>
 						<span class="w-2 h-2 rounded-full bg-[#D83995] ml-0.5 -mt-3"></span>
 					</div>
-				</div>
-
-				<div class="text-center mb-8">
-					<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D83995]/10 text-[#D83995] text-xs font-bold mb-2">
-						<Lock class="w-3.5 h-3.5" />
-						Akses Khusus Admin
-					</div>
-					<h1 class="text-2xl font-black text-slate-900 tracking-tight">
-						Masuk ke Studio Penulis
-					</h1>
-					<p class="text-xs text-slate-500 mt-1.5 leading-relaxed">
-						Hanya Anda yang berhak mengakses dan menulis artikel baru.
-					</p>
 				</div>
 
 				<!-- Error alert if login fails -->
@@ -332,8 +306,7 @@ Bagikan refleksi penutup Anda di sini.`
 						type="submit"
 						class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-[#0593C6] to-[#0477a1] text-white font-bold text-sm hover:opacity-95 transition shadow-lg shadow-[#0593C6]/25 cursor-pointer flex items-center justify-center gap-2 mt-2"
 					>
-						<span>Buka Studio Penulis</span>
-						<Shield class="w-4 h-4" />
+						<span>Login</span>
 					</button>
 				</form>
 			</div>

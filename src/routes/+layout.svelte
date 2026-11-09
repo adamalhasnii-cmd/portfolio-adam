@@ -10,7 +10,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
-	<title>Adam Alhasni — Pemikiran & Finansial</title>
+	<title>911</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 </svelte:head>
 
@@ -24,14 +24,9 @@
 					<span>A</span>
 					<span class="w-1.5 h-1.5 rounded-full bg-[#D83995] ml-0.5 -mt-2"></span>
 				</div>
-				<div class="flex flex-col">
-					<span class="font-extrabold text-base tracking-tight text-slate-900 group-hover:text-[#0593C6] transition-colors">
-						ADAM ALHASNI
-					</span>
-					<span class="text-[11px] font-medium text-slate-500 tracking-wider uppercase">
-						Pemikiran & Keuangan
-					</span>
-				</div>
+				<span class="font-black text-2xl tracking-tight text-slate-900 group-hover:text-[#0593C6] transition-colors">
+					911
+				</span>
 			</a>
 
 			<!-- Desktop Navigation Links -->
@@ -110,7 +105,7 @@
 				<!-- Brand Col -->
 				<div class="md:col-span-2 space-y-3">
 					<div class="flex items-center gap-2">
-						<span class="font-extrabold text-base tracking-tight text-slate-900">ADAM ALHASNI</span>
+						<span class="font-extrabold text-xl tracking-tight text-slate-900">911</span>
 						<span class="w-1.5 h-1.5 rounded-full bg-[#D83995]"></span>
 					</div>
 					<p class="text-sm text-slate-600 leading-relaxed max-w-md">
@@ -142,7 +137,7 @@
 
 			<div class="pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
 				<div>
-					© {new Date().getFullYear()} Adam Alhasni. Hak cipta dilindungi.
+					© {new Date().getFullYear()} 911. Hak cipta dilindungi.
 				</div>
 				<div>
 					<button onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} class="hover:text-[#0593C6] transition">
