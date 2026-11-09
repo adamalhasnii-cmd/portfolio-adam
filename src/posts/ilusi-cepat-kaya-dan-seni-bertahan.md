@@ -50,3 +50,4 @@ Bagaimana seharusnya kita memposisikan diri di tengah ketidakpastian ekonomi saa
 Jangan iri dengan orang yang naik tangga berjalan berkecepatan tinggi jika tangganya mengarah ke tebing jurang. 
 
 Investasi yang baik sejatinya membosankan. Ia tidak memacu adrenalin layaknya kasino. Ia seperti melihat cat mengering atau rumput tumbuh. Jika Anda mencari hiburan, pergilah ke bioskop; jika Anda berinvestasi, fokuslah pada satu hal: **jadilah orang yang masih berdiri tegak ketika badai berikutnya mereda.**
+

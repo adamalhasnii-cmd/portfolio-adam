@@ -14,3 +14,4 @@ export interface Post {
 	slug: string;
 	metadata: PostMetadata;
 }
+

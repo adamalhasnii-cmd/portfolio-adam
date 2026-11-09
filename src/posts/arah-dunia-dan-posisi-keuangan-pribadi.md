@@ -45,3 +45,4 @@ Kebanyakan orang terlalu sibuk bereaksi terhadap notifikasi berita harian sehing
 ---
 
 *“Bukan spesies yang paling kuat atau yang paling cerdas yang akan bertahan, melainkan mereka yang paling adaptif terhadap perubahan.”*
+

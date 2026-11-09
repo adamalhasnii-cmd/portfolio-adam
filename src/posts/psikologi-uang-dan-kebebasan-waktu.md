@@ -54,3 +54,4 @@ Penyakit paling berbahaya dalam urusan finansial adalah tiang gawang yang selalu
 Dunia akan selalu bising dengan tren-tren baru: token kripto terbaru, saham gorengan yang katanya akan *to the moon*, atau cara-cara instan menjadi miliarder dalam semalam.
 
 Tugas kita bukanlah mengejar setiap kilauan emas palsu itu. Tugas kita adalah bertahan hidup cukup lama, menjaga modal, dan memastikan setiap rupiah yang kita alokasikan mendekatkan kita pada satu tujuan mulia: **menjadi tuan atas waktu kita sendiri.**
+
