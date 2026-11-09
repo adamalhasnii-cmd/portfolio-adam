@@ -286,18 +286,20 @@
 			<div
 				class="relative w-full max-w-xl h-14 sm:h-15 px-5 rounded-full bg-[#0a1524]/90 dark:bg-[#060e18]/95 backdrop-blur-3xl border border-white/20 dark:border-white/15 shadow-[0_15px_40px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.3)] flex items-center justify-between text-white"
 			>
-				<div class="flex items-center gap-3 flex-1 min-w-0 mr-3">
-					<!-- Illuminated Glowing Cursor Line on the left -->
-					<span
-						class="w-0.5 h-6 bg-white/95 rounded-full shadow-[0_0_10px_#FCFFFF,0_0_4px_#0593C6] animate-pulse shrink-0"
-					></span>
+				<div class="relative flex items-center flex-1 min-w-0 mr-3">
+					<!-- Single Glowing Illuminated Line (Placed right at the text position, no duplicate line) -->
+					{#if searchQuery === ''}
+						<span
+							class="w-0.5 h-5 bg-white/95 rounded-full shadow-[0_0_10px_#FCFFFF,0_0_4px_#0593C6] animate-pulse shrink-0 mr-1 pointer-events-none"
+						></span>
+					{/if}
 
 					<input
 						bind:this={searchInputEl}
 						bind:value={searchQuery}
 						type="text"
 						placeholder="Search or Ask..."
-						class="w-full bg-transparent text-white placeholder-slate-400 text-base sm:text-lg font-medium focus:outline-none tracking-tight"
+						class="w-full bg-transparent text-white placeholder-slate-400 text-base sm:text-lg font-medium focus:outline-none tracking-tight {searchQuery === '' ? 'caret-transparent' : 'caret-white'}"
 					/>
 				</div>
 
