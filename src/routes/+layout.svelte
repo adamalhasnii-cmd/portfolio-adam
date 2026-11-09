@@ -290,7 +290,7 @@
 					<!-- Single Glowing Illuminated Line (Placed right at the text position, no duplicate line) -->
 					{#if searchQuery === ''}
 						<span
-							class="w-0.5 h-5 bg-white/95 rounded-full shadow-[0_0_10px_#FCFFFF,0_0_4px_#0593C6] animate-pulse shrink-0 mr-1 pointer-events-none"
+							class="w-0.5 h-5 bg-white/95 rounded-full shadow-[0_0_10px_#FCFFFF,0_0_4px_#0593C6] shrink-0 mr-1 pointer-events-none"
 						></span>
 					{/if}
 

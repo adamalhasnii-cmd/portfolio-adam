@@ -32,7 +32,7 @@
 				<div
 					class="absolute -bottom-2 -right-2 px-3 py-1 rounded-full bg-[#D83995] text-xs font-bold text-white shadow-md flex items-center gap-1.5"
 				>
-					<span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+					<span class="w-2 h-2 rounded-full bg-white"></span>
 					Penulis
 				</div>
 			</div>

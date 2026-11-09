@@ -29,14 +29,6 @@
 	<section class="pt-8 sm:pt-14 pb-10 sm:pb-14 border-b border-sky-200/50 dark:border-white/15">
 		<div class="max-w-6xl mx-auto px-4 sm:px-6">
 			<div class="max-w-3xl">
-				<!-- Eyebrow Badge with Hot Pink Accent Dot -->
-				<div
-					class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full glass-pill text-[#0593C6] dark:text-white text-xs font-bold tracking-wide uppercase mb-6 shadow-sm"
-				>
-					<span class="w-2 h-2 rounded-full bg-[#D83995] animate-ping"></span>
-					<span>Pemikiran & Esai Finansial</span>
-				</div>
-
 				<!-- Main Headline: Crisp & Legible in Light & Dark Mode -->
 				<h1
 					class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-[#061a2e] dark:text-white leading-[1.12] mb-6 drop-shadow-xs"

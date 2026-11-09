@@ -325,7 +325,7 @@ Bagikan refleksi penutup Anda di sini.`
 							Studio Penulis (Aktif)
 						</span>
 						<span class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-300 glass-pill px-2.5 py-1 rounded-full border border-emerald-400/30">
-							<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse"></span>
+							<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400"></span>
 							Masuk sebagai adamin
 						</span>
 					</div>
