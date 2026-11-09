@@ -522,7 +522,7 @@
 
 			<div class="pt-8 border-t border-sky-200/50 dark:border-white/15 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#53708e] dark:text-sky-100/70">
 				<div>
-					© {new Date().getFullYear()} 911. Hak cipta dilindungi.
+					© {new Date().getFullYear()} Adam Alhasni. Hak cipta dilindungi.
 				</div>
 				<div>
 					<button onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} class="hover:text-[#0593C6] dark:hover:text-white text-[#334e6b] dark:text-white/80 transition cursor-pointer flex items-center gap-1">
