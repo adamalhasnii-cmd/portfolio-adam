@@ -287,11 +287,22 @@ Bagikan refleksi penutup Anda di sini.`
 
 	let editingSlug = $state<string | null>(null);
 	let isLoadingPost = $state(false);
+	let loadingPostSlug = $state<string | null>(null);
+	let titleInputEl = $state<HTMLInputElement | null>(null);
 
 	// Load existing post (Draft or Uploaded) into the editor
 	async function loadPostForEditing(postSlug: string) {
 		isLoadingPost = true;
+		loadingPostSlug = postSlug;
 		saveMessage = null;
+
+		// Immediately start scrolling up so the user gets instant visual feedback
+		if (typeof window !== 'undefined') {
+			const target = document.getElementById('editor-studio-top') || document.documentElement;
+			target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		}
+
 		try {
 			const res = await fetch(`/api/get-post?slug=${encodeURIComponent(postSlug)}`);
 			const resData = await res.json();
@@ -313,12 +324,17 @@ Bagikan refleksi penutup Anda di sini.`
 
 				saveMessage = {
 					type: 'info',
-					text: `Tulisan "${p.title}" berhasil dimuat ke editor! Anda dapat mengedit isi atau mengubah slug.`
+					text: `Tulisan "${p.title}" berhasil dimuat ke editor! Anda dapat langsung mengedit.`
 				};
 
-				// Smooth scroll to top editor
+				// Ensure smooth scroll to top and focus title field ready for editing
 				if (typeof window !== 'undefined') {
+					const target = document.getElementById('editor-studio-top') || document.documentElement;
+					target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 					window.scrollTo({ top: 0, behavior: 'smooth' });
+					setTimeout(() => {
+						titleInputEl?.focus();
+					}, 250);
 				}
 			} else {
 				saveMessage = {
@@ -333,6 +349,7 @@ Bagikan refleksi penutup Anda di sini.`
 			};
 		} finally {
 			isLoadingPost = false;
+			loadingPostSlug = null;
 		}
 	}
 
@@ -635,7 +652,7 @@ Bagikan refleksi penutup Anda di sini.`
 	</div>
 {:else}
 	<!-- AUTHENTICATED WRITING STUDIO (Liquid Glass Aesthetic) -->
-	<div class="py-6 sm:py-10 text-[#061a2e] dark:text-white transition-colors">
+	<div id="editor-studio-top" class="py-6 sm:py-10 text-[#061a2e] dark:text-white transition-colors">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6">
 			<!-- Top Bar with Logout -->
 			<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 mb-8 border-b border-sky-200/50 dark:border-white/20">
@@ -766,6 +783,7 @@ Bagikan refleksi penutup Anda di sini.`
 						</label>
 						<input
 							id="post-title"
+							bind:this={titleInputEl}
 							type="text"
 							bind:value={title}
 							oninput={onTitleInput}
@@ -1222,11 +1240,16 @@ Bagikan refleksi penutup Anda di sini.`
 											type="button"
 											onclick={() => loadPostForEditing(post.slug)}
 											disabled={isLoadingPost}
-											class="px-2.5 py-1 rounded-lg bg-[#0593C6] hover:bg-[#047ea8] text-white dark:bg-white dark:text-[#0593C6] dark:hover:bg-slate-100 font-bold text-xs transition cursor-pointer flex items-center gap-1 shadow-sm"
+											class="px-2.5 py-1 rounded-lg bg-[#0593C6] hover:bg-[#047ea8] text-white dark:bg-white dark:text-[#0593C6] dark:hover:bg-slate-100 font-bold text-xs transition cursor-pointer flex items-center gap-1 shadow-sm disabled:opacity-70"
 											title="Buka dan edit di form penulisan"
 										>
-											<Pencil class="w-3 h-3 text-current" />
-											<span class="text-current">Edit</span>
+											{#if loadingPostSlug === post.slug}
+												<span class="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
+												<span class="text-current">Memuat...</span>
+											{:else}
+												<Pencil class="w-3 h-3 text-current" />
+												<span class="text-current">Edit</span>
+											{/if}
 										</button>
 
 										<!-- Preview / Buka link -->
