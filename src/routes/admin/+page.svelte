@@ -762,16 +762,16 @@ Bagikan refleksi penutup Anda di sini.`
 				</button>
 			</div>
 
-			<!-- Main Two-Column Layout -->
+			<!-- Main Two-Column Layout with Independent Split-Pane Scrolling -->
 			<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-				<!-- LEFT COLUMN: Editor Form -->
-				<div class="space-y-5 glass-panel p-6 sm:p-7 rounded-3xl text-[#061a2e] dark:text-white border border-sky-200/60 dark:border-white/20 {activeTab === 'preview' ? 'hidden lg:block' : ''}">
-					<div class="flex items-center justify-between pb-3 border-b border-sky-200/50 dark:border-white/15">
+				<!-- LEFT COLUMN: Editor Form (Independent Scroll) -->
+				<div class="space-y-5 glass-panel p-6 sm:p-7 rounded-3xl text-[#061a2e] dark:text-white border border-sky-200/60 dark:border-white/20 lg:h-[calc(100vh-6.5rem)] lg:overflow-y-auto lg:sticky lg:top-20 overscroll-contain custom-scrollbar {activeTab === 'preview' ? 'hidden lg:block' : ''}">
+					<div class="flex items-center justify-between pb-3 border-b border-sky-200/50 dark:border-white/15 sticky top-0 bg-white/90 dark:bg-[#071626]/95 backdrop-blur-md z-10 -mx-6 -mt-6 sm:-mx-7 sm:-mt-7 p-6 sm:p-7 mb-2 rounded-t-3xl shadow-xs">
 						<h2 class="font-black text-base text-[#061a2e] dark:text-white flex items-center gap-2">
 							<FileText class="w-4 h-4 text-[#D83995]" />
 							Metadata & Tulisan
 						</h2>
-						<button type="button" onclick={handleDeleteDraft} class="text-xs text-[#516f8e] dark:text-white/60 hover:text-rose-500 dark:hover:text-rose-300 transition cursor-pointer">
+						<button type="button" onclick={handleDeleteDraft} class="text-xs text-[#516f8e] dark:text-white/60 hover:text-rose-500 dark:hover:text-rose-300 transition cursor-pointer font-semibold">
 							Kosongkan Form
 						</button>
 					</div>
@@ -932,9 +932,9 @@ Bagikan refleksi penutup Anda di sini.`
 					</div>
 				</div>
 
-				<!-- RIGHT COLUMN: Live Preview -->
-				<div class="glass-panel p-6 sm:p-8 rounded-3xl text-[#061a2e] dark:text-white sticky top-28 border border-sky-200/60 dark:border-white/20 {activeTab === 'editor' ? 'hidden lg:block' : ''}">
-					<div class="flex items-center justify-between pb-4 mb-6 border-b border-sky-200/50 dark:border-white/15">
+				<!-- RIGHT COLUMN: Live Preview (Independent Scroll) -->
+				<div class="glass-panel p-6 sm:p-8 rounded-3xl text-[#061a2e] dark:text-white lg:h-[calc(100vh-6.5rem)] lg:overflow-y-auto lg:sticky lg:top-20 overscroll-contain custom-scrollbar border border-sky-200/60 dark:border-white/20 {activeTab === 'editor' ? 'hidden lg:block' : ''}">
+					<div class="flex items-center justify-between pb-4 mb-6 border-b border-sky-200/50 dark:border-white/15 sticky top-0 bg-white/90 dark:bg-[#071626]/95 backdrop-blur-md z-10 -mx-6 -mt-6 sm:-mx-8 sm:-mt-8 p-6 sm:p-8 rounded-t-3xl shadow-xs">
 						<div class="flex items-center gap-2">
 							<Eye class="w-4 h-4 text-[#D83995]" />
 							<span class="font-black text-sm text-[#061a2e] dark:text-white">Live Preview Pembaca</span>
