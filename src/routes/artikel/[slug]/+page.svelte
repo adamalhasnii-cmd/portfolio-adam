@@ -143,11 +143,10 @@
 						{#if data.isAdmin}
 							<div
 								class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0593C6]/15 text-[#0593C6] dark:bg-white/15 dark:text-sky-200 border border-[#0593C6]/30 dark:border-white/30 text-xs font-semibold"
-								title="Statistik ini hanya dapat dilihat oleh Anda sebagai Admin"
+								title="Statistik pembaca unik (hanya terlihat oleh Admin)"
 							>
 								<Eye class="w-3.5 h-3.5 text-[#0593C6] dark:text-sky-300" />
 								<span>{data.viewCount ?? 0} pembaca unik</span>
-								<span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-[#0593C6] text-white dark:bg-white dark:text-[#0593C6]">Khusus Admin</span>
 							</div>
 						{/if}
 					</div>

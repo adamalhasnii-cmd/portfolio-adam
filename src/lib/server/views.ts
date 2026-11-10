@@ -154,3 +154,4 @@ export async function getTotalViews(): Promise<number> {
 	}
 	return total;
 }
+

@@ -14,6 +14,7 @@
 		CornerDownLeft
 	} from '@lucide/svelte';
 	import { onMount } from 'svelte';
+	import { fly } from 'svelte/transition';
 	import { goto } from '$app/navigation';
 
 	let { data, children }: LayoutProps = $props();
@@ -513,9 +514,12 @@
 				</div>
 			</div>
 
-			<!-- Large Hero Brand Name Typography (Benjamin Cowen Style) -->
-			<div class="pt-4 pb-6 sm:pt-6 sm:pb-8 select-none overflow-hidden">
-				<h2 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tighter text-[#061a2e]/20 dark:text-white/12 hover:text-[#061a2e]/30 dark:hover:text-white/20 transition-colors duration-300 leading-none">
+			<!-- Large Hero Brand Name Typography (Centered with bottom fade gradient) -->
+			<div class="pt-6 pb-2 sm:pt-8 sm:pb-3 select-none overflow-hidden flex justify-center items-center text-center">
+				<h2
+					class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tighter leading-none transition-all duration-300 bg-gradient-to-b from-[#061a2e]/35 via-[#061a2e]/18 to-[#061a2e]/0 dark:from-white/22 dark:via-white/10 dark:to-transparent bg-clip-text text-transparent"
+					style="mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 35%, rgba(0,0,0,0) 100%); -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 35%, rgba(0,0,0,0) 100%);"
+				>
 					Adam Alhasni
 				</h2>
 			</div>
@@ -531,12 +535,13 @@
 		</div>
 	</footer>
 
-	<!-- Floating Back to Top Button (Smooth circle near scrollbar, turns hot pink on hover) -->
+	<!-- Floating Back to Top Button (Slides in smoothly from bottom to top, turns hot pink on hover) -->
 	{#if showScrollTop}
 		<button
 			type="button"
+			transition:fly={{ y: 50, duration: 350 }}
 			onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-			class="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full glass-panel flex items-center justify-center text-[#061a2e] dark:text-white border border-sky-200/80 dark:border-white/20 shadow-xl shadow-black/10 hover:bg-[#D83995] hover:text-white hover:border-[#D83995] hover:shadow-[#D83995]/40 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer animate-in fade-in zoom-in-75 group"
+			class="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full glass-panel flex items-center justify-center text-[#061a2e] dark:text-white border border-sky-200/80 dark:border-white/20 shadow-xl shadow-black/10 hover:bg-[#D83995] hover:text-white hover:border-[#D83995] hover:shadow-[#D83995]/40 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer group"
 			title="Kembali ke atas"
 			aria-label="Kembali ke atas"
 		>
