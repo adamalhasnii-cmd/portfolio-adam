@@ -355,10 +355,42 @@ Bagikan refleksi penutup Anda di sini.`
 		};
 	}
 
-	async function deletePostFile(targetSlug: string, postTitle: string) {
-		if (!confirm(`Apakah Anda yakin ingin menghapus permanen "${postTitle}" (${targetSlug}.md)?`)) {
+	let deleteTarget = $state<{
+		slug: string;
+		title: string;
+		isDraftFormOnly?: boolean;
+	} | null>(null);
+	let isDeletingPost = $state(false);
+
+	function requestDeleteFile(targetSlug: string, postTitle: string) {
+		deleteTarget = {
+			slug: targetSlug,
+			title: postTitle,
+			isDraftFormOnly: false
+		};
+	}
+
+	async function confirmDelete() {
+		if (!deleteTarget) return;
+
+		if (deleteTarget.isDraftFormOnly) {
+			try {
+				localStorage.removeItem(AUTOSAVE_STORAGE_KEY);
+			} catch {}
+			resetEditorToNew();
+			saveMessage = {
+				type: 'success',
+				text: 'Isi form draft dan autosave sementara berhasil dibersihkan.'
+			};
+			deleteTarget = null;
 			return;
 		}
+
+		isDeletingPost = true;
+		saveMessage = null;
+
+		const targetSlug = deleteTarget.slug;
+		const postTitle = deleteTarget.title;
 
 		try {
 			const res = await fetch('/api/save-post', {
@@ -370,20 +402,27 @@ Bagikan refleksi penutup Anda di sini.`
 			if (resData.success) {
 				saveMessage = {
 					type: 'success',
-					text: `Tulisan "${postTitle}" berhasil dihapus dari project.`
+					text: `Tulisan "${postTitle}" berhasil dihapus secara permanen.`
 				};
 				if (editingSlug === targetSlug) {
 					resetEditorToNew();
 				}
+				deleteTarget = null;
 				setTimeout(() => {
 					window.location.reload();
 				}, 600);
 			} else {
 				saveMessage = { type: 'error', text: resData.error || 'Gagal menghapus tulisan.' };
+				isDeletingPost = false;
 			}
 		} catch (err: any) {
 			saveMessage = { type: 'error', text: 'Koneksi gagal: ' + err.message };
+			isDeletingPost = false;
 		}
+	}
+
+	async function deletePostFile(targetSlug: string, postTitle: string) {
+		requestDeleteFile(targetSlug, postTitle);
 	}
 
 	let isUpdatingStatus = $state(false);
@@ -485,19 +524,15 @@ Bagikan refleksi penutup Anda di sini.`
 	// Delete current draft and clear temporary autosave
 	function handleDeleteDraft() {
 		if (editingSlug) {
-			deletePostFile(editingSlug, title || editingSlug);
+			requestDeleteFile(editingSlug, title || editingSlug);
 			return;
 		}
 
-		if (!confirm('Apakah Anda yakin ingin menghapus isi form draft ini? Autosave sementara akan dibersihkan.')) {
-			return;
-		}
-
-		try {
-			localStorage.removeItem(AUTOSAVE_STORAGE_KEY);
-		} catch {}
-
-		resetEditorToNew();
+		deleteTarget = {
+			slug: '',
+			title: title || 'Draft Form Baru',
+			isDraftFormOnly: true
+		};
 	}
 </script>
 
@@ -1275,6 +1310,100 @@ Bagikan refleksi penutup Anda di sini.`
 			<div class="pt-3 border-t border-sky-100/60 dark:border-white/10 flex justify-between items-center text-xs">
 				<span class="text-slate-500 dark:text-slate-400">Total Pembaca Unik:</span>
 				<span class="font-black text-sm text-[#0593C6] dark:text-white">{viewingReferrerPost.total}</span>
+			</div>
+		</div>
+	</div>
+{/if}
+
+<!-- ================= DELETE CONFIRMATION MODAL (Liquid Glass) ================= -->
+{#if deleteTarget}
+	<div
+		class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto"
+		onclick={(e) => {
+			if (e.target === e.currentTarget && !isDeletingPost) deleteTarget = null;
+		}}
+		role="presentation"
+	>
+		<div
+			class="glass-panel border border-rose-500/30 dark:border-rose-400/30 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative text-[#061a2e] dark:text-white my-8 animate-in fade-in zoom-in-95 duration-200 overflow-hidden"
+		>
+			<!-- Top Danger Accent Line -->
+			<div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-rose-500 via-[#D83995] to-amber-500"></div>
+
+			<!-- Close Button -->
+			<button
+				type="button"
+				disabled={isDeletingPost}
+				onclick={() => (deleteTarget = null)}
+				class="absolute top-5 right-5 p-2 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-500/10 transition cursor-pointer disabled:opacity-50"
+				title="Tutup dialog"
+			>
+				<X class="w-5 h-5" />
+			</button>
+
+			<!-- Header Icon & Title -->
+			<div class="flex items-start gap-4 mb-5">
+				<div class="w-12 h-12 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 shadow-sm">
+					<Trash2 class="w-6 h-6" />
+				</div>
+				<div>
+					<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-rose-500/15 text-rose-700 dark:text-rose-300 text-[10px] font-extrabold uppercase tracking-wider mb-1.5 border border-rose-500/20">
+						Konfirmasi Hapus
+					</div>
+					<h3 class="text-lg font-black text-[#061a2e] dark:text-white leading-snug">
+						{deleteTarget.isDraftFormOnly ? 'Bersihkan Form Draft?' : 'Hapus Tulisan Permanen?'}
+					</h3>
+				</div>
+			</div>
+
+			<!-- Message Body -->
+			<div class="mb-6 space-y-3">
+				<p class="text-xs sm:text-sm text-[#4b6a8a] dark:text-sky-100/80 leading-relaxed">
+					{#if deleteTarget.isDraftFormOnly}
+						Apakah Anda yakin ingin mengosongkan form tulisan ini? Draft dan autosave lokal yang belum disimpan ke file akan dibersihkan.
+					{:else}
+						Tindakan ini <strong class="text-rose-600 dark:text-rose-400">tidak dapat dibatalkan</strong>. File tulisan markdown berikut akan dihapus secara permanen dari project:
+					{/if}
+				</p>
+
+				{#if !deleteTarget.isDraftFormOnly}
+					<div class="p-3.5 rounded-2xl bg-rose-500/5 dark:bg-white/5 border border-rose-500/20 dark:border-white/10 space-y-1">
+						<div class="font-bold text-xs sm:text-sm text-[#061a2e] dark:text-white truncate">
+							"{deleteTarget.title}"
+						</div>
+						<div class="font-mono text-[11px] text-rose-700 dark:text-rose-300 flex items-center gap-1">
+							<span>📄</span>
+							<span>src/posts/{deleteTarget.slug}.md</span>
+						</div>
+					</div>
+				{/if}
+			</div>
+
+			<!-- Action Buttons -->
+			<div class="flex items-center justify-end gap-3 pt-2">
+				<button
+					type="button"
+					disabled={isDeletingPost}
+					onclick={() => (deleteTarget = null)}
+					class="px-4 py-2.5 rounded-xl border border-sky-200/60 dark:border-white/20 text-xs font-bold text-[#061a2e] dark:text-white hover:bg-sky-500/10 dark:hover:bg-white/10 transition cursor-pointer disabled:opacity-50"
+				>
+					Batal
+				</button>
+
+				<button
+					type="button"
+					disabled={isDeletingPost}
+					onclick={confirmDelete}
+					class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-lg shadow-rose-600/30 transition flex items-center gap-2 cursor-pointer disabled:opacity-50"
+				>
+					{#if isDeletingPost}
+						<span class="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+						<span>Menghapus...</span>
+					{:else}
+						<Trash2 class="w-3.5 h-3.5" />
+						<span>{deleteTarget.isDraftFormOnly ? 'Ya, Bersihkan Form' : 'Ya, Hapus Permanen'}</span>
+					{/if}
+				</button>
 			</div>
 		</div>
 	</div>
