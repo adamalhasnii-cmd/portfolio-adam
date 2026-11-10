@@ -1394,12 +1394,12 @@ Bagikan refleksi penutup Anda di sini.`
 			</div>
 
 			<!-- Action Buttons -->
-			<div class="flex items-center justify-end gap-3 pt-2">
+			<div class="flex items-center justify-center gap-3 pt-2">
 				<button
 					type="button"
 					disabled={isDeletingPost}
 					onclick={() => (deleteTarget = null)}
-					class="px-4 py-2.5 rounded-xl border border-sky-200/60 dark:border-white/20 text-xs font-bold text-[#061a2e] dark:text-white hover:bg-sky-500/10 dark:hover:bg-white/10 transition cursor-pointer disabled:opacity-50"
+					class="px-5 py-2.5 rounded-xl border border-sky-200/60 dark:border-white/20 text-xs font-bold text-[#061a2e] dark:text-white hover:bg-sky-500/10 dark:hover:bg-white/10 transition cursor-pointer disabled:opacity-50"
 				>
 					Batal
 				</button>
@@ -1415,7 +1415,7 @@ Bagikan refleksi penutup Anda di sini.`
 						<span>Menghapus...</span>
 					{:else}
 						<Trash2 class="w-3.5 h-3.5" />
-						<span>{deleteTarget.isDraftFormOnly ? 'Ya, Bersihkan Form' : 'Ya, Hapus Permanen'}</span>
+						<span>{deleteTarget.isDraftFormOnly ? 'Bersihkan Form' : 'Hapus'}</span>
 					{/if}
 				</button>
 			</div>
