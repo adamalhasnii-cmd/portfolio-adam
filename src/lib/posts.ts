@@ -1,6 +1,6 @@
 import type { Post, PostMetadata } from './types';
 
-export function getAllPosts(): Post[] {
+export function getAllPosts(includeDrafts = false): Post[] {
 	const modules = import.meta.glob<{ metadata: PostMetadata; default: any }>('/src/posts/*.md', {
 		eager: true
 	});
@@ -12,11 +12,13 @@ export function getAllPosts(): Post[] {
 		const slug = path.split('/').pop()?.replace(/\.md$/, '') || '';
 
 		if (mod && mod.metadata && slug) {
-			if (mod.metadata.published !== false) {
+			const isPublished = mod.metadata.published !== false;
+			if (includeDrafts || isPublished) {
 				posts.push({
 					slug,
 					metadata: {
 						...mod.metadata,
+						published: isPublished,
 						tags: mod.metadata.tags || [],
 						readTime: mod.metadata.readTime || '5 min baca',
 						date: mod.metadata.date || new Date().toISOString().split('T')[0]

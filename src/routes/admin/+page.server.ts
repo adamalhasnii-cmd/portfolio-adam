@@ -15,7 +15,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
 
 	return {
 		isAuthenticated,
-		posts: isAuthenticated ? getAllPosts() : [],
+		posts: isAuthenticated ? getAllPosts(true) : [],
 		views: isAuthenticated ? await getAllViewCounts() : {}
 	};
 };

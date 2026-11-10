@@ -38,6 +38,14 @@
 		)
 	);
 
+	const uploadCount = $derived(
+		(data.posts || []).filter((p: any) => p.metadata?.published !== false).length
+	);
+
+	const draftCount = $derived(
+		(data.posts || []).filter((p: any) => p.metadata?.published === false).length
+	);
+
 	// Login State
 	let showPassword = $state(false);
 
@@ -740,16 +748,28 @@ Bagikan refleksi penutup Anda di sini.`
 					</div>
 				</div>
 
-				<!-- Stats Overview Cards -->
-				<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-					<div class="glass-panel p-4 rounded-2xl border border-sky-200/60 dark:border-white/20">
-						<div class="text-xs text-[#516f8e] dark:text-white/70 font-semibold mb-1">Total Artikel Terbit</div>
-						<div class="text-2xl font-black text-[#061a2e] dark:text-white">{data.posts?.length || 0}</div>
+				<!-- Stats Overview Cards (Compact & Centered) -->
+				<div class="max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-8">
+					<div class="glass-panel p-3.5 sm:p-4 rounded-2xl border border-sky-200/60 dark:border-white/20 text-center flex flex-col items-center justify-center shadow-sm">
+						<div class="text-[11px] sm:text-xs text-[#516f8e] dark:text-white/70 font-semibold mb-1 flex items-center justify-center gap-1.5">
+							<Upload class="w-3.5 h-3.5 text-emerald-500" />
+							<span>Total Artikel (Upload)</span>
+						</div>
+						<div class="text-2xl font-black text-[#061a2e] dark:text-white">{uploadCount}</div>
 					</div>
-					<div class="glass-panel p-4 rounded-2xl border border-sky-200/60 dark:border-white/20">
-						<div class="text-xs text-[#516f8e] dark:text-white/70 font-semibold mb-1 flex items-center gap-1.5">
+
+					<div class="glass-panel p-3.5 sm:p-4 rounded-2xl border border-sky-200/60 dark:border-white/20 text-center flex flex-col items-center justify-center shadow-sm">
+						<div class="text-[11px] sm:text-xs text-[#516f8e] dark:text-white/70 font-semibold mb-1 flex items-center justify-center gap-1.5">
+							<Bookmark class="w-3.5 h-3.5 text-[#0593C6] dark:text-sky-300" />
+							<span>Total Artikel (Draft)</span>
+						</div>
+						<div class="text-2xl font-black text-[#061a2e] dark:text-white">{draftCount}</div>
+					</div>
+
+					<div class="glass-panel p-3.5 sm:p-4 rounded-2xl border border-sky-200/60 dark:border-white/20 text-center flex flex-col items-center justify-center shadow-sm">
+						<div class="text-[11px] sm:text-xs text-[#516f8e] dark:text-white/70 font-semibold mb-1 flex items-center justify-center gap-1.5">
 							<Eye class="w-3.5 h-3.5 text-[#0593C6]" />
-							<span>Total Pembaca Unik (Semua Tulisan)</span>
+							<span>Total Pembaca Tulisan</span>
 						</div>
 						<div class="text-2xl font-black text-[#0593C6] dark:text-sky-300">{totalViews}</div>
 					</div>
@@ -760,7 +780,14 @@ Bagikan refleksi penutup Anda di sini.`
 						<div class="glass-panel p-5 rounded-2xl border border-sky-200/60 dark:border-white/20 text-[#061a2e] dark:text-white hover:border-[#0593C6]/40 dark:hover:border-white/40 hover:bg-white/90 dark:hover:bg-white/15 transition flex flex-col justify-between">
 							<div>
 								<div class="flex items-center justify-between text-[11px] text-[#516f8e] dark:text-white/70 mb-2">
-									<span class="px-2 py-0.5 rounded-full glass-pill text-[#0593C6] dark:text-white font-semibold">{post.metadata.category}</span>
+									<div class="flex items-center gap-1.5">
+										<span class="px-2 py-0.5 rounded-full glass-pill text-[#0593C6] dark:text-white font-semibold">{post.metadata.category}</span>
+										{#if post.metadata.published === false}
+											<span class="px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-300 font-bold text-[10px] border border-amber-400/30">Draft</span>
+										{:else}
+											<span class="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 font-bold text-[10px] border border-emerald-400/30">Upload</span>
+										{/if}
+									</div>
 									<span>{post.metadata.date}</span>
 								</div>
 								<h4 class="font-bold text-sm text-[#061a2e] dark:text-white line-clamp-2 mb-1.5">{post.metadata.title}</h4>
@@ -771,10 +798,14 @@ Bagikan refleksi penutup Anda di sini.`
 									<Eye class="w-3.5 h-3.5" />
 									<span>{(data.views && (data.views as any)[post.slug]) || 0} pembaca</span>
 								</div>
-								<a href="/artikel/{post.slug}" target="_blank" class="text-[#0593C6] dark:text-white font-semibold hover:text-[#D83995] dark:hover:text-[#f29185] transition flex items-center gap-1">
-									<span>Buka Artikel</span>
-									<span>↗</span>
-								</a>
+								{#if post.metadata.published !== false}
+									<a href="/artikel/{post.slug}" target="_blank" class="text-[#0593C6] dark:text-white font-semibold hover:text-[#D83995] dark:hover:text-[#f29185] transition flex items-center gap-1">
+										<span>Buka Artikel</span>
+										<span>↗</span>
+									</a>
+								{:else}
+									<span class="text-xs text-amber-600 dark:text-amber-300 font-semibold italic">Belum terbit</span>
+								{/if}
 							</div>
 						</div>
 					{/each}
