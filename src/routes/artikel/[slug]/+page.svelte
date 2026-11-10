@@ -262,14 +262,8 @@
 					class="font-semibold text-[#0593C6] dark:text-white hover:text-[#D83995] dark:hover:text-pink-200 transition flex items-center gap-1.5"
 				>
 					<ArrowLeft class="w-4 h-4" />
-					Daftar Tulisan Lainnya
+					<span>Daftar Tulisan Lainnya</span>
 				</a>
-				<button
-					onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-					class="font-semibold text-[#516f8e] dark:text-white hover:text-[#0593C6] dark:hover:text-pink-200 transition cursor-pointer"
-				>
-					Kembali ke Atas ↑
-				</button>
 			</div>
 		</div>
 	</div>
