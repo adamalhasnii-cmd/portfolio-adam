@@ -11,7 +11,9 @@
 		ArrowRight,
 		ArrowUp,
 		BookOpen,
-		CornerDownLeft
+		CornerDownLeft,
+		ChevronDown,
+		LogOut
 	} from '@lucide/svelte';
 	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
@@ -19,6 +21,7 @@
 
 	let { data, children }: LayoutProps = $props();
 	let isMobileMenuOpen = $state(false);
+	let isAdminMenuOpen = $state(false);
 	let isDark = $state(false);
 	let scrollProgress = $state(0);
 	let showScrollTop = $state(false);
@@ -85,11 +88,14 @@
 			return;
 		}
 
-		// Escape closes search modal
-		if (e.key === 'Escape' && isSearchOpen) {
-			e.preventDefault();
-			closeSearch();
-			return;
+		// Escape closes search modal and admin menu
+		if (e.key === 'Escape') {
+			if (isAdminMenuOpen) isAdminMenuOpen = false;
+			if (isSearchOpen) {
+				e.preventDefault();
+				closeSearch();
+				return;
+			}
 		}
 
 		// Arrow keys and Enter navigation when search is open
@@ -117,10 +123,20 @@
 		isDark = document.documentElement.classList.contains('dark');
 		window.addEventListener('scroll', updateScroll, { passive: true });
 		window.addEventListener('keydown', handleKeydown);
+
+		const handleClickOutside = (e: MouseEvent) => {
+			const target = e.target as HTMLElement;
+			if (!target.closest('#admin-menu-container')) {
+				isAdminMenuOpen = false;
+			}
+		};
+		window.addEventListener('click', handleClickOutside);
+
 		updateScroll();
 		return () => {
 			window.removeEventListener('scroll', updateScroll);
 			window.removeEventListener('keydown', handleKeydown);
+			window.removeEventListener('click', handleClickOutside);
 		};
 	});
 
@@ -184,13 +200,45 @@
 			<!-- Right Actions: Admin Button, Theme Toggle & Search Button -->
 			<div class="flex items-center gap-1.5 sm:gap-2">
 				{#if (data as any)?.isAdmin}
-					<a
-						href="/admin"
-						class="px-3.5 py-1 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs shadow-md shadow-emerald-500/25 transition cursor-pointer flex items-center"
-						title="Buka Studio Admin"
-					>
-						Admin
-					</a>
+					<div class="relative" id="admin-menu-container">
+						<button
+							type="button"
+							onclick={() => isAdminMenuOpen = !isAdminMenuOpen}
+							class="px-3.5 py-1.5 rounded-full bg-[#0593C6] hover:bg-[#047ea8] text-white dark:bg-white dark:text-[#0593C6] dark:hover:bg-white/90 font-bold text-xs shadow-md shadow-[#0593C6]/20 dark:shadow-black/20 transition cursor-pointer flex items-center gap-1.5"
+							title="Menu Admin"
+							aria-expanded={isAdminMenuOpen}
+						>
+							<span>Admin</span>
+							<ChevronDown class="w-3 h-3 transition-transform duration-200 {isAdminMenuOpen ? 'rotate-180' : ''}" />
+						</button>
+
+						{#if isAdminMenuOpen}
+							<div
+								class="absolute right-0 mt-2 w-44 rounded-2xl glass-panel p-1.5 border border-sky-200/80 dark:border-white/20 shadow-xl shadow-sky-950/10 dark:shadow-black/40 z-50 animate-in fade-in zoom-in-95 duration-150"
+							>
+								<a
+									href="/admin"
+									onclick={() => isAdminMenuOpen = false}
+									class="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-[#061a2e] dark:text-white hover:bg-[#0593C6]/10 dark:hover:bg-white/10 hover:text-[#0593C6] dark:hover:text-sky-300 transition"
+								>
+									<FileText class="w-3.5 h-3.5 text-[#0593C6] dark:text-sky-300" />
+									<span>Draft Penulisan</span>
+								</a>
+
+								<div class="my-1 border-t border-sky-200/50 dark:border-white/10"></div>
+
+								<form method="POST" action="/api/logout">
+									<button
+										type="submit"
+										class="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 dark:hover:bg-rose-500/20 transition cursor-pointer text-left"
+									>
+										<LogOut class="w-3.5 h-3.5 text-rose-500 dark:text-rose-400" />
+										<span>Logout</span>
+									</button>
+								</form>
+							</div>
+						{/if}
+					</div>
 				{/if}
 
 				<!-- Dark / Light Mode Toggle Button -->
@@ -276,6 +324,27 @@
 				>
 					Filosofi & Tentang
 				</a>
+				{#if (data as any)?.isAdmin}
+					<div class="pt-2 mt-2 border-t border-sky-200/50 dark:border-white/10">
+						<a
+							href="/admin"
+							onclick={() => isMobileMenuOpen = false}
+							class="flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-semibold text-[#0593C6] dark:text-sky-300 hover:bg-sky-500/10 dark:hover:bg-white/15"
+						>
+							<FileText class="w-4 h-4" />
+							<span>Draft Penulisan</span>
+						</a>
+						<form method="POST" action="/api/logout">
+							<button
+								type="submit"
+								class="w-full flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 dark:hover:bg-rose-500/20 text-left cursor-pointer"
+							>
+								<LogOut class="w-4 h-4" />
+								<span>Logout</span>
+							</button>
+						</form>
+					</div>
+				{/if}
 			</div>
 		{/if}
 	</div>

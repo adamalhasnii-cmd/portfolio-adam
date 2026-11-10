@@ -464,18 +464,6 @@ Bagikan refleksi penutup Anda di sini.`
 						<Trash2 class="w-4 h-4 text-rose-500 dark:text-rose-300" />
 						<span>Hapus</span>
 					</button>
-
-					<!-- Logout Form -->
-					<form method="POST" action="?/logout" class="inline-block">
-						<button
-							type="submit"
-							class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl glass-pill text-[#516f8e] dark:text-white/70 hover:text-rose-500 hover:bg-rose-500/10 border border-slate-300/40 dark:border-white/15 text-xs font-semibold transition cursor-pointer"
-							title="Keluar dari sesi admin"
-						>
-							<LogOut class="w-4 h-4" />
-							<span>Keluar</span>
-						</button>
-					</form>
 				</div>
 			</div>
 
