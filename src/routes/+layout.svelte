@@ -88,9 +88,10 @@
 			return;
 		}
 
-		// Escape closes search modal and admin menu
+		// Escape closes search modal, mobile menu, and admin menu
 		if (e.key === 'Escape') {
 			if (isAdminMenuOpen) isAdminMenuOpen = false;
+			if (isMobileMenuOpen) isMobileMenuOpen = false;
 			if (isSearchOpen) {
 				e.preventDefault();
 				closeSearch();

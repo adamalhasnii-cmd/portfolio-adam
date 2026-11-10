@@ -551,7 +551,21 @@ Bagikan refleksi penutup Anda di sini.`
 			isDraftFormOnly: true
 		};
 	}
+
+	function handleWindowKeydown(e: KeyboardEvent) {
+		if (e.key === 'Escape') {
+			if (deleteTarget && !isDeletingPost) {
+				deleteTarget = null;
+			} else if (viewingReferrerPost) {
+				viewingReferrerPost = null;
+			} else if (saveMessage) {
+				saveMessage = null;
+			}
+		}
+	}
 </script>
+
+<svelte:window onkeydown={handleWindowKeydown} />
 
 <svelte:head>
 	<title>{data.isAuthenticated ? 'Studio Penulis (Admin)' : 'Login'} — 911</title>

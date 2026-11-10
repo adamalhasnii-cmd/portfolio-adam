@@ -137,7 +137,19 @@
 			default: return key.charAt(0).toUpperCase() + key.slice(1);
 		}
 	}
+
+	function handleWindowKeydown(e: KeyboardEvent) {
+		if (e.key === 'Escape') {
+			if (showShareModal) {
+				showShareModal = false;
+			} else if (showAdminRefModal) {
+				showAdminRefModal = false;
+			}
+		}
+	}
 </script>
+
+<svelte:window onkeydown={handleWindowKeydown} />
 
 <svelte:head>
 	<title>{data.metadata.title} — 911</title>
