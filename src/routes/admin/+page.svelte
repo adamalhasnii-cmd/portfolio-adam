@@ -779,9 +779,10 @@ Bagikan refleksi penutup Anda di sini.`
 			<!-- Main Two-Column Layout with Independent Split-Pane Scrolling -->
 			<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
 				<!-- LEFT COLUMN: Editor Form (Independent Scroll) -->
-				<div class="space-y-5 glass-panel p-6 sm:p-7 rounded-3xl text-[#061a2e] dark:text-white border border-sky-200/60 dark:border-white/20 lg:h-[calc(100vh-6.5rem)] lg:overflow-y-auto lg:sticky lg:top-20 overscroll-contain custom-scrollbar {activeTab === 'preview' ? 'hidden lg:block' : ''}">
-					<div class="flex items-center justify-between pb-3 border-b border-sky-200/50 dark:border-white/15 sticky top-0 bg-white/90 dark:bg-[#071626]/95 backdrop-blur-md z-10 -mx-6 -mt-6 sm:-mx-7 sm:-mt-7 p-6 sm:p-7 mb-2 rounded-t-3xl shadow-xs">
-						<h2 class="font-black text-base text-[#061a2e] dark:text-white flex items-center gap-2">
+				<div class="glass-panel rounded-3xl text-[#061a2e] dark:text-white border border-sky-200/60 dark:border-white/20 h-auto lg:h-[calc(100vh-7rem)] lg:sticky lg:top-20 flex flex-col overflow-hidden shadow-xl {activeTab === 'preview' ? 'hidden lg:flex' : 'flex'}">
+					<!-- Fixed Card Header (Non-scrolling, never bleeds through) -->
+					<div class="flex items-center justify-between px-6 py-4 border-b border-sky-200/50 dark:border-white/15 bg-white/80 dark:bg-[#071626]/90 backdrop-blur-xl shrink-0">
+						<h2 class="font-black text-sm sm:text-base text-[#061a2e] dark:text-white flex items-center gap-2">
 							<FileText class="w-4 h-4 text-[#D83995]" />
 							Metadata & Tulisan
 						</h2>
@@ -789,6 +790,9 @@ Bagikan refleksi penutup Anda di sini.`
 							Kosongkan Form
 						</button>
 					</div>
+
+					<!-- Scrollable Form Body -->
+					<div class="flex-1 overflow-y-auto p-6 sm:p-7 space-y-5 custom-scrollbar overscroll-contain">
 
 					<!-- Judul Input -->
 					<div>
@@ -945,10 +949,12 @@ Bagikan refleksi penutup Anda di sini.`
 						></textarea>
 					</div>
 				</div>
+			</div>
 
 				<!-- RIGHT COLUMN: Live Preview (Independent Scroll) -->
-				<div class="glass-panel p-6 sm:p-8 rounded-3xl text-[#061a2e] dark:text-white lg:h-[calc(100vh-6.5rem)] lg:overflow-y-auto lg:sticky lg:top-20 overscroll-contain custom-scrollbar border border-sky-200/60 dark:border-white/20 {activeTab === 'editor' ? 'hidden lg:block' : ''}">
-					<div class="flex items-center justify-between pb-4 mb-6 border-b border-sky-200/50 dark:border-white/15 sticky top-0 bg-white/90 dark:bg-[#071626]/95 backdrop-blur-md z-10 -mx-6 -mt-6 sm:-mx-8 sm:-mt-8 p-6 sm:p-8 rounded-t-3xl shadow-xs">
+				<div class="glass-panel rounded-3xl text-[#061a2e] dark:text-white border border-sky-200/60 dark:border-white/20 h-auto lg:h-[calc(100vh-7rem)] lg:sticky lg:top-20 flex flex-col overflow-hidden shadow-xl {activeTab === 'editor' ? 'hidden lg:flex' : 'flex'}">
+					<!-- Fixed Card Header (Non-scrolling, never bleeds through) -->
+					<div class="flex items-center justify-between px-6 py-4 border-b border-sky-200/50 dark:border-white/15 bg-white/80 dark:bg-[#071626]/90 backdrop-blur-xl shrink-0">
 						<div class="flex items-center gap-2">
 							<Eye class="w-4 h-4 text-[#D83995]" />
 							<span class="font-black text-sm text-[#061a2e] dark:text-white">Live Preview Pembaca</span>
@@ -957,6 +963,9 @@ Bagikan refleksi penutup Anda di sini.`
 							{category}
 						</span>
 					</div>
+
+					<!-- Scrollable Rendered Markdown Body -->
+					<div class="flex-1 overflow-y-auto p-6 sm:p-8 custom-scrollbar overscroll-contain">
 
 					<!-- Preview Title -->
 					<h1 class="text-2xl sm:text-3xl font-black text-[#061a2e] dark:text-white tracking-tight leading-tight mb-3 drop-shadow-xs">
@@ -997,6 +1006,7 @@ Bagikan refleksi penutup Anda di sini.`
 					</div>
 				</div>
 			</div>
+		</div>
 
 			<!-- Existing Posts Section in Admin -->
 			<div class="mt-16 pt-10 border-t border-sky-200/50 dark:border-white/20">
