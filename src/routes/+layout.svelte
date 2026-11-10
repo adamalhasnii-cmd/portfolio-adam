@@ -9,6 +9,7 @@
 		Search,
 		FileText,
 		ArrowRight,
+		ArrowUp,
 		BookOpen,
 		CornerDownLeft
 	} from '@lucide/svelte';
@@ -19,6 +20,7 @@
 	let isMobileMenuOpen = $state(false);
 	let isDark = $state(false);
 	let scrollProgress = $state(0);
+	let showScrollTop = $state(false);
 
 	// Search Modal State
 	let isSearchOpen = $state(false);
@@ -29,6 +31,7 @@
 	function updateScroll() {
 		if (typeof window === 'undefined') return;
 		const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+		showScrollTop = winScroll > 250;
 		const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
 		if (height > 0) {
 			scrollProgress = Math.min(100, Math.max(0, (winScroll / height) * 100));
@@ -524,13 +527,23 @@
 				<div>
 					© {new Date().getFullYear()} Adam Alhasni. Hak cipta dilindungi.
 				</div>
-				<div>
-					<button onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} class="hover:text-[#0593C6] dark:hover:text-white text-[#334e6b] dark:text-white/80 transition cursor-pointer flex items-center gap-1">
-						<span>Ke Atas</span>
-						<span>↑</span>
-					</button>
+				<div class="italic text-center sm:text-right font-medium text-[#53708e] dark:text-sky-100/70">
+					Research and education only, not financial advice.
 				</div>
 			</div>
 		</div>
 	</footer>
+
+	<!-- Floating Back to Top Button (Smooth circle near scrollbar, turns hot pink on hover) -->
+	{#if showScrollTop}
+		<button
+			type="button"
+			onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+			class="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full glass-panel flex items-center justify-center text-[#061a2e] dark:text-white border border-sky-200/80 dark:border-white/20 shadow-xl shadow-black/10 hover:bg-[#D83995] hover:text-white hover:border-[#D83995] hover:shadow-[#D83995]/40 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer animate-in fade-in zoom-in-75 group"
+			title="Kembali ke atas"
+			aria-label="Kembali ke atas"
+		>
+			<ArrowUp class="w-5 h-5 transition-transform duration-200 group-hover:-translate-y-0.5" />
+		</button>
+	{/if}
 </div>
