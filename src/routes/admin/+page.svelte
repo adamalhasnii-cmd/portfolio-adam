@@ -333,11 +333,14 @@ Bagikan refleksi penutup Anda di sini.`
 				<div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-white via-[#D83995] to-[#f29185]"></div>
 
 				<!-- Logo / Monogram -->
-				<div class="flex justify-center mb-8">
-					<div class="w-14 h-14 rounded-2xl bg-[#0593C6] text-white dark:bg-white/20 dark:border dark:border-white/35 flex items-center justify-center font-black text-2xl shadow-lg backdrop-blur-md">
-						<span>9</span>
+				<div class="flex flex-col items-center justify-center gap-2 mb-7">
+					<div class="w-14 h-14 rounded-full bg-[#0593C6] dark:bg-white/20 border border-[#0593C6]/30 dark:border-white/30 text-white flex items-center justify-center font-black text-2xl shadow-lg backdrop-blur-md">
+						<span>A</span>
 						<span class="w-2 h-2 rounded-full bg-[#D83995] ml-0.5 -mt-3"></span>
 					</div>
+					<span class="font-black text-2xl tracking-tight text-[#061a2e] dark:text-white">
+						911
+					</span>
 				</div>
 
 				<!-- Error alert if login fails -->
@@ -391,7 +394,7 @@ Bagikan refleksi penutup Anda di sini.`
 							<button
 								type="button"
 								onclick={() => showPassword = !showPassword}
-								class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#516f8e] dark:text-white/60 hover:text-[#0593C6] dark:hover:text-white transition cursor-pointer"
+								class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#516f8e] dark:text-white hover:text-[#0593C6] dark:hover:text-[#D83995] transition cursor-pointer"
 								title={showPassword ? 'Sembunyikan password' : 'Lihat password'}
 							>
 								{#if showPassword}
@@ -405,9 +408,9 @@ Bagikan refleksi penutup Anda di sini.`
 
 					<button
 						type="submit"
-						class="w-full py-3.5 px-4 rounded-xl bg-[#0593C6] text-white hover:bg-[#047ea8] dark:bg-white dark:text-[#0593C6] font-extrabold text-sm hover:scale-[1.01] active:scale-[0.99] transition shadow-lg shadow-[#0593C6]/25 dark:shadow-black/10 cursor-pointer flex items-center justify-center gap-2 mt-4"
+						class="w-full py-3.5 px-4 rounded-xl bg-[#0593C6] hover:bg-[#047ea8] text-white font-black text-sm hover:scale-[1.01] active:scale-[0.99] transition-all shadow-lg shadow-[#0593C6]/25 dark:shadow-[#0593C6]/40 cursor-pointer flex items-center justify-center gap-2 mt-4"
 					>
-						<span>Login</span>
+						<span class="text-white font-black tracking-wide">Login</span>
 					</button>
 				</form>
 			</div>
