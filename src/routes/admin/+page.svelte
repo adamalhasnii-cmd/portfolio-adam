@@ -1036,12 +1036,9 @@ Bagikan refleksi penutup Anda di sini.`
 
 				<!-- Referral Traffic Tracking Overview (Aligned & Centered) -->
 				<div class="max-w-4xl mx-auto mb-8 p-4 sm:p-5 rounded-2xl glass-panel border border-sky-200/60 dark:border-white/20">
-					<div class="flex items-center justify-between mb-3 flex-wrap gap-2">
-						<div class="flex items-center gap-2">
-							<Share2 class="w-4 h-4 text-[#0593C6] dark:text-sky-300" />
-							<h3 class="text-xs sm:text-sm font-black text-[#061a2e] dark:text-white">Sumber Trafik Pembaca (Referral Tracking)</h3>
-						</div>
-						<span class="text-[11px] text-[#516f8e] dark:text-white/60">Terdeteksi dari tautan berbagi (?ref=...) & referer</span>
+					<div class="flex items-center gap-2 mb-3">
+						<Share2 class="w-4 h-4 text-[#0593C6] dark:text-sky-300" />
+						<h3 class="text-xs sm:text-sm font-black text-[#061a2e] dark:text-white">Sumber Trafik Pembaca (Referral Tracking)</h3>
 					</div>
 
 					<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 text-xs">
@@ -1319,7 +1316,7 @@ Bagikan refleksi penutup Anda di sini.`
 					</div>
 				{:else}
 					<div class="p-4 rounded-xl bg-sky-500/5 dark:bg-white/5 text-center text-xs text-slate-400 italic">
-						Belum ada data rujukan spesifik. Saat pembaca membuka link share dengan label ?ref=... (misal dari WhatsApp, Instagram, atau TikTok), platformnya akan muncul di sini.
+						Belum ada data rujukan spesifik. Saat pembaca membuka tautan dari media sosial (WhatsApp, Instagram, TikTok, dsb.), platformnya akan tercatat di sini.
 					</div>
 				{/each}
 			</div>
