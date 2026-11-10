@@ -144,6 +144,16 @@ Bagikan refleksi penutup Anda di sini.`
 	let isSaving = $state(false);
 	let saveMessage = $state<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
 
+	// Automatically dismiss floating toast after 5 seconds
+	$effect(() => {
+		if (saveMessage) {
+			const timer = setTimeout(() => {
+				saveMessage = null;
+			}, 5000);
+			return () => clearTimeout(timer);
+		}
+	});
+
 	// Autosave & Undo State
 	const AUTOSAVE_STORAGE_KEY = 'adam_admin_autosave_temp_v1';
 	let autoSaveStatus = $state<string>('');
@@ -772,23 +782,6 @@ Bagikan refleksi penutup Anda di sini.`
 					</button>
 				</div>
 			</div>
-
-			<!-- Status Message Toast -->
-			{#if saveMessage}
-				<div class="mb-6 p-4 rounded-2xl flex items-start gap-3 text-sm animate-in fade-in duration-200 {saveMessage.type === 'success'
-					? 'bg-emerald-500/10 dark:bg-emerald-500/20 border border-emerald-400/40 text-emerald-800 dark:text-emerald-100'
-					: saveMessage.type === 'info'
-					? 'bg-sky-500/10 dark:bg-sky-500/20 border border-sky-400/40 text-sky-800 dark:text-sky-100'
-					: 'bg-rose-500/10 dark:bg-rose-500/20 border border-rose-400/40 text-rose-800 dark:text-rose-100'} glass-panel">
-					{#if saveMessage.type === 'success'}
-						<Check class="w-5 h-5 text-emerald-500 dark:text-emerald-300 shrink-0 mt-0.5" />
-					{:else}
-						<AlertCircle class="w-5 h-5 text-current shrink-0 mt-0.5" />
-					{/if}
-					<div class="flex-1 font-medium">{saveMessage.text}</div>
-					<button onclick={() => saveMessage = null} class="text-xs font-bold opacity-60 hover:opacity-100 p-1">✕</button>
-				</div>
-			{/if}
 
 			<!-- Anchor for Edit Scroll: docks editor workspace cleanly under floating navbar -->
 			<div id="editor-workspace-anchor" class="scroll-mt-20 lg:scroll-mt-20"></div>
@@ -1539,5 +1532,50 @@ Bagikan refleksi penutup Anda di sini.`
 				</button>
 			</div>
 		</div>
+	</div>
+{/if}
+
+<!-- ================= FLOATING TOAST NOTIFICATION (Bottom-Right, Auto-dismiss 5s) ================= -->
+{#if saveMessage}
+	<div
+		class="fixed bottom-6 right-6 z-50 max-w-sm sm:max-w-md w-[calc(100vw-3rem)] p-4 rounded-2xl bg-white/95 dark:bg-[#071727]/98 backdrop-blur-2xl border shadow-2xl shadow-sky-950/20 dark:shadow-black/70 flex items-start gap-3.5 text-sm animate-in fade-in slide-in-from-bottom-5 duration-300 text-[#061a2e] dark:text-white {saveMessage.type === 'success'
+			? 'border-emerald-500/40 shadow-emerald-500/10'
+			: saveMessage.type === 'info'
+			? 'border-sky-400/40 shadow-sky-500/10'
+			: 'border-rose-400/40 shadow-rose-500/10'}"
+		role="status"
+		aria-live="polite"
+	>
+		<!-- Left Indicator Icon Capsule -->
+		{#if saveMessage.type === 'success'}
+			<div class="w-8 h-8 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+				<Check class="w-4 h-4" />
+			</div>
+		{:else if saveMessage.type === 'info'}
+			<div class="w-8 h-8 rounded-xl bg-sky-500/15 text-[#0593C6] dark:text-sky-300 flex items-center justify-center shrink-0">
+				<AlertCircle class="w-4 h-4" />
+			</div>
+		{:else}
+			<div class="w-8 h-8 rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
+				<AlertCircle class="w-4 h-4" />
+			</div>
+		{/if}
+
+		<!-- Message Text -->
+		<div class="flex-1 min-w-0 pr-1 pt-0.5">
+			<p class="font-medium text-xs sm:text-sm leading-snug">
+				{saveMessage.text}
+			</p>
+		</div>
+
+		<!-- Dismiss Button -->
+		<button
+			type="button"
+			onclick={() => (saveMessage = null)}
+			class="p-1 -mr-1 -mt-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-500/10 transition cursor-pointer shrink-0"
+			title="Tutup pemberitahuan"
+		>
+			<X class="w-4 h-4" />
+		</button>
 	</div>
 {/if}
