@@ -1460,87 +1460,83 @@ Bagikan refleksi penutup Anda di sini.`
 
 <!-- ================= FLOATING TOAST NOTIFICATION (Bottom-Right, 5s Countdown Loading Bar) ================= -->
 {#if saveMessage}
-	{#key toastKey}
-		<div
-			transition:fly={{ y: 24, duration: 250 }}
-			class="fixed bottom-6 right-6 z-[9999] max-w-sm sm:max-w-md w-[calc(100vw-3rem)] rounded-2xl bg-white/95 dark:bg-[#071727]/98 backdrop-blur-2xl border shadow-2xl shadow-sky-950/20 dark:shadow-black/70 text-[#061a2e] dark:text-white overflow-hidden pointer-events-auto {saveMessage.type === 'success'
-				? 'border-emerald-500/40 shadow-emerald-500/10'
-				: saveMessage.type === 'info'
-				? 'border-sky-400/40 shadow-sky-500/10'
-				: 'border-rose-400/40 shadow-rose-500/10'}"
-			role="status"
-			aria-live="polite"
-		>
-			<!-- Side Glowing Border Stripe (Left Edge) -->
+	<div
+		class="fixed bottom-6 right-6 z-[99999] pointer-events-none flex flex-col items-end"
+		style="position: fixed !important; bottom: 24px !important; right: 24px !important; left: auto !important; z-index: 99999 !important;"
+	>
+		{#key toastKey}
 			<div
-				class="absolute top-0 bottom-0 left-0 w-1 {saveMessage.type === 'success'
-					? 'bg-gradient-to-b from-emerald-400 to-teal-500 shadow-[0_0_8px_rgba(52,211,153,0.8)]'
+				transition:fly={{ y: 20, duration: 250 }}
+				class="pointer-events-auto max-w-sm sm:max-w-md w-[calc(100vw-3rem)] sm:w-96 rounded-2xl bg-white/95 dark:bg-[#071727]/98 backdrop-blur-2xl border shadow-2xl shadow-sky-950/20 dark:shadow-black/70 text-[#061a2e] dark:text-white overflow-hidden relative {saveMessage.type === 'success'
+					? 'border-emerald-500/40 shadow-emerald-500/10'
 					: saveMessage.type === 'info'
-					? 'bg-gradient-to-b from-[#0593C6] via-[#D83995] to-[#f29185] shadow-[0_0_8px_rgba(5,147,198,0.8)]'
-					: 'bg-gradient-to-b from-rose-500 to-amber-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]'}"
-			></div>
+					? 'border-sky-400/40 shadow-sky-500/10'
+					: 'border-rose-400/40 shadow-rose-500/10'}"
+				role="status"
+				aria-live="polite"
+			>
+				<!-- Main Card Content (Neon stripe on left removed as requested) -->
+				<div class="p-4 flex items-start gap-3.5 text-sm">
+					<!-- Left Indicator Icon Capsule -->
+					{#if saveMessage.type === 'success'}
+						<div class="w-8 h-8 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+							<Check class="w-4 h-4" />
+						</div>
+					{:else if saveMessage.type === 'info'}
+						<div class="w-8 h-8 rounded-xl bg-sky-500/15 text-[#0593C6] dark:text-sky-300 flex items-center justify-center shrink-0">
+							<AlertCircle class="w-4 h-4" />
+						</div>
+					{:else}
+						<div class="w-8 h-8 rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
+							<AlertCircle class="w-4 h-4" />
+						</div>
+					{/if}
 
-			<!-- Main Card Content -->
-			<div class="p-4 pl-5 flex items-start gap-3.5 text-sm">
-				<!-- Left Indicator Icon Capsule -->
-				{#if saveMessage.type === 'success'}
-					<div class="w-8 h-8 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-						<Check class="w-4 h-4" />
+					<!-- Message Text -->
+					<div class="flex-1 min-w-0 pr-1 pt-0.5">
+						<p class="font-medium text-xs sm:text-sm leading-snug">
+							{saveMessage.text}
+						</p>
 					</div>
-				{:else if saveMessage.type === 'info'}
-					<div class="w-8 h-8 rounded-xl bg-sky-500/15 text-[#0593C6] dark:text-sky-300 flex items-center justify-center shrink-0">
-						<AlertCircle class="w-4 h-4" />
-					</div>
-				{:else}
-					<div class="w-8 h-8 rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
-						<AlertCircle class="w-4 h-4" />
-					</div>
-				{/if}
 
-				<!-- Message Text -->
-				<div class="flex-1 min-w-0 pr-1 pt-0.5">
-					<p class="font-medium text-xs sm:text-sm leading-snug">
-						{saveMessage.text}
-					</p>
+					<!-- Right Actions: 5s Timer Badge & Dismiss Button -->
+					<div class="flex items-center gap-1.5 shrink-0 -mr-1 -mt-1">
+						<span
+							class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border flex items-center gap-1 {saveMessage.type === 'success'
+								? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-300'
+								: saveMessage.type === 'info'
+								? 'bg-sky-500/10 border-sky-500/30 text-[#0593C6] dark:text-sky-300'
+								: 'bg-rose-500/10 border-rose-500/30 text-rose-600 dark:text-rose-300'}"
+							title="Waktu tersisa sebelum pop-up tertutup otomatis"
+						>
+							<Clock class="w-2.5 h-2.5" />
+							<span>{toastRemainingSec}s</span>
+						</span>
+
+						<button
+							type="button"
+							onclick={dismissToast}
+							class="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-500/10 transition cursor-pointer"
+							title="Tutup pemberitahuan"
+						>
+							<X class="w-4 h-4" />
+						</button>
+					</div>
 				</div>
 
-				<!-- Right Actions: 5s Timer Badge & Dismiss Button -->
-				<div class="flex items-center gap-1.5 shrink-0 -mr-1 -mt-1">
-					<span
-						class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border flex items-center gap-1 {saveMessage.type === 'success'
-							? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-300'
+				<!-- Glowing Border Loading Bar (Bottom Border Countdown) -->
+				<div class="relative w-full h-1 bg-slate-200/50 dark:bg-white/10 overflow-hidden">
+					<div
+						class="absolute inset-y-0 left-0 h-full rounded-full toast-progress-bar {saveMessage.type === 'success'
+							? 'bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-300 shadow-[0_0_10px_rgba(52,211,153,0.9)]'
 							: saveMessage.type === 'info'
-							? 'bg-sky-500/10 border-sky-500/30 text-[#0593C6] dark:text-sky-300'
-							: 'bg-rose-500/10 border-rose-500/30 text-rose-600 dark:text-rose-300'}"
-						title="Waktu tersisa sebelum pop-up tertutup otomatis"
-					>
-						<Clock class="w-2.5 h-2.5" />
-						<span>{toastRemainingSec}s</span>
-					</span>
-
-					<button
-						type="button"
-						onclick={dismissToast}
-						class="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-500/10 transition cursor-pointer"
-						title="Tutup pemberitahuan"
-					>
-						<X class="w-4 h-4" />
-					</button>
+							? 'bg-gradient-to-r from-[#0593C6] via-[#D83995] to-[#f29185] shadow-[0_0_10px_rgba(216,57,149,0.9)]'
+							: 'bg-gradient-to-r from-rose-500 via-amber-500 to-rose-400 shadow-[0_0_10px_rgba(244,63,94,0.9)]'}"
+					></div>
 				</div>
 			</div>
-
-			<!-- Glowing Border Loading Bar (Bottom Border Countdown) -->
-			<div class="relative w-full h-1 bg-slate-200/50 dark:bg-white/10 overflow-hidden">
-				<div
-					class="absolute inset-y-0 left-0 h-full rounded-full toast-progress-bar {saveMessage.type === 'success'
-						? 'bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-300 shadow-[0_0_10px_rgba(52,211,153,0.9)]'
-						: saveMessage.type === 'info'
-						? 'bg-gradient-to-r from-[#0593C6] via-[#D83995] to-[#f29185] shadow-[0_0_10px_rgba(216,57,149,0.9)]'
-						: 'bg-gradient-to-r from-rose-500 via-amber-500 to-rose-400 shadow-[0_0_10px_rgba(244,63,94,0.9)]'}"
-				></div>
-			</div>
-		</div>
-	{/key}
+		{/key}
+	</div>
 {/if}
 
 <style>
