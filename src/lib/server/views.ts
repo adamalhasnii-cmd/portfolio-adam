@@ -11,47 +11,26 @@ export interface PostViews {
 
 export type ViewsStore = Record<string, PostViews>;
 
-// In-memory cache for fast lookups and atomic updates
+// In-memory cache for fast lookups
 let viewsCache: ViewsStore | null = null;
-let isLoaded = false;
 
 const PRIMARY_FILE = path.resolve(process.cwd(), 'src/data/views.json');
-const FALLBACK_FILE = '/tmp/portfolio-views.json';
 
 async function loadViews(): Promise<ViewsStore> {
-	if (isLoaded && viewsCache !== null) {
-		return viewsCache;
-	}
-
-	viewsCache = {};
-
-	// 1. Try reading from primary file (src/data/views.json)
+	// Always read primary file from disk so updates and file edits are immediately live
 	try {
 		const raw = await fs.readFile(PRIMARY_FILE, 'utf-8');
 		const parsed = JSON.parse(raw);
 		if (parsed && typeof parsed === 'object') {
 			viewsCache = { ...parsed };
+			return viewsCache;
 		}
 	} catch {
 		// Ignore if not found or unreadable
 	}
 
-	// 2. Try merging from fallback file (/tmp/portfolio-views.json) if it exists with more data
-	try {
-		const rawFallback = await fs.readFile(FALLBACK_FILE, 'utf-8');
-		const parsedFallback = JSON.parse(rawFallback);
-		if (parsedFallback && typeof parsedFallback === 'object') {
-			for (const [slug, data] of Object.entries(parsedFallback as ViewsStore)) {
-				if (!viewsCache[slug] || (data?.total || 0) > (viewsCache[slug]?.total || 0)) {
-					viewsCache[slug] = data;
-				}
-			}
-		}
-	} catch {
-		// Ignore fallback error
-	}
-
-	isLoaded = true;
+	if (viewsCache) return viewsCache;
+	viewsCache = {};
 	return viewsCache;
 }
 
@@ -60,19 +39,11 @@ async function persistViews(): Promise<void> {
 
 	const jsonString = JSON.stringify(viewsCache, null, 2);
 
-	// Try writing to primary file
 	try {
 		await fs.mkdir(path.dirname(PRIMARY_FILE), { recursive: true });
 		await fs.writeFile(PRIMARY_FILE, jsonString, 'utf-8');
 	} catch {
-		// In serverless environments (e.g. Vercel), primary file might be read-only
-	}
-
-	// Always write to fallback /tmp as well
-	try {
-		await fs.writeFile(FALLBACK_FILE, jsonString, 'utf-8');
-	} catch {
-		// Ignore fallback error
+		// In serverless environments, file system might be read-only
 	}
 }
 

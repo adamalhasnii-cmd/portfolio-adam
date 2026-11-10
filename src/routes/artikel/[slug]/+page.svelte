@@ -42,7 +42,7 @@
 		canNativeShare = typeof navigator !== 'undefined' && !!navigator.share;
 		currentBaseUrl = window.location.origin + window.location.pathname;
 
-		if (!data.slug) return;
+		if (!data.slug || data.isAdmin) return;
 
 		const urlParams = new URLSearchParams(window.location.search);
 		const refParam = urlParams.get('ref');

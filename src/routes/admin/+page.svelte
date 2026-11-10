@@ -1034,8 +1034,8 @@ Bagikan refleksi penutup Anda di sini.`
 					</div>
 				</div>
 
-				<!-- Referral Traffic Tracking Overview -->
-				<div class="mb-6 p-4 rounded-2xl glass-panel border border-sky-200/60 dark:border-white/20">
+				<!-- Referral Traffic Tracking Overview (Aligned & Centered) -->
+				<div class="max-w-4xl mx-auto mb-8 p-4 sm:p-5 rounded-2xl glass-panel border border-sky-200/60 dark:border-white/20">
 					<div class="flex items-center justify-between mb-3 flex-wrap gap-2">
 						<div class="flex items-center gap-2">
 							<Share2 class="w-4 h-4 text-[#0593C6] dark:text-sky-300" />
@@ -1168,20 +1168,20 @@ Bagikan refleksi penutup Anda di sini.`
 							</div>
 
 							<!-- Action & Status Management Toolbar -->
-							<div class="pt-3 mt-4 border-t border-sky-100 dark:border-white/15 space-y-2.5">
+							<div class="pt-3.5 mt-4 border-t border-sky-100/70 dark:border-white/10 space-y-3">
 								<!-- Quick Status Switcher Row -->
-								<div class="flex items-center justify-between text-[11px] text-[#516f8e] dark:text-white/70">
-									<span class="font-bold text-[10px] uppercase tracking-wider text-slate-400 dark:text-white/50">Ubah Status:</span>
-									<div class="flex items-center gap-1">
+								<div class="flex items-center justify-between text-xs">
+									<span class="text-[11px] font-medium text-[#516f8e] dark:text-white/60">Ubah status:</span>
+									<div class="flex items-center gap-1.5">
 										{#if post.metadata.status !== 'upload'}
 											<button
 												type="button"
 												disabled={isUpdatingStatus}
 												onclick={() => updatePostStatus(post.slug, 'upload', post.metadata.title)}
-												class="px-2 py-0.5 rounded-md bg-emerald-500/15 hover:bg-emerald-500 text-emerald-700 dark:text-emerald-300 hover:text-white font-bold transition cursor-pointer"
+												class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 transition cursor-pointer"
 												title="Ubah status ke Upload (Terbitkan)"
 											>
-												Upload
+												Terbitkan
 											</button>
 										{/if}
 
@@ -1190,7 +1190,7 @@ Bagikan refleksi penutup Anda di sini.`
 												type="button"
 												disabled={isUpdatingStatus}
 												onclick={() => updatePostStatus(post.slug, 'draft', post.metadata.title)}
-												class="px-2 py-0.5 rounded-md bg-amber-500/15 hover:bg-amber-500 text-amber-700 dark:text-amber-300 hover:text-white font-bold transition cursor-pointer"
+												class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 transition cursor-pointer"
 												title="Ubah status ke Draft"
 											>
 												Draft
@@ -1202,7 +1202,7 @@ Bagikan refleksi penutup Anda di sini.`
 												type="button"
 												disabled={isUpdatingStatus}
 												onclick={() => updatePostStatus(post.slug, 'arsip', post.metadata.title)}
-												class="px-2 py-0.5 rounded-md bg-purple-500/15 hover:bg-purple-500 text-purple-700 dark:text-purple-300 hover:text-white font-bold transition cursor-pointer"
+												class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/30 transition cursor-pointer"
 												title="Ubah status ke Arsip"
 											>
 												Arsip
@@ -1212,27 +1212,21 @@ Bagikan refleksi penutup Anda di sini.`
 								</div>
 
 								<!-- Bottom Action Links Row -->
-								<div class="flex items-center justify-between text-xs pt-1 border-t border-sky-100/60 dark:border-white/10">
-									<div class="flex items-center gap-1.5 flex-wrap">
-										<div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#0593C6]/10 text-[#0593C6] dark:bg-white/10 dark:text-sky-200 border border-[#0593C6]/20 dark:border-white/20 font-bold text-[11px]" title="Jumlah pembaca unik">
-											<Eye class="w-3.5 h-3.5" />
-											<span>{(data.views && (data.views as any)[post.slug]) || 0}</span>
-										</div>
-
-										<button
-											type="button"
-											onclick={() => {
-												const refs = (data.referrers && (data.referrers as any)[post.slug]) || {};
-												const tot = (data.views && (data.views as any)[post.slug]) || 0;
-												viewingReferrerPost = { slug: post.slug, title: post.metadata.title, referrers: refs, total: tot };
-											}}
-											class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 text-[10px] font-bold transition cursor-pointer"
-											title="Lihat rincian sumber pembaca untuk artikel ini"
-										>
-											<Share2 class="w-3 h-3" />
-											<span>Rujukan</span>
-										</button>
-									</div>
+								<div class="flex items-center justify-between text-xs pt-2.5 border-t border-sky-100/60 dark:border-white/10">
+									<!-- Clickable Eye badge for Viewers & Referrers -->
+									<button
+										type="button"
+										onclick={() => {
+											const refs = (data.referrers && (data.referrers as any)[post.slug]) || {};
+											const tot = (data.views && (data.views as any)[post.slug]) || 0;
+											viewingReferrerPost = { slug: post.slug, title: post.metadata.title, referrers: refs, total: tot };
+										}}
+										class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0593C6]/10 hover:bg-[#0593C6]/20 dark:bg-white/10 dark:hover:bg-white/20 text-[#0593C6] dark:text-sky-200 border border-[#0593C6]/25 dark:border-white/20 font-bold text-xs transition cursor-pointer group shadow-2xs"
+										title="Klik untuk melihat rincian sumber pembaca artikel ini"
+									>
+										<Eye class="w-3.5 h-3.5 group-hover:scale-110 text-[#0593C6] dark:text-sky-300 transition-transform" />
+										<span>{(data.views && (data.views as any)[post.slug]) || 0} pembaca</span>
+									</button>
 
 									<div class="flex items-center gap-1.5">
 										<!-- Edit button to load into editor -->
@@ -1256,7 +1250,7 @@ Bagikan refleksi penutup Anda di sini.`
 										<a
 											href="/artikel/{post.slug}"
 											target="_blank"
-											class="text-[#0593C6] dark:text-white/80 hover:text-[#D83995] dark:hover:text-[#f29185] font-semibold text-xs transition flex items-center gap-0.5"
+											class="text-[#0593C6] dark:text-white/80 hover:text-[#D83995] dark:hover:text-[#f29185] font-semibold text-xs transition flex items-center gap-0.5 px-1.5 py-1"
 											title={post.metadata.published === false ? 'Pratinjau Draf' : 'Buka Halaman Artikel'}
 										>
 											<span>{post.metadata.published === false ? 'Preview' : 'Buka'}</span>

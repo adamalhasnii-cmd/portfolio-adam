@@ -2,8 +2,14 @@ import { json } from '@sveltejs/kit';
 import { recordView, getAllViewCounts, getAllReferrerStats, getTotalReferrerStats } from '#lib/server/views';
 import { SESSION_COOKIE_NAME, SESSION_SECRET_TOKEN } from '#lib/server/constants';
 
-export async function POST({ request, getClientAddress }) {
+export async function POST({ request, getClientAddress, cookies }) {
 	try {
+		// Ignore views from authenticated Admin
+		const session = cookies.get(SESSION_COOKIE_NAME);
+		if (session === SESSION_SECRET_TOKEN) {
+			return json({ success: true, isAdmin: true });
+		}
+
 		const body = await request.json().catch(() => ({}));
 		const { slug, visitorId, ref } = body;
 
