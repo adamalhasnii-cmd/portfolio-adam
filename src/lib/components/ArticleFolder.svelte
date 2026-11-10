@@ -39,13 +39,14 @@
 		onEditPost
 	}: Props = $props();
 
-	let hovered = $state(false);
 	let selectedSlug = $state<string | null>(null);
+	let hoveredCardSlug = $state<string | null>(null);
 
-	// When folder unpins, reset selected post
+	// When folder unpins, reset active card states
 	$effect(() => {
 		if (!isPinned) {
 			selectedSlug = null;
+			hoveredCardSlug = null;
 		}
 	});
 
@@ -54,8 +55,6 @@
 	onMount(() => {
 		id = 'folder-' + Math.random().toString(36).substring(2, 9);
 	});
-
-	const open = $derived(hovered || isPinned);
 
 	// Limit to max 4 cards for optimal fanning visual clarity
 	const displayPosts = $derived(posts.slice(0, 4));
@@ -110,25 +109,18 @@
 		}
 	}
 
-	function getCardTransform(index: number, total: number, active: boolean, isOpen: boolean, pinned: boolean) {
+	function getCardTransform(index: number, total: number, isFocused: boolean, pinned: boolean) {
 		const offset = total > 1 ? index / (total - 1) - 0.5 : 0;
 		if (pinned) {
-			const x = offset * 90;
-			const y = active ? -138 : -112 + Math.abs(offset) * 16;
-			const rot = active ? 0 : offset * 12;
-			const sc = active ? 1.05 : 1;
-			return `transform: translate3d(${x}px, ${y}px, 0) rotate(${rot}deg) scale(${sc}); z-index: ${active ? 45 : 10 + index};`;
+			const x = offset * (isFocused ? 92 : 88);
+			const y = isFocused ? -142 : -106 + Math.abs(offset) * 16;
+			const rot = isFocused ? 0 : offset * 12;
+			const sc = isFocused ? 1.07 : 1;
+			return `transform: translate3d(${x}px, ${y}px, 0) rotate(${rot}deg) scale(${sc}); z-index: ${isFocused ? 50 : 10 + index};`;
 		}
-		if (isOpen) {
-			const x = offset * 12;
-			const y = -26 - index * 12;
-			const rot = offset * 5;
-			const sc = 1.02;
-			return `transform: translate3d(${x}px, ${y}px, 0) rotate(${rot}deg) scale(${sc}); z-index: ${20 + index};`;
-		}
-		const y = -index * 5;
-		const rot = offset * 1.5;
-		return `transform: translate3d(0, ${y}px, 0) rotate(${rot}deg) scale(1); z-index: ${10 + index};`;
+		// Default closed state: tucked completely inside folder pocket (never pops out on hover)
+		const y = -index * 4;
+		return `transform: translate3d(0, ${y}px, 0) rotate(0deg) scale(1); z-index: ${10 + index};`;
 	}
 
 	function togglePinned(e: MouseEvent) {
@@ -153,17 +145,10 @@
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <div
 	class="article-folder relative h-[215px] w-full select-none transition-all duration-300 {isActive ? 'scale-[1.02]' : 'hover:scale-[1.01]'}"
-	onpointerenter={(e) => {
-		if (e.pointerType === 'mouse') hovered = true;
-	}}
-	onpointerleave={() => {
-		hovered = false;
-		if (!isPinned) selectedSlug = null;
-	}}
 	onkeydown={(e) => {
 		if (e.key === 'Escape') {
-			hovered = false;
 			selectedSlug = null;
+			hoveredCardSlug = null;
 			if (isPinned && onTogglePinned) onTogglePinned();
 		}
 	}}
@@ -195,18 +180,24 @@
 	<!-- FOLDER CONTENT: SLIDING ARTICLE CARDS -->
 	{#if displayPosts.length > 0}
 		{#each displayPosts as post, i}
-			{@const active = selectedSlug === post.slug}
-			{@const transform = getCardTransform(i, displayPosts.length, active, open, isPinned)}
+			{@const isFocused = isPinned && (selectedSlug === post.slug || hoveredCardSlug === post.slug)}
+			{@const transform = getCardTransform(i, displayPosts.length, isFocused, isPinned)}
 
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<div
-				class="article-file-card absolute bottom-[30px] left-[8%] h-[114px] w-[84%] rounded-xl overflow-hidden shadow-xl cursor-pointer transition-all duration-300 ease-out border bg-gradient-to-br text-white {getPostBg(post.metadata?.category)} {active ? 'ring-2 ring-white/70 shadow-2xl' : 'hover:border-white/50'}"
+				class="article-file-card absolute bottom-[30px] left-[8%] h-[114px] w-[84%] rounded-xl overflow-hidden shadow-xl cursor-pointer transition-all duration-300 ease-out border bg-gradient-to-br text-white {getPostBg(post.metadata?.category)} {isFocused ? 'ring-2 ring-white/80 shadow-2xl' : 'hover:border-white/50'}"
 				style="{transform}"
+				onpointerenter={() => {
+					if (isPinned) hoveredCardSlug = post.slug;
+				}}
+				onpointerleave={() => {
+					if (hoveredCardSlug === post.slug) hoveredCardSlug = null;
+				}}
 				onclick={(e) => handleCardClick(post.slug, e)}
 				role="button"
 				tabindex="0"
 				aria-label="Artikel: {post.metadata?.title}"
-				aria-pressed={active}
+				aria-pressed={isFocused}
 			>
 				<div class="h-full w-full p-2.5 flex flex-col justify-between relative overflow-hidden backdrop-blur-md">
 					<!-- Glossy Glass Refraction Layer -->
@@ -229,9 +220,9 @@
 						</h4>
 					</div>
 
-					<!-- Card Footer / Actions when Active -->
+					<!-- Card Footer / Actions when Focused (Hovered or Selected) -->
 					<div class="relative z-10 flex items-center justify-between text-[9px]">
-						{#if active}
+						{#if isFocused}
 							<div class="flex items-center gap-1.5 w-full justify-end pt-0.5 animate-in fade-in duration-150">
 								{#if onEditPost}
 									<button
@@ -261,9 +252,11 @@
 								<Eye class="w-3 h-3" />
 								<span>{post.views ?? 0}</span>
 							</div>
-							<span class="text-[9px] text-white/50 italic">
-								{isPinned ? 'Klik detail' : ''}
-							</span>
+							{#if isPinned}
+								<span class="text-[9px] text-white/50 italic">
+									Hover detail
+								</span>
+							{/if}
 						{/if}
 					</div>
 				</div>
@@ -284,7 +277,7 @@
 	<!-- FOLDER FRONT FLAP (3D Liquid Glass) -->
 	<div
 		class="folder-tab-front pointer-events-none absolute bottom-5 z-20 h-[124px] w-full transition-all duration-300 ease-out"
-		style="clip-path: url(#{id}-front); transform-origin: bottom center; transform-style: preserve-3d; transform: perspective(800px) rotateX({isPinned ? -24 : open ? -12 : 0}deg) translateY({open ? 3 : 0}px);"
+		style="clip-path: url(#{id}-front); transform-origin: bottom center; transform-style: preserve-3d; transform: perspective(800px) rotateX({isPinned ? -25 : 0}deg) translateY({isPinned ? 3 : 0}px);"
 		aria-hidden="true"
 	>
 		<!-- Glossy Refraction Sheen on Glass Flap -->
@@ -297,12 +290,12 @@
 		onclick={togglePinned}
 		class="folder-control-bar absolute bottom-5 z-30 h-[92px] w-full flex items-end justify-between px-4 pb-3.5 pt-0 text-left cursor-pointer rounded-2xl select-none transition-colors"
 		aria-label="{isPinned ? 'Tutup' : 'Buka'} folder {label}"
-		aria-expanded={open}
+		aria-expanded={isPinned}
 	>
 		<!-- Left: Label & Counter -->
 		<div
 			class="flex flex-col gap-0.5 transition-transform duration-300"
-			style="transform: translateY({open ? 3 : 0}px);"
+			style="transform: translateY({isPinned ? 3 : 0}px);"
 		>
 			<span class="text-xs font-black tracking-tight text-[#061a2e] dark:text-white flex items-center gap-1.5">
 				<span class="w-2 h-2 rounded-full {styles.dot}"></span>
@@ -319,7 +312,7 @@
 		<!-- Right: Action Button (+ / X) -->
 		<div
 			class="size-7 grid place-items-center rounded-xl font-bold shadow-md transition-all duration-200 hover:scale-110 active:scale-95 {styles.actionBtn}"
-			style="transform: translateY({open ? 3 : 0}px);"
+			style="transform: translateY({isPinned ? 3 : 0}px);"
 		>
 			{#if isPinned}
 				<X class="w-3.5 h-3.5" />
@@ -330,14 +323,17 @@
 	</button>
 
 	<!-- BOTTOM ACTIVE POST LABEL -->
-	{#if selectedSlug}
-		{@const currentPost = posts.find((p) => p.slug === selectedSlug)}
-		{#if currentPost}
-			<div class="absolute bottom-0 left-0 w-full text-center px-2 animate-in fade-in duration-200">
-				<span class="inline-block text-[10px] font-mono text-[#0593C6] dark:text-sky-300 truncate max-w-full font-bold">
-					📄 {currentPost.metadata.title}
-				</span>
-			</div>
+	{#if isPinned}
+		{@const currentPostSlug = hoveredCardSlug || selectedSlug}
+		{#if currentPostSlug}
+			{@const currentPost = posts.find((p) => p.slug === currentPostSlug)}
+			{#if currentPost}
+				<div class="absolute bottom-0 left-0 w-full text-center px-2 animate-in fade-in duration-150">
+					<span class="inline-block text-[10px] font-mono text-[#0593C6] dark:text-sky-300 truncate max-w-full font-bold">
+						📄 {currentPost.metadata.title}
+					</span>
+				</div>
+			{/if}
 		{/if}
 	{/if}
 </div>
