@@ -2,12 +2,14 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import crypto from 'node:crypto';
 
-interface PostViews {
+export interface PostViews {
 	total: number;
 	uniqueViewers: string[]; // List of hashed visitor IDs
+	referrers?: Record<string, number>; // Breakdown of unique readers by referral source
+	uniqueReferrerVisitors?: string[]; // Deduplication per visitorHash:source
 }
 
-type ViewsStore = Record<string, PostViews>;
+export type ViewsStore = Record<string, PostViews>;
 
 // In-memory cache for fast lookups and atomic updates
 let viewsCache: ViewsStore | null = null;
@@ -82,42 +84,93 @@ function hashVisitorId(rawId: string): string {
 }
 
 /**
- * Record a unique view for a specific article slug.
- * If the visitor has already viewed this article, it will NOT increment the count.
+ * Normalize referrer source tags to known standard platforms.
+ */
+export function normalizeReferrer(ref?: string | null, headerReferer?: string | null): string {
+	const raw = (ref || '').toLowerCase().trim();
+
+	if (['whatsapp', 'wa', 'chat.whatsapp.com', 'api.whatsapp.com'].includes(raw)) return 'whatsapp';
+	if (['instagram', 'ig', 'instagram.com'].includes(raw)) return 'instagram';
+	if (['tiktok', 'tt', 'tiktok.com'].includes(raw)) return 'tiktok';
+	if (['twitter', 'x', 't.co', 'twitter.com', 'x.com'].includes(raw)) return 'twitter';
+	if (['telegram', 'tg', 't.me', 'telegram.org'].includes(raw)) return 'telegram';
+	if (['facebook', 'fb', 'facebook.com', 'fb.com'].includes(raw)) return 'facebook';
+	if (['linkedin', 'linkedin.com'].includes(raw)) return 'linkedin';
+	if (['salin_tautan', 'share', 'copy', 'salin', 'link'].includes(raw)) return 'salin_tautan';
+	if (['direct', 'langsung'].includes(raw)) return 'direct';
+
+	// Check HTTP Referer header if ref parameter wasn't provided or was generic
+	if (headerReferer) {
+		const h = headerReferer.toLowerCase();
+		if (h.includes('whatsapp') || h.includes('wa.me')) return 'whatsapp';
+		if (h.includes('instagram.com')) return 'instagram';
+		if (h.includes('tiktok.com')) return 'tiktok';
+		if (h.includes('t.co') || h.includes('twitter.com') || h.includes('x.com')) return 'twitter';
+		if (h.includes('t.me') || h.includes('telegram.org')) return 'telegram';
+		if (h.includes('facebook.com') || h.includes('fb.com')) return 'facebook';
+		if (h.includes('linkedin.com')) return 'linkedin';
+		if (h.includes('google.') || h.includes('bing.') || h.includes('yahoo.')) return 'mesin_pencari';
+	}
+
+	if (raw && /^[a-z0-9_-]{2,30}$/.test(raw)) {
+		return raw;
+	}
+
+	return 'direct';
+}
+
+/**
+ * Record a unique view for a specific article slug along with its referral source.
  */
 export async function recordView(
 	slug: string,
-	rawVisitorId: string
-): Promise<{ incremented: boolean; count: number }> {
+	rawVisitorId: string,
+	rawReferrer?: string | null,
+	headerReferer?: string | null
+): Promise<{ incremented: boolean; count: number; referrers: Record<string, number> }> {
 	const store = await loadViews();
 	const visitorHash = hashVisitorId(rawVisitorId || 'anonymous_' + Math.random());
+	const source = normalizeReferrer(rawReferrer, headerReferer);
 
 	if (!store[slug]) {
 		store[slug] = {
 			total: 0,
-			uniqueViewers: []
+			uniqueViewers: [],
+			referrers: {},
+			uniqueReferrerVisitors: []
 		};
 	}
 
 	const postData = store[slug];
-
-	// Strict deduplication: check if this visitor hash already viewed this slug
-	if (postData.uniqueViewers.includes(visitorHash)) {
-		return {
-			incremented: false,
-			count: postData.total
-		};
+	if (!postData.referrers) {
+		postData.referrers = {};
+	}
+	if (!postData.uniqueReferrerVisitors) {
+		postData.uniqueReferrerVisitors = [];
 	}
 
-	// New unique viewer
-	postData.uniqueViewers.push(visitorHash);
-	postData.total += 1;
+	let incremented = false;
+
+	// 1. Overall unique visitor deduplication
+	if (!postData.uniqueViewers.includes(visitorHash)) {
+		postData.uniqueViewers.push(visitorHash);
+		postData.total += 1;
+		incremented = true;
+	}
+
+	// 2. Track referral source uniquely per visitor (prevent refresh-spamming the count)
+	const refKey = `${visitorHash}:${source}`;
+	if (!postData.uniqueReferrerVisitors.includes(refKey)) {
+		postData.uniqueReferrerVisitors.push(refKey);
+		postData.referrers[source] = (postData.referrers[source] || 0) + 1;
+	}
 
 	await persistViews();
 
 	return {
-		incremented: true,
-		count: postData.total
+		incremented,
+		count: postData.total,
+		referrers: postData.referrers
 	};
 }
 
@@ -127,6 +180,14 @@ export async function recordView(
 export async function getViewCount(slug: string): Promise<number> {
 	const store = await loadViews();
 	return store[slug]?.total || 0;
+}
+
+/**
+ * Get referrer breakdown for a specific article slug.
+ */
+export async function getReferrersForSlug(slug: string): Promise<Record<string, number>> {
+	const store = await loadViews();
+	return store[slug]?.referrers || {};
 }
 
 /**
@@ -144,6 +205,38 @@ export async function getAllViewCounts(): Promise<Record<string, number>> {
 }
 
 /**
+ * Get all referrer statistics mapped by slug.
+ */
+export async function getAllReferrerStats(): Promise<Record<string, Record<string, number>>> {
+	const store = await loadViews();
+	const result: Record<string, Record<string, number>> = {};
+
+	for (const [slug, data] of Object.entries(store)) {
+		result[slug] = data?.referrers || {};
+	}
+
+	return result;
+}
+
+/**
+ * Get aggregate totals of all referral sources across all posts.
+ */
+export async function getTotalReferrerStats(): Promise<Record<string, number>> {
+	const store = await loadViews();
+	const totals: Record<string, number> = {};
+
+	for (const data of Object.values(store)) {
+		if (data?.referrers) {
+			for (const [source, count] of Object.entries(data.referrers)) {
+				totals[source] = (totals[source] || 0) + (Number(count) || 0);
+			}
+		}
+	}
+
+	return totals;
+}
+
+/**
  * Get grand total views across all articles.
  */
 export async function getTotalViews(): Promise<number> {
@@ -154,4 +247,3 @@ export async function getTotalViews(): Promise<number> {
 	}
 	return total;
 }
-

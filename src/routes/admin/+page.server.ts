@@ -7,7 +7,7 @@ import {
 	SESSION_COOKIE_NAME,
 	SESSION_SECRET_TOKEN
 } from '#lib/server/constants';
-import { getAllViewCounts } from '#lib/server/views';
+import { getAllViewCounts, getAllReferrerStats, getTotalReferrerStats } from '#lib/server/views';
 
 export const load: PageServerLoad = async ({ cookies }) => {
 	const session = cookies.get(SESSION_COOKIE_NAME);
@@ -16,7 +16,9 @@ export const load: PageServerLoad = async ({ cookies }) => {
 	return {
 		isAuthenticated,
 		posts: isAuthenticated ? getAllPosts(true) : [],
-		views: isAuthenticated ? await getAllViewCounts() : {}
+		views: isAuthenticated ? await getAllViewCounts() : {},
+		referrers: isAuthenticated ? await getAllReferrerStats() : {},
+		totalReferrers: isAuthenticated ? await getTotalReferrerStats() : {}
 	};
 };
 

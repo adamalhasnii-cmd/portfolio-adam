@@ -1,11 +1,11 @@
 import { json } from '@sveltejs/kit';
-import { recordView, getAllViewCounts } from '#lib/server/views';
+import { recordView, getAllViewCounts, getAllReferrerStats, getTotalReferrerStats } from '#lib/server/views';
 import { SESSION_COOKIE_NAME, SESSION_SECRET_TOKEN } from '#lib/server/constants';
 
 export async function POST({ request, getClientAddress }) {
 	try {
 		const body = await request.json().catch(() => ({}));
-		const { slug, visitorId } = body;
+		const { slug, visitorId, ref } = body;
 
 		if (!slug || typeof slug !== 'string') {
 			return json({ success: false, error: 'Slug tidak valid' }, { status: 400 });
@@ -21,10 +21,13 @@ export async function POST({ request, getClientAddress }) {
 			}
 		}
 
-		await recordView(slug.trim(), effectiveVisitorId.trim());
+		const headerReferer = request.headers.get('referer');
+		const result = await recordView(slug.trim(), effectiveVisitorId.trim(), ref, headerReferer);
 
-		// Return success without disclosing reader count publicly
-		return json({ success: true });
+		return json({
+			success: true,
+			count: result.count
+		});
 	} catch (err: any) {
 		return json({ success: false, error: err?.message || 'Server error' }, { status: 500 });
 	}
@@ -37,5 +40,13 @@ export async function GET({ cookies }) {
 	}
 
 	const views = await getAllViewCounts();
-	return json({ success: true, views });
+	const referrers = await getAllReferrerStats();
+	const totalReferrers = await getTotalReferrerStats();
+
+	return json({
+		success: true,
+		views,
+		referrers,
+		totalReferrers
+	});
 }

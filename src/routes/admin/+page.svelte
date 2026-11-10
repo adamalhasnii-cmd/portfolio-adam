@@ -28,7 +28,9 @@
 		Trash2,
 		Undo2,
 		Pencil,
-		Archive
+		Archive,
+		Share2,
+		X
 	} from '@lucide/svelte';
 
 	let { data, form }: PageProps & { form: ActionData } = $props();
@@ -62,6 +64,23 @@
 	);
 
 	let dashboardFilter = $state<'semua' | 'upload' | 'draft' | 'arsip'>('semua');
+	let viewingReferrerPost = $state<{ slug: string; title: string; referrers: Record<string, number>; total: number } | null>(null);
+
+	function formatPlatformName(key: string): string {
+		switch (key) {
+			case 'whatsapp': return 'WhatsApp';
+			case 'instagram': return 'Instagram';
+			case 'tiktok': return 'TikTok';
+			case 'twitter': return 'X (Twitter)';
+			case 'telegram': return 'Telegram';
+			case 'salin_tautan': return 'Salin Tautan';
+			case 'facebook': return 'Facebook';
+			case 'linkedin': return 'LinkedIn';
+			case 'mesin_pencari': return 'Mesin Pencari';
+			case 'direct': return 'Langsung (Direct)';
+			default: return key.charAt(0).toUpperCase() + key.slice(1);
+		}
+	}
 
 	const filteredPosts = $derived(
 		(data.posts || []).filter((p: any) => {
@@ -962,6 +981,75 @@ Bagikan refleksi penutup Anda di sini.`
 					</div>
 				</div>
 
+				<!-- Referral Traffic Tracking Overview -->
+				<div class="mb-6 p-4 rounded-2xl glass-panel border border-sky-200/60 dark:border-white/20">
+					<div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+						<div class="flex items-center gap-2">
+							<Share2 class="w-4 h-4 text-[#0593C6] dark:text-sky-300" />
+							<h3 class="text-xs sm:text-sm font-black text-[#061a2e] dark:text-white">Sumber Trafik Pembaca (Referral Tracking)</h3>
+						</div>
+						<span class="text-[11px] text-[#516f8e] dark:text-white/60">Terdeteksi dari tautan berbagi (?ref=...) & referer</span>
+					</div>
+
+					<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 text-xs">
+						<!-- WhatsApp -->
+						<div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between">
+							<div class="flex items-center gap-1.5">
+								<span class="w-2 h-2 rounded-full bg-[#25D366]"></span>
+								<span class="font-bold text-emerald-900 dark:text-emerald-200 text-[11px]">WhatsApp</span>
+							</div>
+							<span class="font-black text-emerald-700 dark:text-emerald-300">{(data.totalReferrers?.whatsapp) || 0}</span>
+						</div>
+
+						<!-- Instagram -->
+						<div class="p-2.5 rounded-xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-between">
+							<div class="flex items-center gap-1.5">
+								<span class="w-2 h-2 rounded-full bg-[#E1306C]"></span>
+								<span class="font-bold text-pink-900 dark:text-pink-200 text-[11px]">Instagram</span>
+							</div>
+							<span class="font-black text-pink-700 dark:text-pink-300">{(data.totalReferrers?.instagram) || 0}</span>
+						</div>
+
+						<!-- TikTok -->
+						<div class="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-between">
+							<div class="flex items-center gap-1.5">
+								<span class="w-2 h-2 rounded-full bg-[#00f2fe]"></span>
+								<span class="font-bold text-cyan-900 dark:text-cyan-200 text-[11px]">TikTok</span>
+							</div>
+							<span class="font-black text-cyan-700 dark:text-cyan-300">{(data.totalReferrers?.tiktok) || 0}</span>
+						</div>
+
+						<!-- X / Twitter -->
+						<div class="p-2.5 rounded-xl bg-sky-500/10 border border-sky-400/30 flex items-center justify-between">
+							<div class="flex items-center gap-1.5">
+								<span class="w-2 h-2 rounded-full bg-[#0593C6]"></span>
+								<span class="font-bold text-[#0593C6] dark:text-sky-200 text-[11px]">X (Twitter)</span>
+							</div>
+							<span class="font-black text-[#0593C6] dark:text-sky-300">{(data.totalReferrers?.twitter) || 0}</span>
+						</div>
+
+						<!-- Telegram -->
+						<div class="p-2.5 rounded-xl bg-blue-500/10 border border-blue-400/30 flex items-center justify-between">
+							<div class="flex items-center gap-1.5">
+								<span class="w-2 h-2 rounded-full bg-[#229ED9]"></span>
+								<span class="font-bold text-blue-900 dark:text-blue-200 text-[11px]">Telegram</span>
+							</div>
+							<span class="font-black text-blue-700 dark:text-blue-300">{(data.totalReferrers?.telegram) || 0}</span>
+						</div>
+
+						<!-- Langsung & Salin Tautan -->
+						<div class="p-2.5 rounded-xl bg-slate-500/10 border border-slate-400/30 flex items-center justify-between">
+							<div class="flex items-center gap-1.5">
+								<span class="w-2 h-2 rounded-full bg-slate-400"></span>
+								<span class="font-bold text-slate-800 dark:text-slate-200 text-[11px]">Direct / Lain</span>
+							</div>
+							<span class="font-black text-slate-700 dark:text-slate-300">
+								{((data.totalReferrers?.direct || 0) + (data.totalReferrers?.salin_tautan || 0) + (data.totalReferrers?.mesin_pencari || 0))}
+							</span>
+						</div>
+					</div>
+				</div>
+
 				<!-- Dashboard Filter Tabs -->
 				<div class="flex items-center gap-2 mb-6 overflow-x-auto pb-1">
 					<button
@@ -1072,9 +1160,25 @@ Bagikan refleksi penutup Anda di sini.`
 
 								<!-- Bottom Action Links Row -->
 								<div class="flex items-center justify-between text-xs pt-1 border-t border-sky-100/60 dark:border-white/10">
-									<div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#0593C6]/10 text-[#0593C6] dark:bg-white/10 dark:text-sky-200 border border-[#0593C6]/20 dark:border-white/20 font-bold text-[11px]" title="Jumlah pembaca unik">
-										<Eye class="w-3.5 h-3.5" />
-										<span>{(data.views && (data.views as any)[post.slug]) || 0}</span>
+									<div class="flex items-center gap-1.5 flex-wrap">
+										<div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#0593C6]/10 text-[#0593C6] dark:bg-white/10 dark:text-sky-200 border border-[#0593C6]/20 dark:border-white/20 font-bold text-[11px]" title="Jumlah pembaca unik">
+											<Eye class="w-3.5 h-3.5" />
+											<span>{(data.views && (data.views as any)[post.slug]) || 0}</span>
+										</div>
+
+										<button
+											type="button"
+											onclick={() => {
+												const refs = (data.referrers && (data.referrers as any)[post.slug]) || {};
+												const tot = (data.views && (data.views as any)[post.slug]) || 0;
+												viewingReferrerPost = { slug: post.slug, title: post.metadata.title, referrers: refs, total: tot };
+											}}
+											class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 text-[10px] font-bold transition cursor-pointer"
+											title="Lihat rincian sumber pembaca untuk artikel ini"
+										>
+											<Share2 class="w-3 h-3" />
+											<span>Rujukan</span>
+										</button>
 									</div>
 
 									<div class="flex items-center gap-1.5">
@@ -1116,6 +1220,61 @@ Bagikan refleksi penutup Anda di sini.`
 						</div>
 					{/each}
 				</div>
+			</div>
+		</div>
+	</div>
+{/if}
+
+<!-- ================= REFERRER BREAKDOWN MODAL (Admin) ================= -->
+{#if viewingReferrerPost}
+	<div
+		class="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto"
+		onclick={(e) => {
+			if (e.target === e.currentTarget) viewingReferrerPost = null;
+		}}
+		role="presentation"
+	>
+		<div
+			class="glass-panel border border-sky-200/50 dark:border-white/20 rounded-3xl p-6 sm:p-7 max-w-md w-full shadow-2xl relative text-[#061a2e] dark:text-white my-8 animate-in fade-in zoom-in-95 duration-200"
+		>
+			<button
+				type="button"
+				onclick={() => (viewingReferrerPost = null)}
+				class="absolute top-5 right-5 p-2 rounded-full text-slate-400 hover:text-rose-500 hover:bg-white/10 dark:hover:bg-white/15 transition cursor-pointer"
+				title="Tutup dialog"
+			>
+				<X class="w-5 h-5" />
+			</button>
+
+			<div class="mb-4 pr-8">
+				<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 text-xs font-bold mb-2">
+					<Share2 class="w-3.5 h-3.5" />
+					<span>Rincian Sumber Pembaca</span>
+				</div>
+				<h3 class="text-base font-black text-[#061a2e] dark:text-white leading-snug">
+					{viewingReferrerPost.title}
+				</h3>
+				<p class="text-[11px] font-mono text-slate-400 mt-1">
+					src/posts/{viewingReferrerPost.slug}.md
+				</p>
+			</div>
+
+			<div class="space-y-2 mb-6">
+				{#each Object.entries(viewingReferrerPost.referrers || {}) as [src, count]}
+					<div class="flex items-center justify-between p-3 rounded-xl bg-sky-500/5 dark:bg-white/5 border border-sky-200/50 dark:border-white/10 text-xs">
+						<span class="font-bold text-[#061a2e] dark:text-white">{formatPlatformName(src)}</span>
+						<span class="px-2.5 py-0.5 rounded-full bg-[#0593C6]/20 text-[#0593C6] dark:text-sky-200 font-extrabold">{count} pembaca</span>
+					</div>
+				{:else}
+					<div class="p-4 rounded-xl bg-sky-500/5 dark:bg-white/5 text-center text-xs text-slate-400 italic">
+						Belum ada data rujukan spesifik. Saat pembaca membuka link share dengan label ?ref=... (misal dari WhatsApp, Instagram, atau TikTok), platformnya akan muncul di sini.
+					</div>
+				{/each}
+			</div>
+
+			<div class="pt-3 border-t border-sky-100/60 dark:border-white/10 flex justify-between items-center text-xs">
+				<span class="text-slate-500 dark:text-slate-400">Total Pembaca Unik:</span>
+				<span class="font-black text-sm text-[#0593C6] dark:text-white">{viewingReferrerPost.total}</span>
 			</div>
 		</div>
 	</div>

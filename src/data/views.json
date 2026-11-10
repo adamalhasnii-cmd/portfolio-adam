@@ -3,12 +3,24 @@
     "total": 1,
     "uniqueViewers": [
       "7fbc58bac6949c90ecb9d6f3"
+    ],
+    "referrers": {
+      "direct": 1
+    },
+    "uniqueReferrerVisitors": [
+      "7fbc58bac6949c90ecb9d6f3:direct"
     ]
   },
   "testimoni": {
     "total": 1,
     "uniqueViewers": [
       "7fbc58bac6949c90ecb9d6f3"
+    ],
+    "referrers": {
+      "direct": 1
+    },
+    "uniqueReferrerVisitors": [
+      "7fbc58bac6949c90ecb9d6f3:direct"
     ]
   }
 }

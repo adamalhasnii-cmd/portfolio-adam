@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { SESSION_COOKIE_NAME, SESSION_SECRET_TOKEN } from '#lib/server/constants';
-import { getViewCount } from '#lib/server/views';
+import { getViewCount, getReferrersForSlug } from '#lib/server/views';
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
 	const session = cookies.get(SESSION_COOKIE_NAME);
@@ -8,6 +8,7 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
 
 	return {
 		isAdmin,
-		viewCount: isAdmin ? await getViewCount(params.slug) : 0
+		viewCount: isAdmin ? await getViewCount(params.slug) : 0,
+		referrers: isAdmin ? await getReferrersForSlug(params.slug) : {}
 	};
 };
