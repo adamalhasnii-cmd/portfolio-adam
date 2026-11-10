@@ -22,6 +22,8 @@
 		label?: string;
 		variant?: 'emerald' | 'amber' | 'purple' | 'cyan';
 		isActive?: boolean;
+		isPinned?: boolean;
+		onTogglePinned?: () => void;
 		onSelectFolder?: () => void;
 		onEditPost?: (slug: string) => void;
 	}
@@ -31,13 +33,21 @@
 		label = 'My Files',
 		variant = 'cyan',
 		isActive = false,
+		isPinned = false,
+		onTogglePinned,
 		onSelectFolder,
 		onEditPost
 	}: Props = $props();
 
 	let hovered = $state(false);
-	let pinned = $state(false);
 	let selectedSlug = $state<string | null>(null);
+
+	// When folder unpins, reset selected post
+	$effect(() => {
+		if (!isPinned) {
+			selectedSlug = null;
+		}
+	});
 
 	// Unique ID per instance for SVG clip-path
 	let id = $state('folder-' + Math.random().toString(36).substring(2, 9));
@@ -45,7 +55,7 @@
 		id = 'folder-' + Math.random().toString(36).substring(2, 9);
 	});
 
-	const open = $derived(hovered || pinned);
+	const open = $derived(hovered || isPinned);
 
 	// Limit to max 4 cards for optimal fanning visual clarity
 	const displayPosts = $derived(posts.slice(0, 4));
@@ -100,39 +110,42 @@
 		}
 	}
 
-	function getCardTransform(index: number, total: number, active: boolean, isOpen: boolean, isPinned: boolean) {
+	function getCardTransform(index: number, total: number, active: boolean, isOpen: boolean, pinned: boolean) {
 		const offset = total > 1 ? index / (total - 1) - 0.5 : 0;
-		if (isPinned) {
-			const x = offset * 115;
-			const y = active ? -165 : -140 + Math.abs(offset) * 22;
-			const rot = active ? 0 : offset * 15;
-			const sc = active ? 1.08 : 1;
+		if (pinned) {
+			const x = offset * 90;
+			const y = active ? -138 : -112 + Math.abs(offset) * 16;
+			const rot = active ? 0 : offset * 12;
+			const sc = active ? 1.05 : 1;
 			return `transform: translate3d(${x}px, ${y}px, 0) rotate(${rot}deg) scale(${sc}); z-index: ${active ? 45 : 10 + index};`;
 		}
 		if (isOpen) {
-			const x = offset * 14;
-			const y = active ? -75 : -32 - index * 14;
-			const rot = offset * 6;
-			const sc = active ? 1.03 : 1;
-			return `transform: translate3d(${x}px, ${y}px, 0) rotate(${rot}deg) scale(${sc}); z-index: ${active ? 30 : 10 + index};`;
+			const x = offset * 12;
+			const y = -26 - index * 12;
+			const rot = offset * 5;
+			const sc = 1.02;
+			return `transform: translate3d(${x}px, ${y}px, 0) rotate(${rot}deg) scale(${sc}); z-index: ${20 + index};`;
 		}
-		const y = -index * 6;
-		const rot = offset * 2;
+		const y = -index * 5;
+		const rot = offset * 1.5;
 		return `transform: translate3d(0, ${y}px, 0) rotate(${rot}deg) scale(1); z-index: ${10 + index};`;
 	}
 
 	function togglePinned(e: MouseEvent) {
 		e.stopPropagation();
-		pinned = !pinned;
-		if (!pinned) {
-			selectedSlug = null;
+		if (onTogglePinned) {
+			onTogglePinned();
 		}
-		if (onSelectFolder) onSelectFolder();
+		if (onSelectFolder) {
+			onSelectFolder();
+		}
 	}
 
 	function handleCardClick(slug: string, e: MouseEvent) {
 		e.stopPropagation();
-		pinned = true;
+		if (!isPinned && onTogglePinned) {
+			onTogglePinned();
+		}
 		selectedSlug = selectedSlug === slug ? null : slug;
 	}
 </script>
@@ -145,13 +158,13 @@
 	}}
 	onpointerleave={() => {
 		hovered = false;
-		if (!pinned) selectedSlug = null;
+		if (!isPinned) selectedSlug = null;
 	}}
 	onkeydown={(e) => {
 		if (e.key === 'Escape') {
-			pinned = false;
 			hovered = false;
 			selectedSlug = null;
+			if (isPinned && onTogglePinned) onTogglePinned();
 		}
 	}}
 	role="region"
@@ -183,7 +196,7 @@
 	{#if displayPosts.length > 0}
 		{#each displayPosts as post, i}
 			{@const active = selectedSlug === post.slug}
-			{@const transform = getCardTransform(i, displayPosts.length, active, open, pinned)}
+			{@const transform = getCardTransform(i, displayPosts.length, active, open, isPinned)}
 
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<div
@@ -249,7 +262,7 @@
 								<span>{post.views ?? 0}</span>
 							</div>
 							<span class="text-[9px] text-white/50 italic">
-								{pinned ? 'Klik detail' : ''}
+								{isPinned ? 'Klik detail' : ''}
 							</span>
 						{/if}
 					</div>
@@ -271,7 +284,7 @@
 	<!-- FOLDER FRONT FLAP (3D Liquid Glass) -->
 	<div
 		class="folder-tab-front pointer-events-none absolute bottom-5 z-20 h-[124px] w-full transition-all duration-300 ease-out"
-		style="clip-path: url(#{id}-front); transform-origin: bottom center; transform-style: preserve-3d; transform: perspective(800px) rotateX({pinned ? -26 : open ? -13 : 0}deg) translateY({open ? 4 : 0}px);"
+		style="clip-path: url(#{id}-front); transform-origin: bottom center; transform-style: preserve-3d; transform: perspective(800px) rotateX({isPinned ? -24 : open ? -12 : 0}deg) translateY({open ? 3 : 0}px);"
 		aria-hidden="true"
 	>
 		<!-- Glossy Refraction Sheen on Glass Flap -->
@@ -283,7 +296,7 @@
 		type="button"
 		onclick={togglePinned}
 		class="folder-control-bar absolute bottom-5 z-30 h-[92px] w-full flex items-end justify-between px-4 pb-3.5 pt-0 text-left cursor-pointer rounded-2xl select-none transition-colors"
-		aria-label="{pinned ? 'Tutup' : 'Buka'} folder {label}"
+		aria-label="{isPinned ? 'Tutup' : 'Buka'} folder {label}"
 		aria-expanded={open}
 	>
 		<!-- Left: Label & Counter -->
@@ -308,7 +321,7 @@
 			class="size-7 grid place-items-center rounded-xl font-bold shadow-md transition-all duration-200 hover:scale-110 active:scale-95 {styles.actionBtn}"
 			style="transform: translateY({open ? 3 : 0}px);"
 		>
-			{#if pinned}
+			{#if isPinned}
 				<X class="w-3.5 h-3.5" />
 			{:else}
 				<Plus class="w-3.5 h-3.5" />

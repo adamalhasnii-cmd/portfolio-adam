@@ -77,6 +77,17 @@
 	const arsipCount = $derived(arsipPosts.length);
 
 	let dashboardFilter = $state<'semua' | 'upload' | 'draft' | 'arsip'>('semua');
+	let openedFolder = $state<'upload' | 'draft' | 'arsip' | 'semua' | null>(null);
+
+	function handleToggleFolder(folderKey: 'upload' | 'draft' | 'arsip' | 'semua') {
+		if (openedFolder === folderKey) {
+			openedFolder = null;
+		} else {
+			openedFolder = folderKey;
+			dashboardFilter = folderKey;
+		}
+	}
+
 	let viewingReferrerPost = $state<{ slug: string; title: string; referrers: Record<string, number>; total: number } | null>(null);
 
 	function formatPlatformName(key: string): string {
@@ -567,7 +578,9 @@ Bagikan refleksi penutup Anda di sini.`
 
 	function handleWindowKeydown(e: KeyboardEvent) {
 		if (e.key === 'Escape') {
-			if (deleteTarget && !isDeletingPost) {
+			if (openedFolder) {
+				openedFolder = null;
+			} else if (deleteTarget && !isDeletingPost) {
 				deleteTarget = null;
 			} else if (viewingReferrerPost) {
 				viewingReferrerPost = null;
@@ -1139,7 +1152,7 @@ Bagikan refleksi penutup Anda di sini.`
 
 				<!-- Liquid Glass 3D Article Folders Showcase -->
 				<div class="mb-10 p-5 sm:p-7 rounded-3xl glass-panel border border-sky-200/50 dark:border-white/15 shadow-xl">
-					<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 pb-4 border-b border-sky-100/60 dark:border-white/10">
+					<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-4 border-b border-sky-100/60 dark:border-white/10">
 						<div class="flex items-center gap-2">
 							<FolderOpen class="w-4 h-4 text-[#D83995]" />
 							<h4 class="text-sm font-black text-[#061a2e] dark:text-white uppercase tracking-wider">
@@ -1147,16 +1160,19 @@ Bagikan refleksi penutup Anda di sini.`
 							</h4>
 						</div>
 						<span class="text-[11px] text-[#516f8e] dark:text-white/60 font-medium">
-							✨ Hover untuk mengintip berkas • Klik folder untuk membuka & filter
+							✨ Hover untuk mengintip berkas • Klik untuk buka 1 folder
 						</span>
 					</div>
 
-					<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-2 pb-2">
+					<!-- Headroom (pt-12) to ensure fanning cards have ample space without hitting the title -->
+					<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-12 pb-2">
 						<ArticleFolder
 							posts={uploadPosts}
 							label="Terbit (Upload)"
 							variant="emerald"
 							isActive={dashboardFilter === 'upload'}
+							isPinned={openedFolder === 'upload'}
+							onTogglePinned={() => handleToggleFolder('upload')}
 							onSelectFolder={() => dashboardFilter = 'upload'}
 							onEditPost={(slug) => loadPostForEditing(slug)}
 						/>
@@ -1166,6 +1182,8 @@ Bagikan refleksi penutup Anda di sini.`
 							label="Draft Berkas"
 							variant="amber"
 							isActive={dashboardFilter === 'draft'}
+							isPinned={openedFolder === 'draft'}
+							onTogglePinned={() => handleToggleFolder('draft')}
 							onSelectFolder={() => dashboardFilter = 'draft'}
 							onEditPost={(slug) => loadPostForEditing(slug)}
 						/>
@@ -1175,6 +1193,8 @@ Bagikan refleksi penutup Anda di sini.`
 							label="Arsip Tulisan"
 							variant="purple"
 							isActive={dashboardFilter === 'arsip'}
+							isPinned={openedFolder === 'arsip'}
+							onTogglePinned={() => handleToggleFolder('arsip')}
 							onSelectFolder={() => dashboardFilter = 'arsip'}
 							onEditPost={(slug) => loadPostForEditing(slug)}
 						/>
@@ -1184,6 +1204,8 @@ Bagikan refleksi penutup Anda di sini.`
 							label="Semua Berkas"
 							variant="cyan"
 							isActive={dashboardFilter === 'semua'}
+							isPinned={openedFolder === 'semua'}
+							onTogglePinned={() => handleToggleFolder('semua')}
 							onSelectFolder={() => dashboardFilter = 'semua'}
 							onEditPost={(slug) => loadPostForEditing(slug)}
 						/>
