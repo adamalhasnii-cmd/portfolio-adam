@@ -440,22 +440,22 @@ Bagikan refleksi penutup Anda di sini.`
 						type="button"
 						onclick={() => savePost(true)}
 						disabled={isSaving}
-						class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0593C6] text-white hover:bg-[#047ea8] dark:bg-white dark:text-[#0593C6] text-xs font-bold active:scale-[0.99] transition cursor-pointer shadow-lg shadow-[#0593C6]/25 disabled:opacity-50"
+						class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0593C6] text-white hover:bg-[#047ea8] hover:text-white dark:bg-white dark:text-[#0593C6] dark:hover:bg-[#047ea8] dark:hover:text-white text-xs font-bold active:scale-[0.99] transition cursor-pointer shadow-lg shadow-[#0593C6]/25 disabled:opacity-50"
 						title="Upload dan publikasikan tulisan ini"
 					>
-						<Upload class="w-4 h-4" />
-						<span>{isSaving ? 'Mengupload...' : 'Upload'}</span>
+						<Upload class="w-4 h-4 text-current" />
+						<span class="text-current">{isSaving ? 'Mengupload...' : 'Upload'}</span>
 					</button>
 
 					<button
 						type="button"
 						onclick={() => savePost(false)}
 						disabled={isSaving}
-						class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl glass-pill text-[#0593C6] dark:text-sky-200 hover:bg-[#0593C6]/10 border border-[#0593C6]/30 text-xs font-bold transition cursor-pointer"
+						class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl glass-pill text-[#0593C6] dark:text-sky-200 hover:bg-[#0593C6]/15 hover:text-[#0593C6] dark:hover:bg-white/15 dark:hover:text-white border border-[#0593C6]/30 dark:border-white/20 text-xs font-bold transition cursor-pointer"
 						title="Simpan sebagai Draft di project"
 					>
-						<Bookmark class="w-4 h-4 text-[#0593C6] dark:text-sky-300" />
-						<span>Draft</span>
+						<Bookmark class="w-4 h-4 text-current" />
+						<span class="text-current">Draft</span>
 					</button>
 
 					<button

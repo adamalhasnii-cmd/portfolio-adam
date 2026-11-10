@@ -186,7 +186,7 @@
 						searchQuery = '';
 						selectedCategory = 'Semua';
 					}}
-					class="px-6 py-2.5 bg-[#0593C6] text-white hover:bg-[#047ea8] dark:bg-white dark:text-[#0593C6] font-bold text-xs rounded-full shadow-md transition cursor-pointer"
+					class="px-6 py-2.5 bg-[#0593C6] text-white hover:bg-[#047ea8] hover:text-white dark:bg-white dark:text-[#0593C6] dark:hover:bg-[#047ea8] dark:hover:text-white font-bold text-xs rounded-full shadow-md transition cursor-pointer"
 				>
 					Reset Semua Filter
 				</button>
