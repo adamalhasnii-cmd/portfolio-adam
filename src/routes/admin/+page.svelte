@@ -322,9 +322,11 @@ Bagikan refleksi penutup Anda di sini.`
 
 		// Immediately start scrolling up so the user gets instant visual feedback
 		if (typeof window !== 'undefined') {
-			const target = document.getElementById('editor-studio-top') || document.documentElement;
-			target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-			window.scrollTo({ top: 0, behavior: 'smooth' });
+			activeTab = 'editor';
+			const target = document.getElementById('editor-workspace-anchor');
+			if (target) {
+				target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			}
 		}
 
 		try {
@@ -351,14 +353,16 @@ Bagikan refleksi penutup Anda di sini.`
 					text: `Tulisan "${p.title}" berhasil dimuat ke editor! Anda dapat langsung mengedit.`
 				};
 
-				// Ensure smooth scroll to top and focus title field ready for editing
+				// Ensure smooth scroll to editor workspace and focus title field ready for editing
 				if (typeof window !== 'undefined') {
-					const target = document.getElementById('editor-studio-top') || document.documentElement;
-					target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-					window.scrollTo({ top: 0, behavior: 'smooth' });
+					activeTab = 'editor';
 					setTimeout(() => {
-						titleInputEl?.focus();
-					}, 250);
+						const target = document.getElementById('editor-workspace-anchor');
+						if (target) {
+							target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+						}
+						titleInputEl?.focus({ preventScroll: true });
+					}, 150);
 				}
 			} else {
 				saveMessage = {
@@ -785,6 +789,9 @@ Bagikan refleksi penutup Anda di sini.`
 					<button onclick={() => saveMessage = null} class="text-xs font-bold opacity-60 hover:opacity-100 p-1">✕</button>
 				</div>
 			{/if}
+
+			<!-- Anchor for Edit Scroll: docks editor workspace cleanly under floating navbar -->
+			<div id="editor-workspace-anchor" class="scroll-mt-20 lg:scroll-mt-20"></div>
 
 			<!-- View Switcher on Small Screens -->
 			<div class="flex items-center gap-2 mb-4 lg:hidden glass-pill p-1 rounded-2xl">
