@@ -1,12 +1,14 @@
 ---
 title: "Psikologi Uang: Mengapa Kebebasan Waktu Adalah Dividen Tertinggi"
 description: "Investasi bukan cuma soal mengalahkan indeks pasar atau pamer portofolio. Nilai intrinsik terbesar dari uang adalah kemampuannya memberi Anda kendali atas waktu Anda sendiri."
-date: "2026-11-09"
+date: "2026-11-10"
 category: "Mindset Keuangan"
-tags: ["Investasi", "Psikologi", "Freedom", "Filosofi"]
+tags: ["Investasi","Psikologi","Freedom","Filosofi"]
 readTime: "5 min baca"
-featured: true
+featured: false
 published: true
+archived: false
+status: "upload"
 author: "Adam Alhasni"
 ---
 
@@ -54,4 +56,3 @@ Penyakit paling berbahaya dalam urusan finansial adalah tiang gawang yang selalu
 Dunia akan selalu bising dengan tren-tren baru: token kripto terbaru, saham gorengan yang katanya akan *to the moon*, atau cara-cara instan menjadi miliarder dalam semalam.
 
 Tugas kita bukanlah mengejar setiap kilauan emas palsu itu. Tugas kita adalah bertahan hidup cukup lama, menjaga modal, dan memastikan setiap rupiah yang kita alokasikan mendekatkan kita pada satu tujuan mulia: **menjadi tuan atas waktu kita sendiri.**
-

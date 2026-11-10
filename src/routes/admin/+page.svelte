@@ -27,7 +27,8 @@
 		Bookmark,
 		Trash2,
 		Undo2,
-		Pencil
+		Pencil,
+		Archive
 	} from '@lucide/svelte';
 
 	let { data, form }: PageProps & { form: ActionData } = $props();
@@ -40,11 +41,34 @@
 	);
 
 	const uploadCount = $derived(
-		(data.posts || []).filter((p: any) => p.metadata?.published !== false).length
+		(data.posts || []).filter((p: any) => {
+			const st = p.metadata?.status || (p.metadata?.archived ? 'arsip' : (p.metadata?.published !== false ? 'upload' : 'draft'));
+			return st === 'upload';
+		}).length
 	);
 
 	const draftCount = $derived(
-		(data.posts || []).filter((p: any) => p.metadata?.published === false).length
+		(data.posts || []).filter((p: any) => {
+			const st = p.metadata?.status || (p.metadata?.archived ? 'arsip' : (p.metadata?.published !== false ? 'upload' : 'draft'));
+			return st === 'draft';
+		}).length
+	);
+
+	const arsipCount = $derived(
+		(data.posts || []).filter((p: any) => {
+			const st = p.metadata?.status || (p.metadata?.archived ? 'arsip' : (p.metadata?.published !== false ? 'upload' : 'draft'));
+			return st === 'arsip';
+		}).length
+	);
+
+	let dashboardFilter = $state<'semua' | 'upload' | 'draft' | 'arsip'>('semua');
+
+	const filteredPosts = $derived(
+		(data.posts || []).filter((p: any) => {
+			if (dashboardFilter === 'semua') return true;
+			const st = p.metadata?.status || (p.metadata?.archived ? 'arsip' : (p.metadata?.published !== false ? 'upload' : 'draft'));
+			return st === dashboardFilter;
+		})
 	);
 
 	// Login State
@@ -343,8 +367,42 @@ Bagikan refleksi penutup Anda di sini.`
 		}
 	}
 
-	// Save Post Action (Upload or Draft)
-	async function savePost(publish: boolean = true) {
+	let isUpdatingStatus = $state(false);
+
+	async function updatePostStatus(targetSlug: string, newStatus: 'upload' | 'draft' | 'arsip', postTitle: string) {
+		isUpdatingStatus = true;
+		saveMessage = null;
+		try {
+			const res = await fetch('/api/save-post', {
+				method: 'PATCH',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ slug: targetSlug, status: newStatus })
+			});
+			const resData = await res.json();
+			if (resData.success) {
+				const label = newStatus === 'upload' ? 'Upload' : newStatus === 'arsip' ? 'Arsip' : 'Draft';
+				saveMessage = {
+					type: 'success',
+					text: `Status tulisan "${postTitle}" berhasil diubah menjadi ${label}!`
+				};
+				const target = (data.posts || []).find((p: any) => p.slug === targetSlug);
+				if (target) {
+					target.metadata.status = newStatus;
+					target.metadata.published = newStatus === 'upload';
+					target.metadata.archived = newStatus === 'arsip';
+				}
+			} else {
+				saveMessage = { type: 'error', text: resData.error || 'Gagal mengubah status.' };
+			}
+		} catch (err: any) {
+			saveMessage = { type: 'error', text: 'Koneksi gagal: ' + err.message };
+		} finally {
+			isUpdatingStatus = false;
+		}
+	}
+
+	// Save Post Action (Upload, Draft, or Arsip)
+	async function savePost(targetStatus: 'upload' | 'draft' | 'arsip' = 'upload') {
 		if (!title.trim()) {
 			saveMessage = { type: 'error', text: 'Judul artikel wajib diisi terlebih dahulu!' };
 			return;
@@ -366,7 +424,9 @@ Bagikan refleksi penutup Anda di sini.`
 					tags,
 					readTime,
 					content,
-					published: publish,
+					status: targetStatus,
+					published: targetStatus === 'upload',
+					archived: targetStatus === 'arsip',
 					author: 'Adam Alhasni'
 				})
 			});
@@ -374,7 +434,12 @@ Bagikan refleksi penutup Anda di sini.`
 			const resData = await res.json();
 
 			if (resData.success) {
-				const actionName = publish ? 'di-upload & dipublikasikan' : 'disimpan sebagai Draft';
+				const actionName =
+					targetStatus === 'upload'
+						? 'di-upload & dipublikasikan'
+						: targetStatus === 'arsip'
+						? 'disimpan ke Arsip'
+						: 'disimpan sebagai Draft';
 				editingSlug = resData.slug || slug;
 				saveMessage = {
 					type: 'success',
@@ -387,7 +452,7 @@ Bagikan refleksi penutup Anda di sini.`
 				autoSaveStatus = `Telah ${actionName}`;
 				setTimeout(() => {
 					window.location.reload();
-				}, 800);
+				}, 700);
 			} else {
 				saveMessage = { type: 'error', text: resData.error || 'Gagal menyimpan tulisan.' };
 			}
@@ -546,28 +611,39 @@ Bagikan refleksi penutup Anda di sini.`
 					{/if}
 				</div>
 
-				<!-- Action Buttons Group (Upload, Draft, Hapus, Keluar) -->
+				<!-- Action Buttons Group (Upload, Draft, Arsip, Hapus) -->
 				<div class="flex flex-wrap items-center gap-2 sm:gap-3">
 					<button
 						type="button"
-						onclick={() => savePost(true)}
+						onclick={() => savePost('upload')}
 						disabled={isSaving}
 						class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0593C6] text-white hover:bg-[#047ea8] hover:text-white dark:bg-white dark:text-[#0593C6] dark:hover:bg-[#047ea8] dark:hover:text-white text-xs font-bold active:scale-[0.99] transition cursor-pointer shadow-lg shadow-[#0593C6]/25 disabled:opacity-50"
 						title="Upload dan publikasikan tulisan ini"
 					>
 						<Upload class="w-4 h-4 text-current" />
-						<span class="text-current">{isSaving ? 'Mengupload...' : 'Upload'}</span>
+						<span class="text-current">{isSaving ? 'Menyimpan...' : 'Upload'}</span>
 					</button>
 
 					<button
 						type="button"
-						onclick={() => savePost(false)}
+						onclick={() => savePost('draft')}
 						disabled={isSaving}
 						class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl glass-pill text-[#0593C6] dark:text-sky-200 hover:bg-[#0593C6]/15 hover:text-[#0593C6] dark:hover:bg-white/15 dark:hover:text-white border border-[#0593C6]/30 dark:border-white/20 text-xs font-bold transition cursor-pointer"
 						title="Simpan sebagai Draft di project"
 					>
 						<Bookmark class="w-4 h-4 text-current" />
 						<span class="text-current">Draft</span>
+					</button>
+
+					<button
+						type="button"
+						onclick={() => savePost('arsip')}
+						disabled={isSaving}
+						class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl glass-pill text-purple-600 dark:text-purple-300 hover:bg-purple-500/15 hover:text-purple-600 dark:hover:bg-purple-500/20 dark:hover:text-purple-200 border border-purple-400/30 text-xs font-bold transition cursor-pointer"
+						title="Simpan ke Arsip (tersembunyi dari publik)"
+					>
+						<Archive class="w-4 h-4 text-current" />
+						<span class="text-current">Arsip</span>
 					</button>
 
 					<button
@@ -841,7 +917,7 @@ Bagikan refleksi penutup Anda di sini.`
 				<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
 					<div class="flex items-center gap-2">
 						<Layers class="w-5 h-5 text-[#D83995]" />
-						<h3 class="text-lg font-black text-[#061a2e] dark:text-white">Artikel & Statistik Viewer ({data.posts?.length || 0})</h3>
+						<h3 class="text-xl font-black text-[#061a2e] dark:text-white tracking-tight">Dashboard</h3>
 					</div>
 					<div>
 						<a href="/artikel" class="text-xs font-semibold text-[#0593C6] dark:text-white/90 hover:underline flex items-center gap-1">
@@ -851,8 +927,8 @@ Bagikan refleksi penutup Anda di sini.`
 					</div>
 				</div>
 
-				<!-- Stats Overview Cards (Compact & Centered) -->
-				<div class="max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-8">
+				<!-- Stats Overview Cards (Compact & Centered: Upload, Draft, Arsip, Views) -->
+				<div class="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8">
 					<div class="glass-panel p-3.5 sm:p-4 rounded-2xl border border-sky-200/60 dark:border-white/20 text-center flex flex-col items-center justify-center shadow-sm">
 						<div class="text-[11px] sm:text-xs text-[#516f8e] dark:text-white/70 font-semibold mb-1 flex items-center justify-center gap-1.5">
 							<Upload class="w-3.5 h-3.5 text-emerald-500" />
@@ -863,10 +939,18 @@ Bagikan refleksi penutup Anda di sini.`
 
 					<div class="glass-panel p-3.5 sm:p-4 rounded-2xl border border-sky-200/60 dark:border-white/20 text-center flex flex-col items-center justify-center shadow-sm">
 						<div class="text-[11px] sm:text-xs text-[#516f8e] dark:text-white/70 font-semibold mb-1 flex items-center justify-center gap-1.5">
-							<Bookmark class="w-3.5 h-3.5 text-[#0593C6] dark:text-sky-300" />
+							<Bookmark class="w-3.5 h-3.5 text-amber-500" />
 							<span>Total Artikel (Draft)</span>
 						</div>
 						<div class="text-2xl font-black text-[#061a2e] dark:text-white">{draftCount}</div>
+					</div>
+
+					<div class="glass-panel p-3.5 sm:p-4 rounded-2xl border border-sky-200/60 dark:border-white/20 text-center flex flex-col items-center justify-center shadow-sm">
+						<div class="text-[11px] sm:text-xs text-[#516f8e] dark:text-white/70 font-semibold mb-1 flex items-center justify-center gap-1.5">
+							<Archive class="w-3.5 h-3.5 text-purple-500" />
+							<span>Total Artikel (Arsip)</span>
+						</div>
+						<div class="text-2xl font-black text-[#061a2e] dark:text-white">{arsipCount}</div>
 					</div>
 
 					<div class="glass-panel p-3.5 sm:p-4 rounded-2xl border border-sky-200/60 dark:border-white/20 text-center flex flex-col items-center justify-center shadow-sm">
@@ -878,14 +962,59 @@ Bagikan refleksi penutup Anda di sini.`
 					</div>
 				</div>
 
+				<!-- Dashboard Filter Tabs -->
+				<div class="flex items-center gap-2 mb-6 overflow-x-auto pb-1">
+					<button
+						type="button"
+						onclick={() => dashboardFilter = 'semua'}
+						class="px-3.5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer flex items-center gap-1.5 {dashboardFilter === 'semua' ? 'bg-[#0593C6] text-white shadow-sm' : 'glass-pill text-[#516f8e] dark:text-white/70 hover:text-[#0593C6] dark:hover:text-white'}"
+					>
+						<span>Semua</span>
+						<span class="px-1.5 py-0.2 rounded-full text-[10px] bg-black/10 dark:bg-white/20">{data.posts?.length || 0}</span>
+					</button>
+
+					<button
+						type="button"
+						onclick={() => dashboardFilter = 'upload'}
+						class="px-3.5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer flex items-center gap-1.5 {dashboardFilter === 'upload' ? 'bg-emerald-600 text-white shadow-sm' : 'glass-pill text-[#516f8e] dark:text-white/70 hover:text-emerald-500'}"
+					>
+						<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+						<span>Upload</span>
+						<span class="px-1.5 py-0.2 rounded-full text-[10px] bg-black/10 dark:bg-white/20">{uploadCount}</span>
+					</button>
+
+					<button
+						type="button"
+						onclick={() => dashboardFilter = 'draft'}
+						class="px-3.5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer flex items-center gap-1.5 {dashboardFilter === 'draft' ? 'bg-amber-600 text-white shadow-sm' : 'glass-pill text-[#516f8e] dark:text-white/70 hover:text-amber-500'}"
+					>
+						<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+						<span>Draft</span>
+						<span class="px-1.5 py-0.2 rounded-full text-[10px] bg-black/10 dark:bg-white/20">{draftCount}</span>
+					</button>
+
+					<button
+						type="button"
+						onclick={() => dashboardFilter = 'arsip'}
+						class="px-3.5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer flex items-center gap-1.5 {dashboardFilter === 'arsip' ? 'bg-purple-600 text-white shadow-sm' : 'glass-pill text-[#516f8e] dark:text-white/70 hover:text-purple-500'}"
+					>
+						<span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+						<span>Arsip</span>
+						<span class="px-1.5 py-0.2 rounded-full text-[10px] bg-black/10 dark:bg-white/20">{arsipCount}</span>
+					</button>
+				</div>
+
+				<!-- Article Cards Grid -->
 				<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-					{#each (data.posts || []) as post}
+					{#each filteredPosts as post}
 						<div class="glass-panel p-5 rounded-2xl border border-sky-200/60 dark:border-white/20 text-[#061a2e] dark:text-white hover:border-[#0593C6]/40 dark:hover:border-white/40 hover:bg-white/90 dark:hover:bg-white/15 transition flex flex-col justify-between {editingSlug === post.slug ? 'ring-2 ring-[#0593C6] dark:ring-sky-400 bg-sky-500/5' : ''}">
 							<div>
 								<div class="flex items-center justify-between text-[11px] text-[#516f8e] dark:text-white/70 mb-2">
-									<div class="flex items-center gap-1.5">
+									<div class="flex items-center gap-1.5 flex-wrap">
 										<span class="px-2 py-0.5 rounded-full glass-pill text-[#0593C6] dark:text-white font-semibold">{post.metadata.category}</span>
-										{#if post.metadata.published === false}
+										{#if post.metadata.status === 'arsip'}
+											<span class="px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-600 dark:text-purple-300 font-bold text-[10px] border border-purple-400/30">Arsip</span>
+										{:else if post.metadata.status === 'draft' || post.metadata.published === false}
 											<span class="px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-300 font-bold text-[10px] border border-amber-400/30">Draft</span>
 										{:else}
 											<span class="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 font-bold text-[10px] border border-emerald-400/30">Upload</span>
@@ -897,45 +1026,91 @@ Bagikan refleksi penutup Anda di sini.`
 								<p class="text-xs text-[#516f8e] dark:text-white/50 font-mono">src/posts/{post.slug}.md</p>
 							</div>
 
-							<div class="pt-3 mt-3 border-t border-sky-100 dark:border-white/15 flex items-center justify-between text-xs gap-2">
-								<div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#0593C6]/10 text-[#0593C6] dark:bg-white/10 dark:text-sky-200 border border-[#0593C6]/20 dark:border-white/20 font-bold text-[11px]" title="Jumlah pembaca unik">
-									<Eye class="w-3.5 h-3.5" />
-									<span>{(data.views && (data.views as any)[post.slug]) || 0}</span>
+							<!-- Action & Status Management Toolbar -->
+							<div class="pt-3 mt-4 border-t border-sky-100 dark:border-white/15 space-y-2.5">
+								<!-- Quick Status Switcher Row -->
+								<div class="flex items-center justify-between text-[11px] text-[#516f8e] dark:text-white/70">
+									<span class="font-bold text-[10px] uppercase tracking-wider text-slate-400 dark:text-white/50">Ubah Status:</span>
+									<div class="flex items-center gap-1">
+										{#if post.metadata.status !== 'upload'}
+											<button
+												type="button"
+												disabled={isUpdatingStatus}
+												onclick={() => updatePostStatus(post.slug, 'upload', post.metadata.title)}
+												class="px-2 py-0.5 rounded-md bg-emerald-500/15 hover:bg-emerald-500 text-emerald-700 dark:text-emerald-300 hover:text-white font-bold transition cursor-pointer"
+												title="Ubah status ke Upload (Terbitkan)"
+											>
+												Upload
+											</button>
+										{/if}
+
+										{#if post.metadata.status !== 'draft'}
+											<button
+												type="button"
+												disabled={isUpdatingStatus}
+												onclick={() => updatePostStatus(post.slug, 'draft', post.metadata.title)}
+												class="px-2 py-0.5 rounded-md bg-amber-500/15 hover:bg-amber-500 text-amber-700 dark:text-amber-300 hover:text-white font-bold transition cursor-pointer"
+												title="Ubah status ke Draft"
+											>
+												Draft
+											</button>
+										{/if}
+
+										{#if post.metadata.status !== 'arsip'}
+											<button
+												type="button"
+												disabled={isUpdatingStatus}
+												onclick={() => updatePostStatus(post.slug, 'arsip', post.metadata.title)}
+												class="px-2 py-0.5 rounded-md bg-purple-500/15 hover:bg-purple-500 text-purple-700 dark:text-purple-300 hover:text-white font-bold transition cursor-pointer"
+												title="Ubah status ke Arsip"
+											>
+												Arsip
+											</button>
+										{/if}
+									</div>
 								</div>
 
-								<div class="flex items-center gap-2">
-									<!-- Edit button to load draft/article into editor -->
-									<button
-										type="button"
-										onclick={() => loadPostForEditing(post.slug)}
-										disabled={isLoadingPost}
-										class="px-2.5 py-1 rounded-lg bg-[#0593C6] hover:bg-[#047ea8] text-white dark:bg-white dark:text-[#0593C6] dark:hover:bg-slate-100 font-bold text-xs transition cursor-pointer flex items-center gap-1 shadow-sm"
-										title="Buka dan edit di form penulisan"
-									>
-										<Pencil class="w-3 h-3 text-current" />
-										<span class="text-current">Edit</span>
-									</button>
+								<!-- Bottom Action Links Row -->
+								<div class="flex items-center justify-between text-xs pt-1 border-t border-sky-100/60 dark:border-white/10">
+									<div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#0593C6]/10 text-[#0593C6] dark:bg-white/10 dark:text-sky-200 border border-[#0593C6]/20 dark:border-white/20 font-bold text-[11px]" title="Jumlah pembaca unik">
+										<Eye class="w-3.5 h-3.5" />
+										<span>{(data.views && (data.views as any)[post.slug]) || 0}</span>
+									</div>
 
-									<!-- Preview / Buka link -->
-									<a
-										href="/artikel/{post.slug}"
-										target="_blank"
-										class="text-[#0593C6] dark:text-white/80 hover:text-[#D83995] dark:hover:text-[#f29185] font-semibold text-xs transition flex items-center gap-0.5"
-										title={post.metadata.published === false ? 'Pratinjau Draf' : 'Buka Halaman Artikel'}
-									>
-										<span>{post.metadata.published === false ? 'Preview' : 'Buka'}</span>
-										<span class="text-[10px]">↗</span>
-									</a>
+									<div class="flex items-center gap-1.5">
+										<!-- Edit button to load into editor -->
+										<button
+											type="button"
+											onclick={() => loadPostForEditing(post.slug)}
+											disabled={isLoadingPost}
+											class="px-2.5 py-1 rounded-lg bg-[#0593C6] hover:bg-[#047ea8] text-white dark:bg-white dark:text-[#0593C6] dark:hover:bg-slate-100 font-bold text-xs transition cursor-pointer flex items-center gap-1 shadow-sm"
+											title="Buka dan edit di form penulisan"
+										>
+											<Pencil class="w-3 h-3 text-current" />
+											<span class="text-current">Edit</span>
+										</button>
 
-									<!-- Delete file button -->
-									<button
-										type="button"
-										onclick={() => deletePostFile(post.slug, post.metadata.title)}
-										class="p-1 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition cursor-pointer"
-										title="Hapus file artikel ini"
-									>
-										<Trash2 class="w-3.5 h-3.5" />
-									</button>
+										<!-- Preview / Buka link -->
+										<a
+											href="/artikel/{post.slug}"
+											target="_blank"
+											class="text-[#0593C6] dark:text-white/80 hover:text-[#D83995] dark:hover:text-[#f29185] font-semibold text-xs transition flex items-center gap-0.5"
+											title={post.metadata.published === false ? 'Pratinjau Draf' : 'Buka Halaman Artikel'}
+										>
+											<span>{post.metadata.published === false ? 'Preview' : 'Buka'}</span>
+											<span class="text-[10px]">↗</span>
+										</a>
+
+										<!-- Delete file button -->
+										<button
+											type="button"
+											onclick={() => deletePostFile(post.slug, post.metadata.title)}
+											class="p-1 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition cursor-pointer"
+											title="Hapus file artikel ini"
+										>
+											<Trash2 class="w-3.5 h-3.5" />
+										</button>
+									</div>
 								</div>
 							</div>
 						</div>

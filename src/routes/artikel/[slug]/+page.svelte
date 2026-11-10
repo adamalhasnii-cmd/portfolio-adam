@@ -87,11 +87,16 @@
 
 			<!-- Header -->
 			<header class="mb-10 pb-8 border-b border-sky-200/50 dark:border-white/20 relative z-10">
-				<!-- Draft Preview Notice -->
-				{#if data.metadata.published === false}
+				<!-- Draft / Archive Preview Notice -->
+				{#if data.metadata.archived || data.metadata.status === 'arsip'}
+					<div class="mb-5 p-3 rounded-2xl bg-purple-500/15 border border-purple-400/40 text-purple-800 dark:text-purple-200 text-xs font-bold flex items-center justify-between flex-wrap gap-2">
+						<span>📦 Mode Pratinjau Arsip (Artikel ini diarsipkan dan disembunyikan dari publik)</span>
+						<a href="/admin" class="underline hover:text-purple-950 dark:hover:text-white">Buka di Dashboard Admin →</a>
+					</div>
+				{:else if data.metadata.published === false || data.metadata.status === 'draft'}
 					<div class="mb-5 p-3 rounded-2xl bg-amber-500/15 border border-amber-400/40 text-amber-800 dark:text-amber-200 text-xs font-bold flex items-center justify-between flex-wrap gap-2">
 						<span>⚠️ Mode Pratinjau Draf (Artikel ini belum dipublikasikan ke pembaca publik)</span>
-						<a href="/admin" class="underline hover:text-amber-950 dark:hover:text-white">Buka di Editor Admin →</a>
+						<a href="/admin" class="underline hover:text-amber-950 dark:hover:text-white">Buka di Dashboard Admin →</a>
 					</div>
 				{/if}
 

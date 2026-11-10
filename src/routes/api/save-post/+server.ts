@@ -35,6 +35,13 @@ export async function POST({ request, cookies }) {
 					.map((t: string) => t.trim())
 					.filter(Boolean);
 
+		const targetStatus: 'upload' | 'draft' | 'arsip' =
+			data.status === 'arsip'
+				? 'arsip'
+				: data.status === 'draft' || data.published === false
+				? 'draft'
+				: 'upload';
+
 		const frontmatter = [
 			'---',
 			`title: ${JSON.stringify(title)}`,
@@ -44,7 +51,9 @@ export async function POST({ request, cookies }) {
 			`tags: ${JSON.stringify(tagList)}`,
 			`readTime: ${JSON.stringify(readTime || '5 min baca')}`,
 			'featured: false',
-			`published: ${data.published !== false}`,
+			`published: ${targetStatus === 'upload'}`,
+			`archived: ${targetStatus === 'arsip'}`,
+			`status: ${JSON.stringify(targetStatus)}`,
 			`author: ${JSON.stringify(author || 'Adam Alhasni')}`,
 			'---',
 			'',
@@ -66,10 +75,16 @@ export async function POST({ request, cookies }) {
 				}
 			}
 			await fs.writeFile(filePath, frontmatter, 'utf-8');
-			const statusLabel = data.published !== false ? 'di-upload & diterbitkan' : 'disimpan sebagai Draft';
+			const statusLabel =
+				targetStatus === 'upload'
+					? 'di-upload & diterbitkan'
+					: targetStatus === 'arsip'
+					? 'disimpan ke Arsip'
+					: 'disimpan sebagai Draft';
 			return json({
 				success: true,
 				slug: postSlug,
+				status: targetStatus,
 				message: `Artikel "${title}" berhasil ${statusLabel} (${postSlug}.md)!`
 			});
 		} catch (fileErr: any) {
@@ -83,6 +98,66 @@ export async function POST({ request, cookies }) {
 	} catch (err: any) {
 		console.error('Save post error:', err);
 		return json({ success: false, error: err.message || 'Terjadi kesalahan sistem' }, { status: 500 });
+	}
+}
+
+export async function PATCH({ request, cookies }) {
+	const session = cookies.get(SESSION_COOKIE_NAME);
+	if (session !== SESSION_SECRET_TOKEN) {
+		return json({ success: false, error: 'Akses ditolak.' }, { status: 401 });
+	}
+
+	try {
+		const { slug, status } = await request.json().catch(() => ({}));
+		if (!slug || !['upload', 'draft', 'arsip'].includes(status)) {
+			return json({ success: false, error: 'Parameter slug dan status tidak valid' }, { status: 400 });
+		}
+
+		const cleanSlug = slug.replace(/[^a-zA-Z0-9_-]/g, '');
+		const postsDir = path.resolve(process.cwd(), 'src/posts');
+		const filePath = path.join(postsDir, `${cleanSlug}.md`);
+
+		const raw = await fs.readFile(filePath, 'utf-8');
+		const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
+		if (!match) {
+			return json({ success: false, error: 'Format artikel tidak valid' }, { status: 400 });
+		}
+
+		let frontmatterStr = match[1];
+		const body = match[2];
+
+		const isUpload = status === 'upload';
+		const isArsip = status === 'arsip';
+
+		if (/published:\s*(true|false)/i.test(frontmatterStr)) {
+			frontmatterStr = frontmatterStr.replace(/published:\s*(true|false)/gi, `published: ${isUpload}`);
+		} else {
+			frontmatterStr += `\npublished: ${isUpload}`;
+		}
+
+		if (/archived:\s*(true|false)/i.test(frontmatterStr)) {
+			frontmatterStr = frontmatterStr.replace(/archived:\s*(true|false)/gi, `archived: ${isArsip}`);
+		} else {
+			frontmatterStr += `\narchived: ${isArsip}`;
+		}
+
+		if (/status:\s*("[^"]*"|'[^']*'|\w+)/i.test(frontmatterStr)) {
+			frontmatterStr = frontmatterStr.replace(/status:\s*("[^"]*"|'[^']*'|\w+)/gi, `status: "${status}"`);
+		} else {
+			frontmatterStr += `\nstatus: "${status}"`;
+		}
+
+		const updatedContent = `---\n${frontmatterStr.trim()}\n---\n\n${body.trim()}\n`;
+		await fs.writeFile(filePath, updatedContent, 'utf-8');
+
+		const label = status === 'upload' ? 'Upload' : status === 'arsip' ? 'Arsip' : 'Draft';
+		return json({
+			success: true,
+			status,
+			message: `Status tulisan berhasil diubah menjadi ${label}!`
+		});
+	} catch (err: any) {
+		return json({ success: false, error: err?.message || 'Gagal mengubah status tulisan' }, { status: 500 });
 	}
 }
 

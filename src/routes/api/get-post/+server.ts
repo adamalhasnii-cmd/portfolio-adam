@@ -52,6 +52,10 @@ export async function GET({ url, cookies }) {
 			}
 		});
 
+		const isArchived = metadata.archived === true || metadata.status === 'arsip';
+		const isDraft = !isArchived && (metadata.published === false || metadata.status === 'draft');
+		const status: 'upload' | 'draft' | 'arsip' = isArchived ? 'arsip' : (isDraft ? 'draft' : 'upload');
+
 		return json({
 			success: true,
 			post: {
@@ -61,7 +65,9 @@ export async function GET({ url, cookies }) {
 				category: metadata.category || 'Investasi',
 				tags: Array.isArray(metadata.tags) ? metadata.tags.join(', ') : metadata.tags || '',
 				readTime: metadata.readTime || '5 min baca',
-				published: metadata.published !== false,
+				status,
+				published: status === 'upload',
+				archived: status === 'arsip',
 				content: bodyContent.trim()
 			}
 		});
@@ -69,3 +75,4 @@ export async function GET({ url, cookies }) {
 		return json({ success: false, error: 'File tidak ditemukan: ' + err.message }, { status: 404 });
 	}
 }
+

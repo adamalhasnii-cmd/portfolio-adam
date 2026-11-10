@@ -8,6 +8,8 @@ export interface PostMetadata {
 	featured?: boolean;
 	author?: string;
 	published?: boolean;
+	archived?: boolean;
+	status?: 'upload' | 'draft' | 'arsip';
 }
 
 export interface Post {
