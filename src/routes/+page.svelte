@@ -54,7 +54,7 @@
 						href="/artikel"
 						class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-[#0593C6] text-white hover:bg-[#047ea8] hover:text-white dark:bg-white dark:text-[#0593C6] dark:hover:bg-sky-50 dark:hover:text-[#0593C6] font-bold text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-[#0593C6]/25 dark:shadow-black/15 group cursor-pointer"
 					>
-						<span>Jelajahi Semua Tulisan</span>
+						<span>Jelajahi Artikel</span>
 						<ArrowRight class="w-4 h-4 transition-transform group-hover:translate-x-1" />
 					</a>
 

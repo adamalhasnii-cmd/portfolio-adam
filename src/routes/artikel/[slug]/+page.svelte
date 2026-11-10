@@ -167,7 +167,7 @@
 				class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold glass-pill px-4 py-2 rounded-full text-[#061a2e] dark:text-white hover:bg-sky-500/10 dark:hover:bg-white/25 transition-all group"
 			>
 				<ArrowLeft class="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-				<span>Kembali ke Semua Tulisan</span>
+				<span>Kembali ke Artikel</span>
 			</a>
 		</div>
 

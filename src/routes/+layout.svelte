@@ -18,8 +18,10 @@
 	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
 
 	let { data, children }: LayoutProps = $props();
+	const currentPath = $derived(page.url.pathname);
 	let isMobileMenuOpen = $state(false);
 	let isAdminMenuOpen = $state(false);
 	let isDark = $state(false);
@@ -180,21 +182,36 @@
 			<nav class="hidden md:flex items-center gap-1 sm:gap-1.5">
 				<a
 					href="/"
-					class="px-4 py-1.5 rounded-full text-sm font-semibold text-[#2d4766] dark:text-white/85 hover:text-[#0593C6] dark:hover:text-white hover:bg-sky-500/10 dark:hover:bg-white/15 transition-all"
+					class="px-4 py-1.5 rounded-full text-sm font-semibold transition-all flex items-center gap-1.5 {currentPath === '/'
+						? 'bg-[#0593C6]/15 dark:bg-white/15 text-[#0593C6] dark:text-white font-bold border border-[#0593C6]/30 dark:border-white/20 shadow-xs'
+						: 'text-[#2d4766] dark:text-white/75 hover:text-[#0593C6] dark:hover:text-white hover:bg-sky-500/10 dark:hover:bg-white/15'}"
 				>
-					Beranda
+					{#if currentPath === '/'}
+						<span class="w-1.5 h-1.5 rounded-full bg-[#0593C6] dark:bg-sky-300 shadow-[0_0_6px_currentColor]"></span>
+					{/if}
+					<span>Beranda</span>
 				</a>
 				<a
 					href="/artikel"
-					class="px-4 py-1.5 rounded-full text-sm font-semibold text-[#2d4766] dark:text-white/85 hover:text-[#0593C6] dark:hover:text-white hover:bg-sky-500/10 dark:hover:bg-white/15 transition-all"
+					class="px-4 py-1.5 rounded-full text-sm font-semibold transition-all flex items-center gap-1.5 {currentPath.startsWith('/artikel')
+						? 'bg-[#0593C6]/15 dark:bg-white/15 text-[#0593C6] dark:text-white font-bold border border-[#0593C6]/30 dark:border-white/20 shadow-xs'
+						: 'text-[#2d4766] dark:text-white/75 hover:text-[#0593C6] dark:hover:text-white hover:bg-sky-500/10 dark:hover:bg-white/15'}"
 				>
-					Semua Tulisan
+					{#if currentPath.startsWith('/artikel')}
+						<span class="w-1.5 h-1.5 rounded-full bg-[#0593C6] dark:bg-sky-300 shadow-[0_0_6px_currentColor]"></span>
+					{/if}
+					<span>Artikel</span>
 				</a>
 				<a
 					href="/tentang"
-					class="px-4 py-1.5 rounded-full text-sm font-semibold text-[#2d4766] dark:text-white/85 hover:text-[#0593C6] dark:hover:text-white hover:bg-sky-500/10 dark:hover:bg-white/15 transition-all"
+					class="px-4 py-1.5 rounded-full text-sm font-semibold transition-all flex items-center gap-1.5 {currentPath.startsWith('/tentang')
+						? 'bg-[#0593C6]/15 dark:bg-white/15 text-[#0593C6] dark:text-white font-bold border border-[#0593C6]/30 dark:border-white/20 shadow-xs'
+						: 'text-[#2d4766] dark:text-white/75 hover:text-[#0593C6] dark:hover:text-white hover:bg-sky-500/10 dark:hover:bg-white/15'}"
 				>
-					Tentang
+					{#if currentPath.startsWith('/tentang')}
+						<span class="w-1.5 h-1.5 rounded-full bg-[#0593C6] dark:bg-sky-300 shadow-[0_0_6px_currentColor]"></span>
+					{/if}
+					<span>Tentang</span>
 				</a>
 			</nav>
 
@@ -307,23 +324,38 @@
 				<a
 					href="/"
 					onclick={() => isMobileMenuOpen = false}
-					class="block px-4 py-2.5 rounded-2xl text-sm font-semibold text-[#061a2e] dark:text-white hover:bg-sky-500/10 dark:hover:bg-white/15"
+					class="flex items-center justify-between px-4 py-2.5 rounded-2xl text-sm font-semibold transition {currentPath === '/'
+						? 'bg-sky-500/15 dark:bg-white/20 text-[#0593C6] dark:text-white font-bold border border-sky-300/40 dark:border-white/20'
+						: 'text-[#061a2e] dark:text-white hover:bg-sky-500/10 dark:hover:bg-white/15'}"
 				>
-					Beranda
+					<span>Beranda</span>
+					{#if currentPath === '/'}
+						<span class="w-1.5 h-1.5 rounded-full bg-[#0593C6] dark:bg-sky-300 shadow-[0_0_6px_currentColor]"></span>
+					{/if}
 				</a>
 				<a
 					href="/artikel"
 					onclick={() => isMobileMenuOpen = false}
-					class="block px-4 py-2.5 rounded-2xl text-sm font-semibold text-[#061a2e] dark:text-white hover:bg-sky-500/10 dark:hover:bg-white/15"
+					class="flex items-center justify-between px-4 py-2.5 rounded-2xl text-sm font-semibold transition {currentPath.startsWith('/artikel')
+						? 'bg-sky-500/15 dark:bg-white/20 text-[#0593C6] dark:text-white font-bold border border-sky-300/40 dark:border-white/20'
+						: 'text-[#061a2e] dark:text-white hover:bg-sky-500/10 dark:hover:bg-white/15'}"
 				>
-					Semua Tulisan
+					<span>Artikel</span>
+					{#if currentPath.startsWith('/artikel')}
+						<span class="w-1.5 h-1.5 rounded-full bg-[#0593C6] dark:bg-sky-300 shadow-[0_0_6px_currentColor]"></span>
+					{/if}
 				</a>
 				<a
 					href="/tentang"
 					onclick={() => isMobileMenuOpen = false}
-					class="block px-4 py-2.5 rounded-2xl text-sm font-semibold text-[#061a2e] dark:text-white hover:bg-sky-500/10 dark:hover:bg-white/15"
+					class="flex items-center justify-between px-4 py-2.5 rounded-2xl text-sm font-semibold transition {currentPath.startsWith('/tentang')
+						? 'bg-sky-500/15 dark:bg-white/20 text-[#0593C6] dark:text-white font-bold border border-sky-300/40 dark:border-white/20'
+						: 'text-[#061a2e] dark:text-white hover:bg-sky-500/10 dark:hover:bg-white/15'}"
 				>
-					Filosofi & Tentang
+					<span>Tentang</span>
+					{#if currentPath.startsWith('/tentang')}
+						<span class="w-1.5 h-1.5 rounded-full bg-[#0593C6] dark:bg-sky-300 shadow-[0_0_6px_currentColor]"></span>
+					{/if}
 				</a>
 				{#if (data as any)?.isAdmin}
 					<div class="pt-2 mt-2 border-t border-sky-200/50 dark:border-white/10">
@@ -486,7 +518,7 @@
 								onclick={closeSearch}
 								class="hover:text-white text-sky-200 text-xs font-semibold flex items-center gap-1 transition"
 							>
-								<span>Buka Halaman Arsip Semua Tulisan</span>
+								<span>Buka Halaman Arsip Artikel</span>
 								<ArrowRight class="w-3.5 h-3.5" />
 							</a>
 							<span class="text-[11px] text-slate-400">Tekan ESC untuk tutup</span>
@@ -554,7 +586,7 @@
 										type="button"
 										onclick={() => navigateTo('/artikel')}
 										class="text-white underline hover:text-pink-200 font-medium cursor-pointer"
-										>semua tulisan</button
+										>semua artikel</button
 									>.
 								</p>
 							</div>

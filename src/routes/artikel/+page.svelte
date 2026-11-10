@@ -27,7 +27,7 @@
 </script>
 
 <svelte:head>
-	<title>Semua Tulisan — 911</title>
+	<title>Artikel — 911</title>
 	<meta name="description" content="Arsip lengkap catatan pemikiran seputar keuangan, strategi investasi, dan refleksi arah dunia." />
 </svelte:head>
 
