@@ -245,27 +245,15 @@
 
 						<!-- Admin Only Viewer Badge & Breakdown Trigger -->
 						{#if data.isAdmin}
-							<div class="flex items-center gap-1.5">
-								<div
-									class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0593C6]/15 text-[#0593C6] dark:bg-white/15 dark:text-sky-200 border border-[#0593C6]/30 dark:border-white/30 text-xs font-semibold"
-									title="Statistik pembaca unik (hanya terlihat oleh Admin)"
-								>
-									<Eye class="w-3.5 h-3.5 text-[#0593C6] dark:text-sky-300" />
-									<span>{data.viewCount ?? 0} pembaca unik</span>
-								</div>
-
-								{#if data.referrers && Object.keys(data.referrers).length > 0}
-									<button
-										type="button"
-										onclick={() => (showAdminRefModal = true)}
-										class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-xs font-bold hover:bg-emerald-500/25 transition cursor-pointer"
-										title="Lihat rincian sumber pembaca artikel ini"
-									>
-										<BarChart3 class="w-3 h-3" />
-										<span>Sumber Trafik</span>
-									</button>
-								{/if}
-							</div>
+							<button
+								type="button"
+								onclick={() => (showAdminRefModal = true)}
+								class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0593C6]/15 hover:bg-[#0593C6]/25 text-[#0593C6] dark:bg-white/15 dark:hover:bg-white/25 dark:text-sky-200 border border-[#0593C6]/30 dark:border-white/30 text-xs font-semibold transition cursor-pointer group"
+								title="Klik untuk melihat rincian sumber pembaca artikel ini (Admin)"
+							>
+								<Eye class="w-3.5 h-3.5 text-[#0593C6] dark:text-sky-300 group-hover:scale-110 transition-transform" />
+								<span>{data.viewCount ?? 0} pembaca</span>
+							</button>
 						{/if}
 					</div>
 
@@ -648,7 +636,7 @@
 			</div>
 
 			<div class="pt-3 border-t border-sky-100/60 dark:border-white/10 flex justify-between items-center text-xs">
-				<span class="text-slate-500 dark:text-slate-400">Total Pembaca Unik:</span>
+				<span class="text-slate-500 dark:text-slate-400">Total Pembaca:</span>
 				<span class="font-black text-sm text-[#0593C6] dark:text-white">{data.viewCount ?? 0}</span>
 			</div>
 		</div>

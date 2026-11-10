@@ -1346,7 +1346,7 @@ Bagikan refleksi penutup Anda di sini.`
 			</div>
 
 			<div class="pt-3 border-t border-sky-100/60 dark:border-white/10 flex justify-between items-center text-xs">
-				<span class="text-slate-500 dark:text-slate-400">Total Pembaca Unik:</span>
+				<span class="text-slate-500 dark:text-slate-400">Total Pembaca:</span>
 				<span class="font-black text-sm text-[#0593C6] dark:text-white">{viewingReferrerPost.total}</span>
 			</div>
 		</div>
