@@ -1,20 +1,15 @@
 <script lang="ts">
 	import type { PageProps, ActionData } from './$types';
+	import { onMount } from 'svelte';
 	import { marked } from 'marked';
 	import {
-		PenTool,
 		Eye,
 		EyeOff,
-		Save,
-		Copy,
-		Download,
 		Check,
 		AlertCircle,
 		Sparkles,
-		Tag,
 		Calendar,
 		Clock,
-		BookOpen,
 		FileText,
 		Layers,
 		Quote,
@@ -27,7 +22,11 @@
 		Table,
 		Lock,
 		User,
-		LogOut
+		LogOut,
+		Upload,
+		Bookmark,
+		Trash2,
+		Undo2
 	} from '@lucide/svelte';
 
 	let { data, form }: PageProps & { form: ActionData } = $props();
@@ -68,7 +67,99 @@ Bagikan refleksi penutup Anda di sini.`
 	let activeTab = $state<'editor' | 'preview' | 'split'>('split');
 	let isSaving = $state(false);
 	let saveMessage = $state<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
-	let copied = $state(false);
+
+	// Autosave & Undo State
+	const AUTOSAVE_STORAGE_KEY = 'adam_admin_autosave_temp_v1';
+	let autoSaveStatus = $state<string>('');
+	let autoSaveTimeout: any = null;
+
+	let contentHistory = $state<string[]>([]);
+	let historyIndex = $state(-1);
+	let isUndoOperation = false;
+
+	function pushHistory(newContent: string) {
+		if (isUndoOperation) return;
+		if (historyIndex >= 0 && contentHistory[historyIndex] === newContent) return;
+		const next = contentHistory.slice(0, historyIndex + 1);
+		next.push(newContent);
+		if (next.length > 50) next.shift();
+		contentHistory = next;
+		historyIndex = next.length - 1;
+	}
+
+	function handleUndo() {
+		if (historyIndex > 0) {
+			historyIndex -= 1;
+			isUndoOperation = true;
+			content = contentHistory[historyIndex];
+			setTimeout(() => {
+				isUndoOperation = false;
+			}, 50);
+		}
+	}
+
+	function triggerAutoSave() {
+		if (typeof window === 'undefined') return;
+		if (autoSaveTimeout) clearTimeout(autoSaveTimeout);
+		autoSaveStatus = 'Menyimpan...';
+
+		autoSaveTimeout = setTimeout(() => {
+			const draft = {
+				title,
+				slug,
+				category,
+				readTime,
+				description,
+				tags,
+				content,
+				savedAt: Date.now()
+			};
+			try {
+				localStorage.setItem(AUTOSAVE_STORAGE_KEY, JSON.stringify(draft));
+				const time = new Date().toLocaleTimeString('id-ID', {
+					hour: '2-digit',
+					minute: '2-digit'
+				});
+				autoSaveStatus = `Tersimpan otomatis (${time})`;
+			} catch {}
+		}, 800);
+	}
+
+	function onContentInput() {
+		pushHistory(content);
+		triggerAutoSave();
+	}
+
+	function handleTextareaKeydown(e: KeyboardEvent) {
+		if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'z' && !e.shiftKey) {
+			e.preventDefault();
+			handleUndo();
+		}
+	}
+
+	onMount(() => {
+		contentHistory = [content];
+		historyIndex = 0;
+
+		try {
+			const saved = localStorage.getItem(AUTOSAVE_STORAGE_KEY);
+			if (saved) {
+				const parsed = JSON.parse(saved);
+				if (parsed && (parsed.title || parsed.content)) {
+					title = parsed.title || '';
+					slug = parsed.slug || '';
+					category = parsed.category || 'Investasi';
+					readTime = parsed.readTime || '5 min baca';
+					description = parsed.description || '';
+					tags = parsed.tags || 'Investasi, Keuangan, Mindset';
+					content = parsed.content || '';
+					contentHistory = [content];
+					historyIndex = 0;
+					autoSaveStatus = 'Draft sementara dimuat kembali';
+				}
+			}
+		} catch {}
+	});
 
 	// Auto-generate slug when title changes
 	let slugManuallyEdited = $state(false);
@@ -81,6 +172,7 @@ Bagikan refleksi penutup Anda di sini.`
 				.replace(/[\s_-]+/g, '-')
 				.replace(/^-+|-+$/g, '');
 		}
+		triggerAutoSave();
 	}
 
 	// Toolbar helper
@@ -94,6 +186,8 @@ Bagikan refleksi penutup Anda di sini.`
 		const replacement = `${prefix}${selectedText || 'teks'}${suffix}`;
 
 		content = content.substring(0, start) + replacement + content.substring(end);
+		pushHistory(content);
+		triggerAutoSave();
 
 		setTimeout(() => {
 			textarea.focus();
@@ -139,8 +233,8 @@ Bagikan refleksi penutup Anda di sini.`
 		}
 	});
 
-	// Save Post Action (writes to src/posts/*.md in local dev)
-	async function savePostToProject() {
+	// Save Post Action (Upload or Draft)
+	async function savePost(publish: boolean = true) {
 		if (!title.trim()) {
 			saveMessage = { type: 'error', text: 'Judul artikel wajib diisi terlebih dahulu!' };
 			return;
@@ -161,22 +255,24 @@ Bagikan refleksi penutup Anda di sini.`
 					tags,
 					readTime,
 					content,
-					author: '911'
+					published: publish,
+					author: 'Adam Alhasni'
 				})
 			});
 
 			const resData = await res.json();
 
 			if (resData.success) {
+				const actionName = publish ? 'di-upload & dipublikasikan' : 'disimpan sebagai Draft';
 				saveMessage = {
 					type: 'success',
-					text: `Berhasil tersimpan ke file: src/posts/${resData.slug}.md! Silakan buka artikel di web.`
+					text: `Artikel "${title}" berhasil ${actionName}!`
 				};
-			} else if (resData.readOnly) {
-				saveMessage = {
-					type: 'info',
-					text: 'Website berjalan di Vercel (read-only cloud). Gunakan tombol "Salin Markdown" atau "Unduh .md" di atas untuk menyimpan tulisan Anda.'
-				};
+				// Autosave is temporary until author uploads, drafts, or deletes
+				try {
+					localStorage.removeItem(AUTOSAVE_STORAGE_KEY);
+				} catch {}
+				autoSaveStatus = `Telah ${actionName}`;
 			} else {
 				saveMessage = { type: 'error', text: resData.error || 'Gagal menyimpan tulisan.' };
 			}
@@ -187,41 +283,31 @@ Bagikan refleksi penutup Anda di sini.`
 		}
 	}
 
-	// Copy full markdown to clipboard
-	function copyToClipboard() {
-		navigator.clipboard.writeText(fullMarkdown);
-		copied = true;
-		saveMessage = {
-			type: 'success',
-			text: 'Seluruh teks Markdown & Frontmatter berhasil disalin ke clipboard!'
-		};
-		setTimeout(() => {
-			copied = false;
-		}, 3000);
-	}
-
-	// Download .md file
-	function downloadMarkdownFile() {
-		const filename = `${slug || 'tulisan-baru'}.md`;
-		const blob = new Blob([fullMarkdown], { type: 'text/markdown;charset=utf-8;' });
-		const url = URL.createObjectURL(blob);
-		const link = document.createElement('a');
-		link.href = url;
-		link.download = filename;
-		link.click();
-		URL.revokeObjectURL(url);
-		saveMessage = { type: 'success', text: `File "${filename}" berhasil diunduh ke laptop Anda!` };
-	}
-
-	function resetForm() {
-		if (confirm('Apakah Anda yakin ingin mengosongkan formulir?')) {
-			title = '';
-			slug = '';
-			description = '';
-			tags = 'Investasi, Keuangan';
-			content = '';
-			saveMessage = null;
+	// Delete current draft and clear temporary autosave
+	function handleDeleteDraft() {
+		if (!confirm('Apakah Anda yakin ingin menghapus draft ini? Semua isi penulisan dan autosave sementara akan dibersihkan.')) {
+			return;
 		}
+
+		try {
+			localStorage.removeItem(AUTOSAVE_STORAGE_KEY);
+		} catch {}
+
+		title = '';
+		slug = '';
+		slugManuallyEdited = false;
+		description = '';
+		tags = 'Investasi, Keuangan, Mindset';
+		category = 'Investasi';
+		readTime = '5 min baca';
+		content = '';
+		contentHistory = [''];
+		historyIndex = 0;
+		autoSaveStatus = '';
+		saveMessage = {
+			type: 'info',
+			text: 'Draft penulisan dan autosave sementara telah berhasil dibersihkan.'
+		};
 	}
 </script>
 
@@ -326,63 +412,56 @@ Bagikan refleksi penutup Anda di sini.`
 			<!-- Top Bar with Logout -->
 			<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 mb-8 border-b border-sky-200/50 dark:border-white/20">
 				<div>
-					<div class="flex items-center gap-2 mb-2">
-						<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full glass-pill text-[#0593C6] dark:text-white text-xs font-semibold">
-							<PenTool class="w-3.5 h-3.5 text-[#D83995]" />
-							Studio Penulis (Aktif)
-						</span>
-						<span class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-300 glass-pill px-2.5 py-1 rounded-full border border-emerald-400/30">
-							<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400"></span>
-							Masuk sebagai adamin
-						</span>
-					</div>
 					<h1 class="text-2xl sm:text-3xl font-black text-[#061a2e] dark:text-white tracking-tight drop-shadow-xs">
-						Tulis & Publikasikan Pemikiran Anda
+						Draft Penulisan
 					</h1>
-					<p class="text-xs sm:text-sm text-[#2e4a68] dark:text-sky-100/80 mt-1">
-						Ketik langsung dengan format Markdown dan Live Preview real-time.
-					</p>
+					{#if autoSaveStatus}
+						<span class="text-xs text-[#0593C6] dark:text-sky-300 font-medium inline-flex items-center gap-1.5 mt-1.5">
+							<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+							{autoSaveStatus}
+						</span>
+					{/if}
 				</div>
 
-				<!-- Action Buttons Group + Logout -->
+				<!-- Action Buttons Group (Upload, Draft, Hapus, Keluar) -->
 				<div class="flex flex-wrap items-center gap-2 sm:gap-3">
 					<button
-						onclick={copyToClipboard}
-						class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl glass-pill hover:bg-sky-500/10 dark:hover:bg-white/25 text-[#061a2e] dark:text-white text-xs font-semibold transition cursor-pointer"
-						title="Salin seluruh isi Markdown ke clipboard"
-					>
-						{#if copied}
-							<Check class="w-4 h-4 text-emerald-500 dark:text-emerald-300" />
-							<span class="text-emerald-600 dark:text-emerald-300 font-bold">Tersalin!</span>
-						{:else}
-							<Copy class="w-4 h-4 text-[#516f8e] dark:text-white/80" />
-							<span>Salin Markdown</span>
-						{/if}
-					</button>
-
-					<button
-						onclick={downloadMarkdownFile}
-						class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl glass-pill hover:bg-sky-500/10 dark:hover:bg-white/25 text-[#061a2e] dark:text-white text-xs font-semibold transition cursor-pointer"
-						title="Unduh file .md"
-					>
-						<Download class="w-4 h-4 text-[#516f8e] dark:text-white/80" />
-						<span>Unduh .md</span>
-					</button>
-
-					<button
-						onclick={savePostToProject}
+						type="button"
+						onclick={() => savePost(true)}
 						disabled={isSaving}
-						class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0593C6] text-white hover:bg-[#047ea8] dark:bg-white dark:text-[#0593C6] text-xs font-extrabold active:scale-[0.99] transition cursor-pointer shadow-lg shadow-[#0593C6]/25 dark:shadow-black/10 disabled:opacity-50"
+						class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0593C6] text-white hover:bg-[#047ea8] dark:bg-white dark:text-[#0593C6] text-xs font-bold active:scale-[0.99] transition cursor-pointer shadow-lg shadow-[#0593C6]/25 disabled:opacity-50"
+						title="Upload dan publikasikan tulisan ini"
 					>
-						<Save class="w-4 h-4" />
-						<span>{isSaving ? 'Menyimpan...' : 'Simpan ke Project (.md)'}</span>
+						<Upload class="w-4 h-4" />
+						<span>{isSaving ? 'Mengupload...' : 'Upload'}</span>
+					</button>
+
+					<button
+						type="button"
+						onclick={() => savePost(false)}
+						disabled={isSaving}
+						class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl glass-pill text-[#0593C6] dark:text-sky-200 hover:bg-[#0593C6]/10 border border-[#0593C6]/30 text-xs font-bold transition cursor-pointer"
+						title="Simpan sebagai Draft di project"
+					>
+						<Bookmark class="w-4 h-4 text-[#0593C6] dark:text-sky-300" />
+						<span>Draft</span>
+					</button>
+
+					<button
+						type="button"
+						onclick={handleDeleteDraft}
+						class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl glass-pill text-rose-600 dark:text-rose-300 hover:text-white hover:bg-rose-500/80 border border-rose-300 dark:border-rose-400/30 text-xs font-bold transition cursor-pointer"
+						title="Hapus draft dan bersihkan editor"
+					>
+						<Trash2 class="w-4 h-4 text-rose-500 dark:text-rose-300" />
+						<span>Hapus</span>
 					</button>
 
 					<!-- Logout Form -->
 					<form method="POST" action="?/logout" class="inline-block">
 						<button
 							type="submit"
-							class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl glass-pill text-rose-600 dark:text-rose-300 hover:text-white hover:bg-rose-500 dark:hover:bg-rose-500/25 border-rose-300 dark:border-rose-400/30 text-xs font-semibold transition cursor-pointer"
+							class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl glass-pill text-[#516f8e] dark:text-white/70 hover:text-rose-500 hover:bg-rose-500/10 border border-slate-300/40 dark:border-white/15 text-xs font-semibold transition cursor-pointer"
 							title="Keluar dari sesi admin"
 						>
 							<LogOut class="w-4 h-4" />
@@ -434,7 +513,7 @@ Bagikan refleksi penutup Anda di sini.`
 							<FileText class="w-4 h-4 text-[#D83995]" />
 							Metadata & Tulisan
 						</h2>
-						<button onclick={resetForm} class="text-xs text-[#516f8e] dark:text-white/60 hover:text-rose-500 dark:hover:text-rose-300 transition cursor-pointer">
+						<button type="button" onclick={handleDeleteDraft} class="text-xs text-[#516f8e] dark:text-white/60 hover:text-rose-500 dark:hover:text-rose-300 transition cursor-pointer">
 							Kosongkan Form
 						</button>
 					</div>
@@ -454,39 +533,39 @@ Bagikan refleksi penutup Anda di sini.`
 						/>
 					</div>
 
-					<!-- Slug & Category Row -->
-					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-						<div>
-							<label for="post-slug" class="block text-xs font-bold text-[#061a2e] dark:text-white uppercase tracking-wider mb-1.5">
-								Slug URL
-							</label>
-							<input
-								id="post-slug"
-								type="text"
-								bind:value={slug}
-								oninput={() => slugManuallyEdited = true}
-								placeholder="mengapa-uang-tunai-berharga"
-								class="w-full px-3.5 py-2.5 rounded-xl border border-sky-200/80 dark:border-white/20 bg-white/80 dark:bg-black/30 text-[#061a2e] dark:text-white text-xs font-mono focus:outline-none focus:ring-2 focus:ring-[#0593C6] dark:focus:ring-white/40 focus:border-[#0593C6] dark:focus:border-white placeholder:text-slate-400 dark:placeholder:text-white/45 backdrop-blur-md transition"
-							/>
-						</div>
+					<!-- Category Input (Full Width matching all input boxes) -->
+					<div>
+						<label for="post-category" class="block text-xs font-bold text-[#061a2e] dark:text-white uppercase tracking-wider mb-1.5">
+							Kategori Artikel *
+						</label>
+						<select
+							id="post-category"
+							bind:value={category}
+							onchange={triggerAutoSave}
+							class="w-full px-4 py-2.5 rounded-xl border border-sky-200/80 dark:border-white/20 bg-white/80 dark:bg-black/40 text-[#061a2e] dark:text-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#0593C6] dark:focus:ring-white/40 focus:border-[#0593C6] dark:focus:border-white backdrop-blur-md transition cursor-pointer"
+						>
+							<option value="Investasi" class="bg-white dark:bg-[#051a2e] text-[#061a2e] dark:text-white">Investasi</option>
+							<option value="Mindset Keuangan" class="bg-white dark:bg-[#051a2e] text-[#061a2e] dark:text-white">Mindset Keuangan</option>
+							<option value="Opini Dunia" class="bg-white dark:bg-[#051a2e] text-[#061a2e] dark:text-white">Opini Dunia</option>
+							<option value="Geopolitik" class="bg-white dark:bg-[#051a2e] text-[#061a2e] dark:text-white">Geopolitik</option>
+							<option value="Refleksi Hidup" class="bg-white dark:bg-[#051a2e] text-[#061a2e] dark:text-white">Refleksi Hidup</option>
+							<option value="Analisis Pasar" class="bg-white dark:bg-[#051a2e] text-[#061a2e] dark:text-white">Analisis Pasar</option>
+						</select>
+					</div>
 
-						<div>
-							<label for="post-category" class="block text-xs font-bold text-[#061a2e] dark:text-white uppercase tracking-wider mb-1.5">
-								Kategori
-							</label>
-							<select
-								id="post-category"
-								bind:value={category}
-								class="w-full px-3.5 py-2.5 rounded-xl border border-sky-200/80 dark:border-white/20 bg-white/80 dark:bg-black/40 text-[#061a2e] dark:text-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#0593C6] dark:focus:ring-white/40 focus:border-[#0593C6] dark:focus:border-white backdrop-blur-md transition cursor-pointer"
-							>
-								<option value="Investasi" class="bg-white dark:bg-[#051a2e] text-[#061a2e] dark:text-white">Investasi</option>
-								<option value="Mindset Keuangan" class="bg-white dark:bg-[#051a2e] text-[#061a2e] dark:text-white">Mindset Keuangan</option>
-								<option value="Opini Dunia" class="bg-white dark:bg-[#051a2e] text-[#061a2e] dark:text-white">Opini Dunia</option>
-								<option value="Geopolitik" class="bg-white dark:bg-[#051a2e] text-[#061a2e] dark:text-white">Geopolitik</option>
-								<option value="Refleksi Hidup" class="bg-white dark:bg-[#051a2e] text-[#061a2e] dark:text-white">Refleksi Hidup</option>
-								<option value="Analisis Pasar" class="bg-white dark:bg-[#051a2e] text-[#061a2e] dark:text-white">Analisis Pasar</option>
-							</select>
-						</div>
+					<!-- Slug URL (Full Width) -->
+					<div>
+						<label for="post-slug" class="block text-xs font-bold text-[#061a2e] dark:text-white uppercase tracking-wider mb-1.5">
+							Slug URL
+						</label>
+						<input
+							id="post-slug"
+							type="text"
+							bind:value={slug}
+							oninput={() => { slugManuallyEdited = true; triggerAutoSave(); }}
+							placeholder="mengapa-uang-tunai-berharga"
+							class="w-full px-4 py-2.5 rounded-xl border border-sky-200/80 dark:border-white/20 bg-white/80 dark:bg-black/30 text-[#061a2e] dark:text-white text-xs font-mono focus:outline-none focus:ring-2 focus:ring-[#0593C6] dark:focus:ring-white/40 focus:border-[#0593C6] dark:focus:border-white placeholder:text-slate-400 dark:placeholder:text-white/45 backdrop-blur-md transition"
+						/>
 					</div>
 
 					<!-- Description / Excerpt -->
@@ -543,6 +622,19 @@ Bagikan refleksi penutup Anda di sini.`
 						</div>
 
 						<div class="flex flex-wrap items-center gap-1 p-2 bg-sky-50/90 dark:bg-black/35 border border-sky-200/80 dark:border-white/20 rounded-t-2xl text-[#061a2e] dark:text-white backdrop-blur-md">
+							<!-- Undo Button -->
+							<button
+								type="button"
+								onclick={handleUndo}
+								disabled={historyIndex <= 0}
+								class="p-1.5 hover:bg-sky-500/15 dark:hover:bg-white/25 rounded-lg text-[#334e6b] dark:text-white/80 hover:text-[#0593C6] dark:hover:text-white transition cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1 mr-1"
+								title="Undo (Kembalikan ketikan) [Ctrl+Z]"
+							>
+								<Undo2 class="w-4 h-4 text-[#0593C6] dark:text-sky-300" />
+								<span class="text-xs font-bold">Undo</span>
+							</button>
+							<div class="w-px h-4 bg-sky-300/60 dark:bg-white/20 mx-1"></div>
+
 							<button type="button" onclick={() => insertFormatting('## ')} class="p-1.5 hover:bg-sky-500/15 dark:hover:bg-white/25 rounded-lg text-[#334e6b] dark:text-white/80 hover:text-[#0593C6] dark:hover:text-white transition cursor-pointer" title="Heading 2">
 								<Heading2 class="w-4 h-4" />
 							</button>
@@ -572,6 +664,8 @@ Bagikan refleksi penutup Anda di sini.`
 						<textarea
 							id="markdown-editor"
 							bind:value={content}
+							oninput={onContentInput}
+							onkeydown={handleTextareaKeydown}
 							rows="16"
 							placeholder="Mulai ketik cerita atau analisis Anda di sini..."
 							class="w-full p-4 rounded-b-2xl border border-t-0 border-sky-200/80 dark:border-white/20 bg-white/60 dark:bg-black/35 text-[#1b324b] dark:text-white text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#0593C6] dark:focus:ring-white/40 focus:border-[#0593C6] dark:focus:border-white leading-relaxed resize-y placeholder:text-slate-400 dark:placeholder:text-white/45 backdrop-blur-md"

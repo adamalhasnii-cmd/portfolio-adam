@@ -181,8 +181,18 @@
 				</a>
 			</nav>
 
-			<!-- Right Actions: Theme Toggle & Capsule Button -->
-			<div class="flex items-center gap-2">
+			<!-- Right Actions: Admin Button, Theme Toggle & Search Button -->
+			<div class="flex items-center gap-1.5 sm:gap-2">
+				{#if (data as any)?.isAdmin}
+					<a
+						href="/admin"
+						class="px-3.5 py-1 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs shadow-md shadow-emerald-500/25 transition cursor-pointer flex items-center"
+						title="Buka Studio Admin"
+					>
+						Admin
+					</a>
+				{/if}
+
 				<!-- Dark / Light Mode Toggle Button -->
 				<button
 					type="button"
@@ -535,17 +545,14 @@
 		</div>
 	</footer>
 
-	<!-- Floating Back to Top Button (Slides in smoothly from bottom to top, turns hot pink on hover) -->
-	{#if showScrollTop}
-		<button
-			type="button"
-			transition:fly={{ y: 50, duration: 350 }}
-			onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-			class="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full glass-panel flex items-center justify-center text-[#061a2e] dark:text-white border border-sky-200/80 dark:border-white/20 shadow-xl shadow-black/10 hover:bg-[#D83995] hover:text-white hover:border-[#D83995] hover:shadow-[#D83995]/40 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer group"
-			title="Kembali ke atas"
-			aria-label="Kembali ke atas"
-		>
-			<ArrowUp class="w-5 h-5 transition-transform duration-200 group-hover:-translate-y-0.5" />
-		</button>
-	{/if}
+	<!-- Floating Back to Top Button (Smooth slide from bottom with CSS transform & opacity, turns hot pink on hover) -->
+	<button
+		type="button"
+		onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+		class="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full glass-panel flex items-center justify-center text-[#061a2e] dark:text-white border border-sky-200/80 dark:border-white/20 shadow-xl shadow-black/10 hover:bg-[#D83995] hover:text-white hover:border-[#D83995] hover:shadow-[#D83995]/40 hover:scale-105 active:scale-95 transition-all duration-500 ease-out cursor-pointer group {showScrollTop ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-10 pointer-events-none'}"
+		title="Kembali ke atas"
+		aria-label="Kembali ke atas"
+	>
+		<ArrowUp class="w-5 h-5 transition-transform duration-200 group-hover:-translate-y-0.5" />
+	</button>
 </div>

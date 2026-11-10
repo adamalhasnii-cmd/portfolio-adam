@@ -44,7 +44,7 @@ export async function POST({ request, cookies }) {
 			`tags: ${JSON.stringify(tagList)}`,
 			`readTime: ${JSON.stringify(readTime || '5 min baca')}`,
 			'featured: false',
-			'published: true',
+			`published: ${data.published !== false}`,
 			`author: ${JSON.stringify(author || 'Adam Alhasni')}`,
 			'---',
 			'',
@@ -58,10 +58,11 @@ export async function POST({ request, cookies }) {
 		try {
 			await fs.mkdir(postsDir, { recursive: true });
 			await fs.writeFile(filePath, frontmatter, 'utf-8');
+			const statusLabel = data.published !== false ? 'di-upload & diterbitkan' : 'disimpan sebagai Draft';
 			return json({
 				success: true,
 				slug: postSlug,
-				message: `Artikel "${title}" berhasil disimpan sebagai ${postSlug}.md!`
+				message: `Artikel "${title}" berhasil ${statusLabel} (${postSlug}.md)!`
 			});
 		} catch (fileErr: any) {
 			return json({
@@ -74,5 +75,32 @@ export async function POST({ request, cookies }) {
 	} catch (err: any) {
 		console.error('Save post error:', err);
 		return json({ success: false, error: err.message || 'Terjadi kesalahan sistem' }, { status: 500 });
+	}
+}
+
+export async function DELETE({ request, cookies }) {
+	const session = cookies.get(SESSION_COOKIE_NAME);
+	if (session !== SESSION_SECRET_TOKEN) {
+		return json({ success: false, error: 'Akses ditolak.' }, { status: 401 });
+	}
+
+	try {
+		const { slug } = await request.json().catch(() => ({}));
+		if (!slug || typeof slug !== 'string') {
+			return json({ success: false, error: 'Slug artikel wajib diisi' }, { status: 400 });
+		}
+
+		const cleanSlug = slug.replace(/[^a-zA-Z0-9_-]/g, '');
+		const postsDir = path.resolve(process.cwd(), 'src/posts');
+		const filePath = path.join(postsDir, `${cleanSlug}.md`);
+
+		try {
+			await fs.unlink(filePath);
+			return json({ success: true, message: `Artikel ${cleanSlug}.md berhasil dihapus dari project!` });
+		} catch {
+			return json({ success: false, error: 'File artikel tidak ditemukan di disk.' }, { status: 404 });
+		}
+	} catch (err: any) {
+		return json({ success: false, error: err?.message || 'Gagal menghapus artikel' }, { status: 500 });
 	}
 }
