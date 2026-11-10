@@ -525,7 +525,7 @@ Bagikan refleksi penutup Anda di sini.`
 							bind:value={title}
 							oninput={onTitleInput}
 							placeholder="Contoh: Mengapa Uang Tunai Tetap Berharga di Saat Suku Bunga Tinggi"
-							class="w-full px-4 py-2.5 rounded-xl border border-sky-200/80 dark:border-white/20 bg-white/80 dark:bg-black/30 text-[#061a2e] dark:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-[#0593C6] dark:focus:ring-white/40 focus:border-[#0593C6] dark:focus:border-white text-sm placeholder:text-slate-400 dark:placeholder:text-white/45 backdrop-blur-md transition"
+							class="w-full h-11 px-4 rounded-xl border border-sky-200/80 dark:border-white/20 bg-white/80 dark:bg-black/30 text-[#061a2e] dark:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-[#0593C6] dark:focus:ring-white/40 focus:border-[#0593C6] dark:focus:border-white text-sm placeholder:text-slate-400 dark:placeholder:text-white/45 backdrop-blur-md transition"
 						/>
 					</div>
 
@@ -538,7 +538,7 @@ Bagikan refleksi penutup Anda di sini.`
 							id="post-category"
 							bind:value={category}
 							onchange={triggerAutoSave}
-							class="w-full px-4 py-2.5 rounded-xl border border-sky-200/80 dark:border-white/20 bg-white/80 dark:bg-black/40 text-[#061a2e] dark:text-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#0593C6] dark:focus:ring-white/40 focus:border-[#0593C6] dark:focus:border-white backdrop-blur-md transition cursor-pointer"
+							class="w-full h-11 px-4 rounded-xl border border-sky-200/80 dark:border-white/20 bg-white/80 dark:bg-black/40 text-[#061a2e] dark:text-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#0593C6] dark:focus:ring-white/40 focus:border-[#0593C6] dark:focus:border-white backdrop-blur-md transition cursor-pointer"
 						>
 							<option value="Investasi" class="bg-white dark:bg-[#051a2e] text-[#061a2e] dark:text-white">Investasi</option>
 							<option value="Mindset Keuangan" class="bg-white dark:bg-[#051a2e] text-[#061a2e] dark:text-white">Mindset Keuangan</option>
@@ -560,7 +560,7 @@ Bagikan refleksi penutup Anda di sini.`
 							bind:value={slug}
 							oninput={() => { slugManuallyEdited = true; triggerAutoSave(); }}
 							placeholder="mengapa-uang-tunai-berharga"
-							class="w-full px-4 py-2.5 rounded-xl border border-sky-200/80 dark:border-white/20 bg-white/80 dark:bg-black/30 text-[#061a2e] dark:text-white text-xs font-mono focus:outline-none focus:ring-2 focus:ring-[#0593C6] dark:focus:ring-white/40 focus:border-[#0593C6] dark:focus:border-white placeholder:text-slate-400 dark:placeholder:text-white/45 backdrop-blur-md transition"
+							class="w-full h-11 px-4 rounded-xl border border-sky-200/80 dark:border-white/20 bg-white/80 dark:bg-black/30 text-[#061a2e] dark:text-white text-xs font-mono focus:outline-none focus:ring-2 focus:ring-[#0593C6] dark:focus:ring-white/40 focus:border-[#0593C6] dark:focus:border-white placeholder:text-slate-400 dark:placeholder:text-white/45 backdrop-blur-md transition"
 						/>
 					</div>
 
@@ -589,7 +589,7 @@ Bagikan refleksi penutup Anda di sini.`
 								type="text"
 								bind:value={tags}
 								placeholder="Investasi, Cashflow, Saham"
-								class="w-full px-3.5 py-2.5 rounded-xl border border-sky-200/80 dark:border-white/20 bg-white/80 dark:bg-black/30 text-[#061a2e] dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#0593C6] dark:focus:ring-white/40 focus:border-[#0593C6] dark:focus:border-white placeholder:text-slate-400 dark:placeholder:text-white/45 backdrop-blur-md transition"
+								class="w-full h-11 px-3.5 rounded-xl border border-sky-200/80 dark:border-white/20 bg-white/80 dark:bg-black/30 text-[#061a2e] dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#0593C6] dark:focus:ring-white/40 focus:border-[#0593C6] dark:focus:border-white placeholder:text-slate-400 dark:placeholder:text-white/45 backdrop-blur-md transition"
 							/>
 						</div>
 						<div>
@@ -601,7 +601,7 @@ Bagikan refleksi penutup Anda di sini.`
 								type="text"
 								bind:value={readTime}
 								placeholder="5 min baca"
-								class="w-full px-3.5 py-2.5 rounded-xl border border-sky-200/80 dark:border-white/20 bg-white/80 dark:bg-black/30 text-[#061a2e] dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#0593C6] dark:focus:ring-white/40 focus:border-[#0593C6] dark:focus:border-white placeholder:text-slate-400 dark:placeholder:text-white/45 backdrop-blur-md transition"
+								class="w-full h-11 px-3.5 rounded-xl border border-sky-200/80 dark:border-white/20 bg-white/80 dark:bg-black/30 text-[#061a2e] dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#0593C6] dark:focus:ring-white/40 focus:border-[#0593C6] dark:focus:border-white placeholder:text-slate-400 dark:placeholder:text-white/45 backdrop-blur-md transition"
 							/>
 						</div>
 					</div>
