@@ -492,35 +492,32 @@
 	<!-- Footer -->
 	<footer class="border-t border-sky-200/60 dark:border-white/15 bg-white/70 dark:bg-black/30 backdrop-blur-2xl py-12 text-[#334e6b] dark:text-white/80 mt-20 transition-colors">
 		<div class="max-w-6xl mx-auto px-4 sm:px-6">
-			<div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 mb-8 sm:mb-12">
 				<!-- Brand Col -->
-				<div class="md:col-span-2 space-y-3">
+				<div class="space-y-3">
 					<div class="flex items-center gap-2">
 						<span class="font-extrabold text-xl tracking-tight text-[#061a2e] dark:text-white drop-shadow-sm">911</span>
 						<span class="w-1.5 h-1.5 rounded-full bg-[#D83995]"></span>
 					</div>
-					<p class="text-sm text-[#3a5472] dark:text-sky-50/85 leading-relaxed max-w-md font-normal">
+					<p class="text-sm text-[#3a5472] dark:text-sky-50/85 leading-relaxed max-w-lg font-normal">
 						Ruang eksplorasi dan esai pribadi untuk membedah dinamika dunia, psikologi mengelola kekayaan, dan strategi membangun otonomi waktu jangka panjang.
 					</p>
 				</div>
 
-				<!-- Nav Links Col -->
-				<div>
-					<h4 class="text-xs font-bold text-[#061a2e] dark:text-white uppercase tracking-wider mb-4">Navigasi</h4>
-					<ul class="space-y-2.5 text-sm">
-						<li><a href="/" class="text-[#334e6b] dark:text-white/80 hover:text-[#0593C6] dark:hover:text-white transition">Beranda</a></li>
-						<li><a href="/artikel" class="text-[#334e6b] dark:text-white/80 hover:text-[#0593C6] dark:hover:text-white transition">Kumpulan Tulisan</a></li>
-						<li><a href="/tentang" class="text-[#334e6b] dark:text-white/80 hover:text-[#0593C6] dark:hover:text-white transition">Filosofi & Tentang</a></li>
-					</ul>
-				</div>
-
 				<!-- Disclaimer Col -->
-				<div>
-					<h4 class="text-xs font-bold text-[#061a2e] dark:text-white uppercase tracking-wider mb-4">Disclaimer</h4>
-					<p class="text-xs text-[#527091] dark:text-sky-100/75 leading-relaxed">
+				<div class="md:text-right flex flex-col md:items-end justify-center">
+					<h4 class="text-xs font-bold text-[#061a2e] dark:text-white uppercase tracking-wider mb-2">Disclaimer</h4>
+					<p class="text-xs text-[#527091] dark:text-sky-100/75 leading-relaxed max-w-md">
 						Seluruh tulisan di situs ini adalah opini dan refleksi pribadi semata. Bukan merupakan anjuran, rekomendasi, ataupun nasihat finansial resmi.
 					</p>
 				</div>
+			</div>
+
+			<!-- Large Hero Brand Name Typography (Benjamin Cowen Style) -->
+			<div class="pt-4 pb-6 sm:pt-6 sm:pb-8 select-none overflow-hidden">
+				<h2 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tighter text-[#061a2e]/20 dark:text-white/12 hover:text-[#061a2e]/30 dark:hover:text-white/20 transition-colors duration-300 leading-none">
+					Adam Alhasni
+				</h2>
 			</div>
 
 			<div class="pt-8 border-t border-sky-200/50 dark:border-white/15 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#53708e] dark:text-sky-100/70">
