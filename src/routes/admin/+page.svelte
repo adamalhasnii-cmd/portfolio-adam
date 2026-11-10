@@ -26,7 +26,8 @@
 		Upload,
 		Bookmark,
 		Trash2,
-		Undo2
+		Undo2,
+		Pencil
 	} from '@lucide/svelte';
 
 	let { data, form }: PageProps & { form: ActionData } = $props();
@@ -241,6 +242,107 @@ Bagikan refleksi penutup Anda di sini.`
 		}
 	});
 
+	let editingSlug = $state<string | null>(null);
+	let isLoadingPost = $state(false);
+
+	// Load existing post (Draft or Uploaded) into the editor
+	async function loadPostForEditing(postSlug: string) {
+		isLoadingPost = true;
+		saveMessage = null;
+		try {
+			const res = await fetch(`/api/get-post?slug=${encodeURIComponent(postSlug)}`);
+			const resData = await res.json();
+			if (resData.success && resData.post) {
+				const p = resData.post;
+				title = p.title;
+				slug = p.slug;
+				slugManuallyEdited = true;
+				category = p.category;
+				description = p.description;
+				tags = p.tags;
+				readTime = p.readTime;
+				content = p.content;
+				editingSlug = p.slug;
+
+				// Reset history stack with loaded content
+				contentHistory = [content];
+				historyIndex = 0;
+
+				saveMessage = {
+					type: 'info',
+					text: `Tulisan "${p.title}" berhasil dimuat ke editor! Anda dapat mengedit isi atau mengubah slug.`
+				};
+
+				// Smooth scroll to top editor
+				if (typeof window !== 'undefined') {
+					window.scrollTo({ top: 0, behavior: 'smooth' });
+				}
+			} else {
+				saveMessage = {
+					type: 'error',
+					text: resData.error || 'Gagal memuat tulisan.'
+				};
+			}
+		} catch (err: any) {
+			saveMessage = {
+				type: 'error',
+				text: 'Gagal mengambil data tulisan: ' + err.message
+			};
+		} finally {
+			isLoadingPost = false;
+		}
+	}
+
+	function resetEditorToNew() {
+		editingSlug = null;
+		slugManuallyEdited = false;
+		title = '';
+		slug = '';
+		description = '';
+		tags = 'Investasi, Keuangan, Mindset';
+		category = 'Investasi';
+		readTime = '5 min baca';
+		content = '';
+		contentHistory = [''];
+		historyIndex = 0;
+		autoSaveStatus = '';
+		saveMessage = {
+			type: 'info',
+			text: 'Form telah dikosongkan untuk memulai tulisan baru.'
+		};
+	}
+
+	async function deletePostFile(targetSlug: string, postTitle: string) {
+		if (!confirm(`Apakah Anda yakin ingin menghapus permanen "${postTitle}" (${targetSlug}.md)?`)) {
+			return;
+		}
+
+		try {
+			const res = await fetch('/api/save-post', {
+				method: 'DELETE',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ slug: targetSlug })
+			});
+			const resData = await res.json();
+			if (resData.success) {
+				saveMessage = {
+					type: 'success',
+					text: `Tulisan "${postTitle}" berhasil dihapus dari project.`
+				};
+				if (editingSlug === targetSlug) {
+					resetEditorToNew();
+				}
+				setTimeout(() => {
+					window.location.reload();
+				}, 600);
+			} else {
+				saveMessage = { type: 'error', text: resData.error || 'Gagal menghapus tulisan.' };
+			}
+		} catch (err: any) {
+			saveMessage = { type: 'error', text: 'Koneksi gagal: ' + err.message };
+		}
+	}
+
 	// Save Post Action (Upload or Draft)
 	async function savePost(publish: boolean = true) {
 		if (!title.trim()) {
@@ -258,6 +360,7 @@ Bagikan refleksi penutup Anda di sini.`
 				body: JSON.stringify({
 					title,
 					slug: slug || title,
+					originalSlug: editingSlug || undefined,
 					description,
 					category,
 					tags,
@@ -272,6 +375,7 @@ Bagikan refleksi penutup Anda di sini.`
 
 			if (resData.success) {
 				const actionName = publish ? 'di-upload & dipublikasikan' : 'disimpan sebagai Draft';
+				editingSlug = resData.slug || slug;
 				saveMessage = {
 					type: 'success',
 					text: `Artikel "${title}" berhasil ${actionName}!`
@@ -281,6 +385,9 @@ Bagikan refleksi penutup Anda di sini.`
 					localStorage.removeItem(AUTOSAVE_STORAGE_KEY);
 				} catch {}
 				autoSaveStatus = `Telah ${actionName}`;
+				setTimeout(() => {
+					window.location.reload();
+				}, 800);
 			} else {
 				saveMessage = { type: 'error', text: resData.error || 'Gagal menyimpan tulisan.' };
 			}
@@ -293,7 +400,12 @@ Bagikan refleksi penutup Anda di sini.`
 
 	// Delete current draft and clear temporary autosave
 	function handleDeleteDraft() {
-		if (!confirm('Apakah Anda yakin ingin menghapus draft ini? Semua isi penulisan dan autosave sementara akan dibersihkan.')) {
+		if (editingSlug) {
+			deletePostFile(editingSlug, title || editingSlug);
+			return;
+		}
+
+		if (!confirm('Apakah Anda yakin ingin menghapus isi form draft ini? Autosave sementara akan dibersihkan.')) {
 			return;
 		}
 
@@ -301,21 +413,7 @@ Bagikan refleksi penutup Anda di sini.`
 			localStorage.removeItem(AUTOSAVE_STORAGE_KEY);
 		} catch {}
 
-		title = '';
-		slug = '';
-		slugManuallyEdited = false;
-		description = '';
-		tags = 'Investasi, Keuangan, Mindset';
-		category = 'Investasi';
-		readTime = '5 min baca';
-		content = '';
-		contentHistory = [''];
-		historyIndex = 0;
-		autoSaveStatus = '';
-		saveMessage = {
-			type: 'info',
-			text: 'Draft penulisan dan autosave sementara telah berhasil dibersihkan.'
-		};
+		resetEditorToNew();
 	}
 </script>
 
@@ -423,9 +521,23 @@ Bagikan refleksi penutup Anda di sini.`
 			<!-- Top Bar with Logout -->
 			<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 mb-8 border-b border-sky-200/50 dark:border-white/20">
 				<div>
-					<h1 class="text-2xl sm:text-3xl font-black text-[#061a2e] dark:text-white tracking-tight drop-shadow-xs">
-						Draft Penulisan
-					</h1>
+					<div class="flex items-center gap-2.5 flex-wrap">
+						<h1 class="text-2xl sm:text-3xl font-black text-[#061a2e] dark:text-white tracking-tight drop-shadow-xs">
+							Draft Penulisan
+						</h1>
+						{#if editingSlug}
+							<span class="text-xs px-2.5 py-1 rounded-full bg-sky-500/15 text-[#0593C6] dark:text-sky-300 font-bold border border-[#0593C6]/30 flex items-center gap-1.5">
+								<span class="w-1.5 h-1.5 rounded-full bg-[#0593C6] animate-pulse"></span>
+								<span>Mengedit: <strong class="font-mono">{editingSlug}.md</strong></span>
+								<button
+									type="button"
+									onclick={resetEditorToNew}
+									class="ml-1 text-slate-400 hover:text-rose-500 transition font-black cursor-pointer"
+									title="Batal edit dan buat tulisan baru"
+								>✕</button>
+							</span>
+						{/if}
+					</div>
 					{#if autoSaveStatus}
 						<span class="text-xs text-[#0593C6] dark:text-sky-300 font-medium inline-flex items-center gap-1.5 mt-1.5">
 							<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
@@ -768,7 +880,7 @@ Bagikan refleksi penutup Anda di sini.`
 
 				<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 					{#each (data.posts || []) as post}
-						<div class="glass-panel p-5 rounded-2xl border border-sky-200/60 dark:border-white/20 text-[#061a2e] dark:text-white hover:border-[#0593C6]/40 dark:hover:border-white/40 hover:bg-white/90 dark:hover:bg-white/15 transition flex flex-col justify-between">
+						<div class="glass-panel p-5 rounded-2xl border border-sky-200/60 dark:border-white/20 text-[#061a2e] dark:text-white hover:border-[#0593C6]/40 dark:hover:border-white/40 hover:bg-white/90 dark:hover:bg-white/15 transition flex flex-col justify-between {editingSlug === post.slug ? 'ring-2 ring-[#0593C6] dark:ring-sky-400 bg-sky-500/5' : ''}">
 							<div>
 								<div class="flex items-center justify-between text-[11px] text-[#516f8e] dark:text-white/70 mb-2">
 									<div class="flex items-center gap-1.5">
@@ -784,19 +896,47 @@ Bagikan refleksi penutup Anda di sini.`
 								<h4 class="font-bold text-sm text-[#061a2e] dark:text-white line-clamp-2 mb-1.5">{post.metadata.title}</h4>
 								<p class="text-xs text-[#516f8e] dark:text-white/50 font-mono">src/posts/{post.slug}.md</p>
 							</div>
-							<div class="pt-3 mt-3 border-t border-sky-100 dark:border-white/15 flex items-center justify-between text-xs">
-								<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#0593C6]/10 text-[#0593C6] dark:bg-white/10 dark:text-sky-200 border border-[#0593C6]/20 dark:border-white/20 font-bold text-xs" title="Jumlah pembaca unik">
+
+							<div class="pt-3 mt-3 border-t border-sky-100 dark:border-white/15 flex items-center justify-between text-xs gap-2">
+								<div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#0593C6]/10 text-[#0593C6] dark:bg-white/10 dark:text-sky-200 border border-[#0593C6]/20 dark:border-white/20 font-bold text-[11px]" title="Jumlah pembaca unik">
 									<Eye class="w-3.5 h-3.5" />
-									<span>{(data.views && (data.views as any)[post.slug]) || 0} pembaca</span>
+									<span>{(data.views && (data.views as any)[post.slug]) || 0}</span>
 								</div>
-								{#if post.metadata.published !== false}
-									<a href="/artikel/{post.slug}" target="_blank" class="text-[#0593C6] dark:text-white font-semibold hover:text-[#D83995] dark:hover:text-[#f29185] transition flex items-center gap-1">
-										<span>Buka Artikel</span>
-										<span>↗</span>
+
+								<div class="flex items-center gap-2">
+									<!-- Edit button to load draft/article into editor -->
+									<button
+										type="button"
+										onclick={() => loadPostForEditing(post.slug)}
+										disabled={isLoadingPost}
+										class="px-2.5 py-1 rounded-lg bg-[#0593C6] hover:bg-[#047ea8] text-white dark:bg-white dark:text-[#0593C6] dark:hover:bg-slate-100 font-bold text-xs transition cursor-pointer flex items-center gap-1 shadow-sm"
+										title="Buka dan edit di form penulisan"
+									>
+										<Pencil class="w-3 h-3 text-current" />
+										<span class="text-current">Edit</span>
+									</button>
+
+									<!-- Preview / Buka link -->
+									<a
+										href="/artikel/{post.slug}"
+										target="_blank"
+										class="text-[#0593C6] dark:text-white/80 hover:text-[#D83995] dark:hover:text-[#f29185] font-semibold text-xs transition flex items-center gap-0.5"
+										title={post.metadata.published === false ? 'Pratinjau Draf' : 'Buka Halaman Artikel'}
+									>
+										<span>{post.metadata.published === false ? 'Preview' : 'Buka'}</span>
+										<span class="text-[10px]">↗</span>
 									</a>
-								{:else}
-									<span class="text-xs text-amber-600 dark:text-amber-300 font-semibold italic">Belum terbit</span>
-								{/if}
+
+									<!-- Delete file button -->
+									<button
+										type="button"
+										onclick={() => deletePostFile(post.slug, post.metadata.title)}
+										class="p-1 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition cursor-pointer"
+										title="Hapus file artikel ini"
+									>
+										<Trash2 class="w-3.5 h-3.5" />
+									</button>
+								</div>
 							</div>
 						</div>
 					{/each}

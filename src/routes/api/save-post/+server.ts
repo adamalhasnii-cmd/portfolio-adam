@@ -14,7 +14,7 @@ export async function POST({ request, cookies }) {
 
 	try {
 		const data = await request.json();
-		const { title, description, category, tags, readTime, content, slug, author } = data;
+		const { title, description, category, tags, readTime, content, slug, author, originalSlug } = data;
 
 		if (!title || !content) {
 			return json({ success: false, error: 'Judul dan isi tulisan wajib diisi' }, { status: 400 });
@@ -57,6 +57,14 @@ export async function POST({ request, cookies }) {
 
 		try {
 			await fs.mkdir(postsDir, { recursive: true });
+			if (originalSlug && originalSlug !== postSlug) {
+				const oldClean = originalSlug.replace(/[^a-zA-Z0-9_-]/g, '');
+				if (oldClean) {
+					try {
+						await fs.unlink(path.join(postsDir, `${oldClean}.md`));
+					} catch {}
+				}
+			}
 			await fs.writeFile(filePath, frontmatter, 'utf-8');
 			const statusLabel = data.published !== false ? 'di-upload & diterbitkan' : 'disimpan sebagai Draft';
 			return json({
