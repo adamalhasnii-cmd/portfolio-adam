@@ -1,11 +1,45 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import type { PageProps } from './$types';
-	import { Calendar, Clock, ArrowLeft, Share2, Check, AlertCircle } from '@lucide/svelte';
+	import { Calendar, Clock, ArrowLeft, Share2, Check, AlertCircle, Eye } from '@lucide/svelte';
 
 	let { data }: PageProps = $props();
 	let copied = $state(false);
 
 	const ContentComponent = $derived(data.component);
+
+	function getOrCreateVisitorId(): string {
+		if (typeof window === 'undefined') return '';
+		let id = localStorage.getItem('portfolio_vid');
+		if (!id) {
+			id = 'vid_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+			localStorage.setItem('portfolio_vid', id);
+		}
+		return id;
+	}
+
+	onMount(() => {
+		if (typeof window === 'undefined' || !data.slug) return;
+
+		// Deduplication check: prevent duplicate counting if visited in this browser
+		const viewKey = `viewed_post_${data.slug}`;
+		if (localStorage.getItem(viewKey)) {
+			return;
+		}
+
+		const visitorId = getOrCreateVisitorId();
+		fetch('/api/views', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ slug: data.slug, visitorId })
+		})
+			.then((res) => {
+				if (res.ok) {
+					localStorage.setItem(viewKey, Date.now().toString());
+				}
+			})
+			.catch(() => {});
+	});
 
 	function shareArticle() {
 		if (typeof window !== 'undefined') {
@@ -104,6 +138,18 @@
 							<Clock class="w-4 h-4 text-[#D83995] dark:text-pink-200" />
 							<span>{data.metadata.readTime}</span>
 						</div>
+
+						<!-- Admin Only Viewer Badge -->
+						{#if data.isAdmin}
+							<div
+								class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0593C6]/15 text-[#0593C6] dark:bg-white/15 dark:text-sky-200 border border-[#0593C6]/30 dark:border-white/30 text-xs font-semibold"
+								title="Statistik ini hanya dapat dilihat oleh Anda sebagai Admin"
+							>
+								<Eye class="w-3.5 h-3.5 text-[#0593C6] dark:text-sky-300" />
+								<span>{data.viewCount ?? 0} pembaca unik</span>
+								<span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-[#0593C6] text-white dark:bg-white dark:text-[#0593C6]">Khusus Admin</span>
+							</div>
+						{/if}
 					</div>
 
 					<!-- Share Button -->

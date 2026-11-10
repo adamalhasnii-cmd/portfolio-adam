@@ -1,7 +1,8 @@
 import { error } from '@sveltejs/kit';
 import { getPostBySlug } from '#lib/posts';
+import type { PageLoad } from './$types';
 
-export function load({ params }) {
+export const load: PageLoad = async ({ data, params }) => {
 	const post = getPostBySlug(params.slug);
 
 	if (!post) {
@@ -9,8 +10,9 @@ export function load({ params }) {
 	}
 
 	return {
+		...data,
 		slug: post.slug,
 		metadata: post.metadata,
 		component: post.component
 	};
-}
+};

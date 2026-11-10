@@ -1,11 +1,13 @@
 import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
 import { getAllPosts } from '#lib/posts';
-
-const ADMIN_USER = 'adamin';
-const ADMIN_PASS = 'fronTalistu99&!';
-const SESSION_COOKIE_NAME = 'adam_admin_token';
-const SESSION_SECRET_TOKEN = 'auth_session_adamin_portfolio_secret_2026';
+import {
+	ADMIN_USER,
+	ADMIN_PASS,
+	SESSION_COOKIE_NAME,
+	SESSION_SECRET_TOKEN
+} from '#lib/server/constants';
+import { getAllViewCounts } from '#lib/server/views';
 
 export const load: PageServerLoad = async ({ cookies }) => {
 	const session = cookies.get(SESSION_COOKIE_NAME);
@@ -13,7 +15,8 @@ export const load: PageServerLoad = async ({ cookies }) => {
 
 	return {
 		isAuthenticated,
-		posts: isAuthenticated ? getAllPosts() : []
+		posts: isAuthenticated ? getAllPosts() : [],
+		views: isAuthenticated ? await getAllViewCounts() : {}
 	};
 };
 

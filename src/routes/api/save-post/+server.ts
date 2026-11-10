@@ -1,9 +1,7 @@
 import { json } from '@sveltejs/kit';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-
-const SESSION_COOKIE_NAME = 'adam_admin_token';
-const SESSION_SECRET_TOKEN = 'auth_session_adamin_portfolio_secret_2026';
+import { SESSION_COOKIE_NAME, SESSION_SECRET_TOKEN } from '#lib/server/constants';
 
 export async function POST({ request, cookies }) {
 	const session = cookies.get(SESSION_COOKIE_NAME);

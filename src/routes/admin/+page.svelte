@@ -32,6 +32,13 @@
 
 	let { data, form }: PageProps & { form: ActionData } = $props();
 
+	const totalViews = $derived(
+		Object.values((data as any)?.views || {}).reduce(
+			(acc: number, curr: any) => acc + (Number(curr) || 0),
+			0
+		)
+	);
+
 	// Login State
 	let showPassword = $state(false);
 
@@ -626,15 +633,40 @@ Bagikan refleksi penutup Anda di sini.`
 
 			<!-- Existing Posts Section in Admin -->
 			<div class="mt-16 pt-10 border-t border-sky-200/50 dark:border-white/20">
-				<div class="flex items-center justify-between mb-6">
+				<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
 					<div class="flex items-center gap-2">
 						<Layers class="w-5 h-5 text-[#D83995]" />
-						<h3 class="text-lg font-black text-[#061a2e] dark:text-white">Artikel yang Tersimpan di Project ({data.posts?.length || 0})</h3>
+						<h3 class="text-lg font-black text-[#061a2e] dark:text-white">Artikel & Statistik Viewer ({data.posts?.length || 0})</h3>
 					</div>
-					<a href="/artikel" class="text-xs font-semibold text-[#0593C6] dark:text-white/90 hover:underline flex items-center gap-1">
-						<span>Lihat halaman pembaca</span>
-						<span>→</span>
-					</a>
+					<div class="flex items-center gap-3">
+						<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 text-xs font-bold">
+							<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+							Anti-Duplikasi Aktif
+						</span>
+						<a href="/artikel" class="text-xs font-semibold text-[#0593C6] dark:text-white/90 hover:underline flex items-center gap-1">
+							<span>Lihat halaman pembaca</span>
+							<span>→</span>
+						</a>
+					</div>
+				</div>
+
+				<!-- Stats Overview Cards -->
+				<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+					<div class="glass-panel p-4 rounded-2xl border border-sky-200/60 dark:border-white/20">
+						<div class="text-xs text-[#516f8e] dark:text-white/70 font-semibold mb-1">Total Artikel Terbit</div>
+						<div class="text-2xl font-black text-[#061a2e] dark:text-white">{data.posts?.length || 0}</div>
+					</div>
+					<div class="glass-panel p-4 rounded-2xl border border-sky-200/60 dark:border-white/20">
+						<div class="text-xs text-[#516f8e] dark:text-white/70 font-semibold mb-1 flex items-center gap-1.5">
+							<Eye class="w-3.5 h-3.5 text-[#0593C6]" />
+							<span>Total Pembaca Unik (Semua Tulisan)</span>
+						</div>
+						<div class="text-2xl font-black text-[#0593C6] dark:text-sky-300">{totalViews}</div>
+					</div>
+					<div class="glass-panel p-4 rounded-2xl border border-sky-200/60 dark:border-white/20">
+						<div class="text-xs text-[#516f8e] dark:text-white/70 font-semibold mb-1">Status Privasi</div>
+						<div class="text-xs font-bold text-[#D83995] dark:text-pink-300 mt-1">Hanya Terlihat Oleh Admin</div>
+					</div>
 				</div>
 
 				<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -649,6 +681,10 @@ Bagikan refleksi penutup Anda di sini.`
 								<p class="text-xs text-[#516f8e] dark:text-white/50 font-mono">src/posts/{post.slug}.md</p>
 							</div>
 							<div class="pt-3 mt-3 border-t border-sky-100 dark:border-white/15 flex items-center justify-between text-xs">
+								<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#0593C6]/10 text-[#0593C6] dark:bg-white/10 dark:text-sky-200 border border-[#0593C6]/20 dark:border-white/20 font-bold text-xs" title="Jumlah pembaca unik">
+									<Eye class="w-3.5 h-3.5" />
+									<span>{(data.views && (data.views as any)[post.slug]) || 0} pembaca</span>
+								</div>
 								<a href="/artikel/{post.slug}" target="_blank" class="text-[#0593C6] dark:text-white font-semibold hover:text-[#D83995] dark:hover:text-[#f29185] transition flex items-center gap-1">
 									<span>Buka Artikel</span>
 									<span>↗</span>
