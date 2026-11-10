@@ -394,16 +394,9 @@
 
 			<!-- Header -->
 			<div class="mb-5 pr-8">
-				<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0593C6]/15 text-[#0593C6] dark:bg-white/15 dark:text-sky-200 text-xs font-bold mb-2">
-					<Share2 class="w-3.5 h-3.5" />
-					<span>Bagikan Tulisan Berlabel Pelacak</span>
-				</div>
 				<h3 class="text-xl font-black text-[#061a2e] dark:text-white leading-tight">
 					Bagikan ke Media Sosial
 				</h3>
-				<p class="text-xs sm:text-sm text-[#4b6a8a] dark:text-sky-100/80 mt-1">
-					Tautan otomatis disematkan pelacak rujukan (<span class="font-mono text-[11px] font-bold text-[#0593C6] dark:text-sky-300">?ref=...</span>) agar sumber pembaca terdata di Dashboard.
-				</p>
 			</div>
 
 			<!-- Copy Notification Toast inside modal -->
@@ -458,7 +451,7 @@
 								<span>Instagram</span>
 								<span class="text-[10px] px-1.5 py-0.5 rounded bg-pink-500/20 text-pink-800 dark:text-pink-300 font-bold">Story Sticker & Bio</span>
 							</div>
-							<p class="text-xs text-[#527192] dark:text-sky-100/70">Salin tautan berlabel khusus untuk Story / Bio IG</p>
+							<p class="text-xs text-[#527192] dark:text-sky-100/70">Salin tautan untuk Story atau Bio Instagram</p>
 						</div>
 					</div>
 					<div class="flex items-center gap-1 text-xs font-bold text-pink-600 dark:text-pink-300">
@@ -490,7 +483,7 @@
 								<span>TikTok</span>
 								<span class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 font-bold">Bio & Komentar</span>
 							</div>
-							<p class="text-xs text-[#527192] dark:text-sky-100/70">Salin tautan berlabel khusus untuk akun TikTok</p>
+							<p class="text-xs text-[#527192] dark:text-sky-100/70">Salin tautan untuk profil atau komentar TikTok</p>
 						</div>
 					</div>
 					<div class="flex items-center gap-1 text-xs font-bold text-cyan-600 dark:text-cyan-300">
@@ -566,7 +559,7 @@
 							<div class="font-bold text-sm text-[#061a2e] dark:text-white flex items-center gap-1.5">
 								<span>Salin Tautan Umum</span>
 							</div>
-							<p class="text-xs text-[#527192] dark:text-sky-100/70">Salin URL dengan label ?ref=salin_tautan</p>
+							<p class="text-xs text-[#527192] dark:text-sky-100/70">Salin tautan langsung ke papan klip</p>
 						</div>
 					</div>
 					<div class="flex items-center gap-1 text-xs font-bold text-[#0593C6] dark:text-sky-300">
