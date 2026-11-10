@@ -491,40 +491,40 @@
 	</main>
 
 	<!-- Footer -->
-	<footer class="border-t border-sky-200/60 dark:border-white/15 bg-white/70 dark:bg-black/30 backdrop-blur-2xl py-12 text-[#334e6b] dark:text-white/80 mt-20 transition-colors">
+	<footer class="border-t border-sky-200/60 dark:border-white/15 bg-white/70 dark:bg-black/30 backdrop-blur-2xl py-6 sm:py-7 text-[#334e6b] dark:text-white/80 mt-10 sm:mt-12 transition-colors">
 		<div class="max-w-6xl mx-auto px-4 sm:px-6">
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 mb-8 sm:mb-12">
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8 mb-4 sm:mb-5">
 				<!-- Brand Col -->
-				<div class="space-y-3">
+				<div class="space-y-1.5">
 					<div class="flex items-center gap-2">
-						<span class="font-extrabold text-xl tracking-tight text-[#061a2e] dark:text-white drop-shadow-sm">911</span>
+						<span class="font-extrabold text-base sm:text-lg tracking-tight text-[#061a2e] dark:text-white drop-shadow-sm">911</span>
 						<span class="w-1.5 h-1.5 rounded-full bg-[#D83995]"></span>
 					</div>
-					<p class="text-sm text-[#3a5472] dark:text-sky-50/85 leading-relaxed max-w-lg font-normal">
+					<p class="text-xs sm:text-[13px] text-[#3a5472] dark:text-sky-50/85 leading-relaxed max-w-lg font-normal">
 						Ruang eksplorasi dan esai pribadi untuk membedah dinamika dunia, psikologi mengelola kekayaan, dan strategi membangun otonomi waktu jangka panjang.
 					</p>
 				</div>
 
 				<!-- Disclaimer Col -->
 				<div class="md:text-right flex flex-col md:items-end justify-center">
-					<h4 class="text-xs font-bold text-[#061a2e] dark:text-white uppercase tracking-wider mb-2">Disclaimer</h4>
-					<p class="text-xs text-[#527091] dark:text-sky-100/75 leading-relaxed max-w-md">
+					<h4 class="text-[11px] font-bold text-[#061a2e] dark:text-white uppercase tracking-wider mb-1">Disclaimer</h4>
+					<p class="text-[11px] text-[#527091] dark:text-sky-100/75 leading-relaxed max-w-md">
 						Seluruh tulisan di situs ini adalah opini dan refleksi pribadi semata. Bukan merupakan anjuran, rekomendasi, ataupun nasihat finansial resmi.
 					</p>
 				</div>
 			</div>
 
 			<!-- Large Hero Brand Name Typography (Centered with bottom fade gradient) -->
-			<div class="pt-6 pb-2 sm:pt-8 sm:pb-3 select-none overflow-hidden flex justify-center items-center text-center">
+			<div class="pt-1 pb-1 sm:pt-2 sm:pb-2 select-none overflow-hidden flex justify-center items-center text-center">
 				<h2
-					class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tighter leading-none transition-all duration-300 bg-gradient-to-b from-[#061a2e]/35 via-[#061a2e]/18 to-[#061a2e]/0 dark:from-white/22 dark:via-white/10 dark:to-transparent bg-clip-text text-transparent"
+					class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter leading-none transition-all duration-300 bg-gradient-to-b from-[#061a2e]/35 via-[#061a2e]/18 to-[#061a2e]/0 dark:from-white/22 dark:via-white/10 dark:to-transparent bg-clip-text text-transparent"
 					style="mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 35%, rgba(0,0,0,0) 100%); -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 35%, rgba(0,0,0,0) 100%);"
 				>
 					Adam Alhasni
 				</h2>
 			</div>
 
-			<div class="pt-8 border-t border-sky-200/50 dark:border-white/15 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#53708e] dark:text-sky-100/70">
+			<div class="pt-4 border-t border-sky-200/50 dark:border-white/15 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-[#53708e] dark:text-sky-100/70">
 				<div>
 					© {new Date().getFullYear()} Adam Alhasni. Hak cipta dilindungi.
 				</div>

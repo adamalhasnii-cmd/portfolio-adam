@@ -638,11 +638,7 @@ Bagikan refleksi penutup Anda di sini.`
 						<Layers class="w-5 h-5 text-[#D83995]" />
 						<h3 class="text-lg font-black text-[#061a2e] dark:text-white">Artikel & Statistik Viewer ({data.posts?.length || 0})</h3>
 					</div>
-					<div class="flex items-center gap-3">
-						<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 text-xs font-bold">
-							<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-							Anti-Duplikasi Aktif
-						</span>
+					<div>
 						<a href="/artikel" class="text-xs font-semibold text-[#0593C6] dark:text-white/90 hover:underline flex items-center gap-1">
 							<span>Lihat halaman pembaca</span>
 							<span>→</span>
@@ -651,7 +647,7 @@ Bagikan refleksi penutup Anda di sini.`
 				</div>
 
 				<!-- Stats Overview Cards -->
-				<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+				<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
 					<div class="glass-panel p-4 rounded-2xl border border-sky-200/60 dark:border-white/20">
 						<div class="text-xs text-[#516f8e] dark:text-white/70 font-semibold mb-1">Total Artikel Terbit</div>
 						<div class="text-2xl font-black text-[#061a2e] dark:text-white">{data.posts?.length || 0}</div>
@@ -662,10 +658,6 @@ Bagikan refleksi penutup Anda di sini.`
 							<span>Total Pembaca Unik (Semua Tulisan)</span>
 						</div>
 						<div class="text-2xl font-black text-[#0593C6] dark:text-sky-300">{totalViews}</div>
-					</div>
-					<div class="glass-panel p-4 rounded-2xl border border-sky-200/60 dark:border-white/20">
-						<div class="text-xs text-[#516f8e] dark:text-white/70 font-semibold mb-1">Status Privasi</div>
-						<div class="text-xs font-bold text-[#D83995] dark:text-pink-300 mt-1">Hanya Terlihat Oleh Admin</div>
 					</div>
 				</div>
 
