@@ -1396,7 +1396,7 @@ Bagikan refleksi penutup Anda di sini.`
 		role="presentation"
 	>
 		<div
-			class="glass-panel border border-sky-200/50 dark:border-white/20 rounded-3xl p-6 sm:p-7 max-w-md w-full shadow-2xl relative text-[#061a2e] dark:text-white my-8 animate-in fade-in zoom-in-95 duration-200"
+			class="bg-white/95 dark:bg-[#071626]/98 backdrop-blur-2xl border border-sky-200/50 dark:border-white/20 rounded-3xl p-6 sm:p-7 max-w-md w-full shadow-2xl relative text-[#061a2e] dark:text-white my-8 animate-in fade-in zoom-in-95 duration-200"
 		>
 			<button
 				type="button"
@@ -1451,7 +1451,7 @@ Bagikan refleksi penutup Anda di sini.`
 		role="presentation"
 	>
 		<div
-			class="glass-panel border border-rose-500/30 dark:border-rose-400/30 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative text-[#061a2e] dark:text-white my-8 animate-in fade-in zoom-in-95 duration-200 overflow-hidden"
+			class="bg-white/95 dark:bg-[#071626]/98 backdrop-blur-2xl border border-rose-500/30 dark:border-rose-400/30 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative text-[#061a2e] dark:text-white my-8 animate-in fade-in zoom-in-95 duration-200 overflow-hidden"
 		>
 			<!-- Top Danger Accent Line -->
 			<div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-rose-500 via-[#D83995] to-amber-500"></div>

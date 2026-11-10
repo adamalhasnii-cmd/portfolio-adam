@@ -215,12 +215,12 @@
 
 						{#if isAdminMenuOpen}
 							<div
-								class="absolute right-0 mt-2 w-44 rounded-2xl glass-panel p-1.5 border border-sky-200/80 dark:border-white/20 shadow-xl shadow-sky-950/10 dark:shadow-black/40 z-50 animate-in fade-in zoom-in-95 duration-150"
+								class="absolute right-0 mt-2 w-48 rounded-2xl bg-white/95 dark:bg-[#071727]/98 backdrop-blur-2xl p-1.5 border border-sky-200/80 dark:border-white/20 shadow-2xl shadow-sky-950/20 dark:shadow-black/70 z-50 animate-in fade-in zoom-in-95 duration-150"
 							>
 								<a
 									href="/admin"
 									onclick={() => isAdminMenuOpen = false}
-									class="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-[#061a2e] dark:text-white hover:bg-[#0593C6]/10 dark:hover:bg-white/10 hover:text-[#0593C6] dark:hover:text-sky-300 transition"
+									class="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold text-[#061a2e] dark:text-white hover:bg-[#0593C6]/10 dark:hover:bg-white/10 hover:text-[#0593C6] dark:hover:text-sky-300 transition"
 								>
 									<FileText class="w-3.5 h-3.5 text-[#0593C6] dark:text-sky-300" />
 									<span>Draft Penulisan</span>
@@ -231,7 +231,7 @@
 								<form method="POST" action="/api/logout">
 									<button
 										type="submit"
-										class="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 dark:hover:bg-rose-500/20 transition cursor-pointer text-left"
+										class="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 dark:hover:bg-rose-500/20 transition cursor-pointer text-left"
 									>
 										<LogOut class="w-3.5 h-3.5 text-rose-500 dark:text-rose-400" />
 										<span>Logout</span>
@@ -295,7 +295,7 @@
 
 		<!-- Mobile Floating Glass Dropdown Menu -->
 		{#if isMobileMenuOpen}
-			<div class="md:hidden mt-2 p-4 rounded-3xl glass-panel space-y-1.5 animate-in fade-in slide-in-from-top-3 duration-200 text-[#061a2e] dark:text-white">
+			<div class="md:hidden mt-2 p-4 rounded-3xl bg-white/95 dark:bg-[#071727]/98 backdrop-blur-2xl border border-sky-200/80 dark:border-white/20 shadow-2xl shadow-black/20 dark:shadow-black/70 space-y-1.5 animate-in fade-in slide-in-from-top-3 duration-200 text-[#061a2e] dark:text-white">
 				<button
 					type="button"
 					onclick={() => { isMobileMenuOpen = false; openSearch(); }}

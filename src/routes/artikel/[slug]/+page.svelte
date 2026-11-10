@@ -380,7 +380,7 @@
 		role="presentation"
 	>
 		<div
-			class="glass-panel border border-sky-200/50 dark:border-white/20 rounded-3xl p-6 sm:p-7 max-w-lg w-full shadow-2xl relative text-[#061a2e] dark:text-white my-8 animate-in fade-in zoom-in-95 duration-200"
+			class="bg-white/95 dark:bg-[#071626]/98 backdrop-blur-2xl border border-sky-200/50 dark:border-white/20 rounded-3xl p-6 sm:p-7 max-w-lg w-full shadow-2xl relative text-[#061a2e] dark:text-white my-8 animate-in fade-in zoom-in-95 duration-200"
 		>
 			<!-- Close button -->
 			<button
@@ -601,7 +601,7 @@
 		role="presentation"
 	>
 		<div
-			class="glass-panel border border-sky-200/50 dark:border-white/20 rounded-3xl p-6 sm:p-7 max-w-md w-full shadow-2xl relative text-[#061a2e] dark:text-white my-8 animate-in fade-in zoom-in-95 duration-200"
+			class="bg-white/95 dark:bg-[#071626]/98 backdrop-blur-2xl border border-sky-200/50 dark:border-white/20 rounded-3xl p-6 sm:p-7 max-w-md w-full shadow-2xl relative text-[#061a2e] dark:text-white my-8 animate-in fade-in zoom-in-95 duration-200"
 		>
 			<button
 				type="button"
