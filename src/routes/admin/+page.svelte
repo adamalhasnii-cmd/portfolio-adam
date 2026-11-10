@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PageProps, ActionData } from './$types';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
+	import { fly } from 'svelte/transition';
 	import { marked } from 'marked';
 	import {
 		Eye,
@@ -133,26 +134,40 @@ Bagikan refleksi penutup Anda di sini.`
 	let isSaving = $state(false);
 	let saveMessage = $state<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
 
-	// Toast Notification State & Auto-dismiss Countdown
+	// Toast Notification State & Auto-dismiss Countdown (Bottom-Right Floating Toast)
 	let toastRemainingSec = $state(5);
+	let toastTimer: any = null;
+	let toastInterval: any = null;
+	let toastKey = $state(0);
 
-	// Automatically dismiss floating toast after 5 seconds with ticking countdown
-	$effect(() => {
-		if (saveMessage) {
-			toastRemainingSec = 5;
-			const interval = setInterval(() => {
-				toastRemainingSec = Math.max(0, toastRemainingSec - 1);
-			}, 1000);
+	function showToast(type: 'success' | 'error' | 'info', text: string) {
+		if (toastTimer) clearTimeout(toastTimer);
+		if (toastInterval) clearInterval(toastInterval);
 
-			const timer = setTimeout(() => {
-				saveMessage = null;
-			}, 5000);
+		saveMessage = { type, text };
+		toastRemainingSec = 5;
+		toastKey += 1;
 
-			return () => {
-				clearInterval(interval);
-				clearTimeout(timer);
-			};
-		}
+		toastInterval = setInterval(() => {
+			toastRemainingSec = Math.max(0, toastRemainingSec - 1);
+		}, 1000);
+
+		toastTimer = setTimeout(() => {
+			dismissToast();
+		}, 5000);
+	}
+
+	function dismissToast() {
+		if (toastTimer) clearTimeout(toastTimer);
+		if (toastInterval) clearInterval(toastInterval);
+		toastTimer = null;
+		toastInterval = null;
+		saveMessage = null;
+	}
+
+	onDestroy(() => {
+		if (toastTimer) clearTimeout(toastTimer);
+		if (toastInterval) clearInterval(toastInterval);
 	});
 
 	// Autosave & Undo State
@@ -329,7 +344,6 @@ Bagikan refleksi penutup Anda di sini.`
 	async function loadPostForEditing(postSlug: string) {
 		isLoadingPost = true;
 		loadingPostSlug = postSlug;
-		saveMessage = null;
 
 		// Immediately start scrolling up so the user gets instant visual feedback
 		if (typeof window !== 'undefined') {
@@ -341,7 +355,9 @@ Bagikan refleksi penutup Anda di sini.`
 		}
 
 		try {
-			const res = await fetch(`/api/get-post?slug=${encodeURIComponent(postSlug)}`);
+			const res = await fetch(`/api/get-post?slug=${encodeURIComponent(postSlug)}`, {
+				credentials: 'include'
+			});
 			const resData = await res.json();
 			if (resData.success && resData.post) {
 				const p = resData.post;
@@ -359,10 +375,7 @@ Bagikan refleksi penutup Anda di sini.`
 				contentHistory = [content];
 				historyIndex = 0;
 
-				saveMessage = {
-					type: 'info',
-					text: `Tulisan "${p.title}" berhasil dimuat ke editor! Anda dapat langsung mengedit.`
-				};
+				showToast('info', `Tulisan "${p.title}" berhasil dimuat ke editor! Anda dapat langsung mengedit.`);
 
 				// Ensure smooth scroll to editor workspace and focus title field ready for editing
 				if (typeof window !== 'undefined') {
@@ -376,16 +389,10 @@ Bagikan refleksi penutup Anda di sini.`
 					}, 150);
 				}
 			} else {
-				saveMessage = {
-					type: 'error',
-					text: resData.error || 'Gagal memuat tulisan.'
-				};
+				showToast('error', resData.error || 'Gagal memuat tulisan.');
 			}
 		} catch (err: any) {
-			saveMessage = {
-				type: 'error',
-				text: 'Gagal mengambil data tulisan: ' + err.message
-			};
+			showToast('error', 'Gagal mengambil data tulisan: ' + err.message);
 		} finally {
 			isLoadingPost = false;
 			loadingPostSlug = null;
@@ -405,10 +412,7 @@ Bagikan refleksi penutup Anda di sini.`
 		contentHistory = [''];
 		historyIndex = 0;
 		autoSaveStatus = '';
-		saveMessage = {
-			type: 'info',
-			text: 'Form telah dikosongkan untuk memulai tulisan baru.'
-		};
+		showToast('info', 'Form telah dikosongkan untuk memulai tulisan baru.');
 	}
 
 	let deleteTarget = $state<{
@@ -434,16 +438,12 @@ Bagikan refleksi penutup Anda di sini.`
 				localStorage.removeItem(AUTOSAVE_STORAGE_KEY);
 			} catch {}
 			resetEditorToNew();
-			saveMessage = {
-				type: 'success',
-				text: 'Isi form draft dan autosave sementara berhasil dibersihkan.'
-			};
+			showToast('success', 'Isi form draft dan autosave sementara berhasil dibersihkan.');
 			deleteTarget = null;
 			return;
 		}
 
 		isDeletingPost = true;
-		saveMessage = null;
 
 		const targetSlug = deleteTarget.slug;
 		const postTitle = deleteTarget.title;
@@ -456,10 +456,7 @@ Bagikan refleksi penutup Anda di sini.`
 			});
 			const resData = await res.json();
 			if (resData.success) {
-				saveMessage = {
-					type: 'success',
-					text: `Tulisan "${postTitle}" berhasil dihapus secara permanen.`
-				};
+				showToast('success', `Tulisan "${postTitle}" berhasil dihapus secara permanen.`);
 				if (editingSlug === targetSlug) {
 					resetEditorToNew();
 				}
@@ -468,11 +465,11 @@ Bagikan refleksi penutup Anda di sini.`
 					window.location.reload();
 				}, 600);
 			} else {
-				saveMessage = { type: 'error', text: resData.error || 'Gagal menghapus tulisan.' };
+				showToast('error', resData.error || 'Gagal menghapus tulisan.');
 				isDeletingPost = false;
 			}
 		} catch (err: any) {
-			saveMessage = { type: 'error', text: 'Koneksi gagal: ' + err.message };
+			showToast('error', 'Koneksi gagal: ' + err.message);
 			isDeletingPost = false;
 		}
 	}
@@ -485,7 +482,6 @@ Bagikan refleksi penutup Anda di sini.`
 
 	async function updatePostStatus(targetSlug: string, newStatus: 'upload' | 'draft' | 'arsip', postTitle: string) {
 		isUpdatingStatus = true;
-		saveMessage = null;
 		try {
 			const res = await fetch('/api/save-post', {
 				method: 'PATCH',
@@ -495,10 +491,7 @@ Bagikan refleksi penutup Anda di sini.`
 			const resData = await res.json();
 			if (resData.success) {
 				const label = newStatus === 'upload' ? 'Upload' : newStatus === 'arsip' ? 'Arsip' : 'Draft';
-				saveMessage = {
-					type: 'success',
-					text: `Status tulisan "${postTitle}" berhasil diubah menjadi ${label}!`
-				};
+				showToast('success', `Status tulisan "${postTitle}" berhasil diubah menjadi ${label}!`);
 				const target = (data.posts || []).find((p: any) => p.slug === targetSlug);
 				if (target) {
 					target.metadata.status = newStatus;
@@ -506,10 +499,10 @@ Bagikan refleksi penutup Anda di sini.`
 					target.metadata.archived = newStatus === 'arsip';
 				}
 			} else {
-				saveMessage = { type: 'error', text: resData.error || 'Gagal mengubah status.' };
+				showToast('error', resData.error || 'Gagal mengubah status.');
 			}
 		} catch (err: any) {
-			saveMessage = { type: 'error', text: 'Koneksi gagal: ' + err.message };
+			showToast('error', 'Koneksi gagal: ' + err.message);
 		} finally {
 			isUpdatingStatus = false;
 		}
@@ -518,12 +511,11 @@ Bagikan refleksi penutup Anda di sini.`
 	// Save Post Action (Upload, Draft, or Arsip)
 	async function savePost(targetStatus: 'upload' | 'draft' | 'arsip' = 'upload') {
 		if (!title.trim()) {
-			saveMessage = { type: 'error', text: 'Judul artikel wajib diisi terlebih dahulu!' };
+			showToast('error', 'Judul artikel wajib diisi terlebih dahulu!');
 			return;
 		}
 
 		isSaving = true;
-		saveMessage = null;
 
 		try {
 			const res = await fetch('/api/save-post', {
@@ -555,10 +547,7 @@ Bagikan refleksi penutup Anda di sini.`
 						? 'disimpan ke Arsip'
 						: 'disimpan sebagai Draft';
 				editingSlug = resData.slug || slug;
-				saveMessage = {
-					type: 'success',
-					text: `Artikel "${title}" berhasil ${actionName}!`
-				};
+				showToast('success', `Artikel "${title}" berhasil ${actionName}!`);
 				// Autosave is temporary until author uploads, drafts, or deletes
 				try {
 					localStorage.removeItem(AUTOSAVE_STORAGE_KEY);
@@ -568,10 +557,10 @@ Bagikan refleksi penutup Anda di sini.`
 					window.location.reload();
 				}, 700);
 			} else {
-				saveMessage = { type: 'error', text: resData.error || 'Gagal menyimpan tulisan.' };
+				showToast('error', resData.error || 'Gagal menyimpan tulisan.');
 			}
 		} catch (err: any) {
-			saveMessage = { type: 'error', text: 'Koneksi gagal: ' + err.message };
+			showToast('error', 'Koneksi gagal: ' + err.message);
 		} finally {
 			isSaving = false;
 		}
@@ -598,7 +587,7 @@ Bagikan refleksi penutup Anda di sini.`
 			} else if (viewingReferrerPost) {
 				viewingReferrerPost = null;
 			} else if (saveMessage) {
-				saveMessage = null;
+				dismissToast();
 			}
 		}
 	}
@@ -1471,9 +1460,10 @@ Bagikan refleksi penutup Anda di sini.`
 
 <!-- ================= FLOATING TOAST NOTIFICATION (Bottom-Right, 5s Countdown Loading Bar) ================= -->
 {#if saveMessage}
-	{#key saveMessage}
+	{#key toastKey}
 		<div
-			class="fixed bottom-6 right-6 z-50 max-w-sm sm:max-w-md w-[calc(100vw-3rem)] rounded-2xl bg-white/95 dark:bg-[#071727]/98 backdrop-blur-2xl border shadow-2xl shadow-sky-950/20 dark:shadow-black/70 text-[#061a2e] dark:text-white overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-300 relative {saveMessage.type === 'success'
+			transition:fly={{ y: 24, duration: 250 }}
+			class="fixed bottom-6 right-6 z-[9999] max-w-sm sm:max-w-md w-[calc(100vw-3rem)] rounded-2xl bg-white/95 dark:bg-[#071727]/98 backdrop-blur-2xl border shadow-2xl shadow-sky-950/20 dark:shadow-black/70 text-[#061a2e] dark:text-white overflow-hidden pointer-events-auto {saveMessage.type === 'success'
 				? 'border-emerald-500/40 shadow-emerald-500/10'
 				: saveMessage.type === 'info'
 				? 'border-sky-400/40 shadow-sky-500/10'
@@ -1530,7 +1520,7 @@ Bagikan refleksi penutup Anda di sini.`
 
 					<button
 						type="button"
-						onclick={() => (saveMessage = null)}
+						onclick={dismissToast}
 						class="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-500/10 transition cursor-pointer"
 						title="Tutup pemberitahuan"
 					>
