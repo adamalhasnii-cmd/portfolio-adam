@@ -1103,8 +1103,8 @@ Bagikan refleksi penutup Anda di sini.`
 					</div>
 				</div>
 
-				<!-- Dashboard Filter Tabs -->
-				<div class="flex items-center gap-2 mb-6 overflow-x-auto pb-1">
+				<!-- Dashboard Filter Tabs (Centered) -->
+				<div class="flex items-center justify-center gap-2 mb-6 overflow-x-auto pb-1 flex-wrap">
 					<button
 						type="button"
 						onclick={() => dashboardFilter = 'semua'}
