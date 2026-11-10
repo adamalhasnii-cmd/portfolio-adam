@@ -30,8 +30,10 @@
 		Pencil,
 		Archive,
 		Share2,
+		FolderOpen,
 		X
 	} from '@lucide/svelte';
+	import ArticleFolder from '#lib/components/ArticleFolder.svelte';
 
 	let { data, form }: PageProps & { form: ActionData } = $props();
 
@@ -42,26 +44,37 @@
 		)
 	);
 
-	const uploadCount = $derived(
-		(data.posts || []).filter((p: any) => {
+	const postsWithViews = $derived(
+		(data.posts || []).map((p: any) => ({
+			...p,
+			views: (data.views && (data.views as any)[p.slug]) || 0
+		}))
+	);
+
+	const uploadPosts = $derived(
+		postsWithViews.filter((p: any) => {
 			const st = p.metadata?.status || (p.metadata?.archived ? 'arsip' : (p.metadata?.published !== false ? 'upload' : 'draft'));
 			return st === 'upload';
-		}).length
+		})
 	);
 
-	const draftCount = $derived(
-		(data.posts || []).filter((p: any) => {
+	const draftPosts = $derived(
+		postsWithViews.filter((p: any) => {
 			const st = p.metadata?.status || (p.metadata?.archived ? 'arsip' : (p.metadata?.published !== false ? 'upload' : 'draft'));
 			return st === 'draft';
-		}).length
+		})
 	);
 
-	const arsipCount = $derived(
-		(data.posts || []).filter((p: any) => {
+	const arsipPosts = $derived(
+		postsWithViews.filter((p: any) => {
 			const st = p.metadata?.status || (p.metadata?.archived ? 'arsip' : (p.metadata?.published !== false ? 'upload' : 'draft'));
 			return st === 'arsip';
-		}).length
+		})
 	);
+
+	const uploadCount = $derived(uploadPosts.length);
+	const draftCount = $derived(draftPosts.length);
+	const arsipCount = $derived(arsipPosts.length);
 
 	let dashboardFilter = $state<'semua' | 'upload' | 'draft' | 'arsip'>('semua');
 	let viewingReferrerPost = $state<{ slug: string; title: string; referrers: Record<string, number>; total: number } | null>(null);
@@ -1121,6 +1134,59 @@ Bagikan refleksi penutup Anda di sini.`
 								{((data.totalReferrers?.direct || 0) + (data.totalReferrers?.salin_tautan || 0) + (data.totalReferrers?.mesin_pencari || 0))}
 							</span>
 						</div>
+					</div>
+				</div>
+
+				<!-- Liquid Glass 3D Article Folders Showcase -->
+				<div class="mb-10 p-5 sm:p-7 rounded-3xl glass-panel border border-sky-200/50 dark:border-white/15 shadow-xl">
+					<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 pb-4 border-b border-sky-100/60 dark:border-white/10">
+						<div class="flex items-center gap-2">
+							<FolderOpen class="w-4 h-4 text-[#D83995]" />
+							<h4 class="text-sm font-black text-[#061a2e] dark:text-white uppercase tracking-wider">
+								Katalog Arsip Folder Berkas
+							</h4>
+						</div>
+						<span class="text-[11px] text-[#516f8e] dark:text-white/60 font-medium">
+							✨ Hover untuk mengintip berkas • Klik folder untuk membuka & filter
+						</span>
+					</div>
+
+					<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-2 pb-2">
+						<ArticleFolder
+							posts={uploadPosts}
+							label="Terbit (Upload)"
+							variant="emerald"
+							isActive={dashboardFilter === 'upload'}
+							onSelectFolder={() => dashboardFilter = 'upload'}
+							onEditPost={(slug) => loadPostForEditing(slug)}
+						/>
+
+						<ArticleFolder
+							posts={draftPosts}
+							label="Draft Berkas"
+							variant="amber"
+							isActive={dashboardFilter === 'draft'}
+							onSelectFolder={() => dashboardFilter = 'draft'}
+							onEditPost={(slug) => loadPostForEditing(slug)}
+						/>
+
+						<ArticleFolder
+							posts={arsipPosts}
+							label="Arsip Tulisan"
+							variant="purple"
+							isActive={dashboardFilter === 'arsip'}
+							onSelectFolder={() => dashboardFilter = 'arsip'}
+							onEditPost={(slug) => loadPostForEditing(slug)}
+						/>
+
+						<ArticleFolder
+							posts={postsWithViews}
+							label="Semua Berkas"
+							variant="cyan"
+							isActive={dashboardFilter === 'semua'}
+							onSelectFolder={() => dashboardFilter = 'semua'}
+							onEditPost={(slug) => loadPostForEditing(slug)}
+						/>
 					</div>
 				</div>
 
