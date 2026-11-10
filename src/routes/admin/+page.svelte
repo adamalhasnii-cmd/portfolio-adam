@@ -30,6 +30,7 @@
 		Pencil,
 		Archive,
 		Share2,
+		ExternalLink,
 		X
 	} from '@lucide/svelte';
 
@@ -1195,123 +1196,120 @@ Bagikan refleksi penutup Anda di sini.`
 					{#each filteredPosts as post}
 						<div class="glass-panel p-5 rounded-2xl border border-sky-200/60 dark:border-white/20 text-[#061a2e] dark:text-white hover:border-[#0593C6]/40 dark:hover:border-white/40 hover:bg-white/90 dark:hover:bg-white/15 transition flex flex-col justify-between {editingSlug === post.slug ? 'ring-2 ring-[#0593C6] dark:ring-sky-400 bg-sky-500/5' : ''}">
 							<div>
-								<div class="flex items-center justify-between text-[11px] text-[#516f8e] dark:text-white/70 mb-2">
-									<div class="flex items-center gap-1.5 flex-wrap">
-										<span class="px-2 py-0.5 rounded-full glass-pill text-[#0593C6] dark:text-white font-semibold">{post.metadata.category}</span>
+								<!-- Top Row: Category + Glowing Status Dot on Left, Reader Count + Date on Right -->
+								<div class="flex items-center justify-between text-xs text-[#516f8e] dark:text-white/70 mb-2.5">
+									<div class="flex items-center gap-2">
+										<span class="px-2.5 py-0.5 rounded-full glass-pill text-[#0593C6] dark:text-white font-semibold text-[11px]">{post.metadata.category}</span>
 										{#if post.metadata.status === 'arsip'}
-											<span class="px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-600 dark:text-purple-300 font-bold text-[10px] border border-purple-400/30">Arsip</span>
+											<span class="w-2 h-2 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(192,132,252,0.9)] shrink-0 inline-block" title="Status: Arsip"></span>
 										{:else if post.metadata.status === 'draft' || post.metadata.published === false}
-											<span class="px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-300 font-bold text-[10px] border border-amber-400/30">Draft</span>
+											<span class="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.9)] shrink-0 inline-block" title="Status: Draft"></span>
 										{:else}
-											<span class="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 font-bold text-[10px] border border-emerald-400/30">Upload</span>
+											<span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)] shrink-0 inline-block" title="Status: Upload (Terbit)"></span>
 										{/if}
 									</div>
-									<span>{post.metadata.date}</span>
+
+									<div class="flex items-center gap-2 text-xs">
+										<!-- Clickable Eye badge for Viewers & Referrers (Icon + number, no 'pembaca' word) -->
+										<button
+											type="button"
+											onclick={() => {
+												const refs = (data.referrers && (data.referrers as any)[post.slug]) || {};
+												const tot = (data.views && (data.views as any)[post.slug]) || 0;
+												viewingReferrerPost = { slug: post.slug, title: post.metadata.title, referrers: refs, total: tot };
+											}}
+											class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#0593C6]/10 hover:bg-[#0593C6]/20 dark:bg-white/10 dark:hover:bg-white/20 text-[#0593C6] dark:text-sky-200 border border-[#0593C6]/25 dark:border-white/20 font-bold text-[11px] transition cursor-pointer group shadow-2xs"
+											title="Klik untuk melihat rincian sumber pembaca artikel ini"
+										>
+											<Eye class="w-3.5 h-3.5 group-hover:scale-110 text-[#0593C6] dark:text-sky-300 transition-transform" />
+											<span>{(data.views && (data.views as any)[post.slug]) || 0}</span>
+										</button>
+
+										<span class="text-xs text-[#516f8e] dark:text-white/60">{post.metadata.date}</span>
+									</div>
 								</div>
+
 								<h4 class="font-bold text-sm text-[#061a2e] dark:text-white line-clamp-2 mb-1.5">{post.metadata.title}</h4>
 								<p class="text-xs text-[#516f8e] dark:text-white/50 font-mono">src/posts/{post.slug}.md</p>
 							</div>
 
-							<!-- Action & Status Management Toolbar -->
-							<div class="pt-3.5 mt-4 border-t border-sky-100/70 dark:border-white/10 space-y-3">
-								<!-- Quick Status Switcher Row -->
-								<div class="flex items-center justify-between text-xs">
-									<span class="text-[11px] font-medium text-[#516f8e] dark:text-white/60">Ubah status:</span>
-									<div class="flex items-center gap-1.5">
-										{#if post.metadata.status !== 'upload'}
-											<button
-												type="button"
-												disabled={isUpdatingStatus}
-												onclick={() => updatePostStatus(post.slug, 'upload', post.metadata.title)}
-												class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 transition cursor-pointer"
-												title="Ubah status ke Upload (Terbitkan)"
-											>
-												Terbitkan
-											</button>
-										{/if}
+							<!-- Action & Status Management Toolbar (Single Clean Row) -->
+							<div class="pt-3 mt-3.5 border-t border-sky-100/70 dark:border-white/10 flex items-center justify-between text-xs">
+								<!-- Left: Quick Status Switchers (No "Ubah status:" text) -->
+								<div class="flex items-center gap-1.5">
+									{#if post.metadata.status !== 'upload'}
+										<button
+											type="button"
+											disabled={isUpdatingStatus}
+											onclick={() => updatePostStatus(post.slug, 'upload', post.metadata.title)}
+											class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 transition cursor-pointer disabled:opacity-50"
+											title="Ubah status ke Upload (Terbitkan)"
+										>
+											Upload
+										</button>
+									{/if}
 
-										{#if post.metadata.status !== 'draft'}
-											<button
-												type="button"
-												disabled={isUpdatingStatus}
-												onclick={() => updatePostStatus(post.slug, 'draft', post.metadata.title)}
-												class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 transition cursor-pointer"
-												title="Ubah status ke Draft"
-											>
-												Draft
-											</button>
-										{/if}
+									{#if post.metadata.status !== 'draft'}
+										<button
+											type="button"
+											disabled={isUpdatingStatus}
+											onclick={() => updatePostStatus(post.slug, 'draft', post.metadata.title)}
+											class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 transition cursor-pointer disabled:opacity-50"
+											title="Ubah status ke Draft"
+										>
+											Draft
+										</button>
+									{/if}
 
-										{#if post.metadata.status !== 'arsip'}
-											<button
-												type="button"
-												disabled={isUpdatingStatus}
-												onclick={() => updatePostStatus(post.slug, 'arsip', post.metadata.title)}
-												class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/30 transition cursor-pointer"
-												title="Ubah status ke Arsip"
-											>
-												Arsip
-											</button>
-										{/if}
-									</div>
+									{#if post.metadata.status !== 'arsip'}
+										<button
+											type="button"
+											disabled={isUpdatingStatus}
+											onclick={() => updatePostStatus(post.slug, 'arsip', post.metadata.title)}
+											class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/30 transition cursor-pointer disabled:opacity-50"
+											title="Ubah status ke Arsip"
+										>
+											Arsip
+										</button>
+									{/if}
 								</div>
 
-								<!-- Bottom Action Links Row -->
-								<div class="flex items-center justify-between text-xs pt-2.5 border-t border-sky-100/60 dark:border-white/10">
-									<!-- Clickable Eye badge for Viewers & Referrers -->
+								<!-- Right: Actions (Pencil Icon, Open Icon, Trash Icon) -->
+								<div class="flex items-center gap-1">
+									<!-- Edit button (Icon Only) -->
 									<button
 										type="button"
-										onclick={() => {
-											const refs = (data.referrers && (data.referrers as any)[post.slug]) || {};
-											const tot = (data.views && (data.views as any)[post.slug]) || 0;
-											viewingReferrerPost = { slug: post.slug, title: post.metadata.title, referrers: refs, total: tot };
-										}}
-										class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0593C6]/10 hover:bg-[#0593C6]/20 dark:bg-white/10 dark:hover:bg-white/20 text-[#0593C6] dark:text-sky-200 border border-[#0593C6]/25 dark:border-white/20 font-bold text-xs transition cursor-pointer group shadow-2xs"
-										title="Klik untuk melihat rincian sumber pembaca artikel ini"
+										onclick={() => loadPostForEditing(post.slug)}
+										disabled={isLoadingPost}
+										class="p-1.5 rounded-lg bg-[#0593C6] hover:bg-[#047ea8] text-white dark:bg-white dark:text-[#0593C6] dark:hover:bg-slate-100 transition cursor-pointer flex items-center justify-center shadow-xs disabled:opacity-70"
+										title="Buka dan edit di form penulisan"
 									>
-										<Eye class="w-3.5 h-3.5 group-hover:scale-110 text-[#0593C6] dark:text-sky-300 transition-transform" />
-										<span>{(data.views && (data.views as any)[post.slug]) || 0} pembaca</span>
+										{#if loadingPostSlug === post.slug}
+											<span class="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
+										{:else}
+											<Pencil class="w-3.5 h-3.5 text-current" />
+										{/if}
 									</button>
 
-									<div class="flex items-center gap-1.5">
-										<!-- Edit button to load into editor -->
-										<button
-											type="button"
-											onclick={() => loadPostForEditing(post.slug)}
-											disabled={isLoadingPost}
-											class="px-2.5 py-1 rounded-lg bg-[#0593C6] hover:bg-[#047ea8] text-white dark:bg-white dark:text-[#0593C6] dark:hover:bg-slate-100 font-bold text-xs transition cursor-pointer flex items-center gap-1 shadow-sm disabled:opacity-70"
-											title="Buka dan edit di form penulisan"
-										>
-											{#if loadingPostSlug === post.slug}
-												<span class="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
-												<span class="text-current">Memuat...</span>
-											{:else}
-												<Pencil class="w-3 h-3 text-current" />
-												<span class="text-current">Edit</span>
-											{/if}
-										</button>
+									<!-- Buka link (Icon Only with diagonal arrow) -->
+									<a
+										href="/artikel/{post.slug}"
+										target="_blank"
+										class="p-1.5 rounded-lg text-slate-500 dark:text-white/70 hover:text-[#0593C6] dark:hover:text-white hover:bg-sky-500/10 dark:hover:bg-white/10 transition cursor-pointer flex items-center justify-center"
+										title={post.metadata.published === false ? 'Pratinjau Draf' : 'Buka Halaman Artikel'}
+									>
+										<ExternalLink class="w-3.5 h-3.5" />
+									</a>
 
-										<!-- Preview / Buka link -->
-										<a
-											href="/artikel/{post.slug}"
-											target="_blank"
-											class="text-[#0593C6] dark:text-white/80 hover:text-[#D83995] dark:hover:text-[#f29185] font-semibold text-xs transition flex items-center gap-0.5 px-1.5 py-1"
-											title={post.metadata.published === false ? 'Pratinjau Draf' : 'Buka Halaman Artikel'}
-										>
-											<span>{post.metadata.published === false ? 'Preview' : 'Buka'}</span>
-											<span class="text-[10px]">↗</span>
-										</a>
-
-										<!-- Delete file button -->
-										<button
-											type="button"
-											onclick={() => deletePostFile(post.slug, post.metadata.title)}
-											class="p-1 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition cursor-pointer"
-											title="Hapus file artikel ini"
-										>
-											<Trash2 class="w-3.5 h-3.5" />
-										</button>
-									</div>
+									<!-- Delete file button (Icon Only) -->
+									<button
+										type="button"
+										onclick={() => deletePostFile(post.slug, post.metadata.title)}
+										class="p-1.5 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition cursor-pointer flex items-center justify-center"
+										title="Hapus file artikel ini"
+									>
+										<Trash2 class="w-3.5 h-3.5" />
+									</button>
 								</div>
 							</div>
 						</div>
